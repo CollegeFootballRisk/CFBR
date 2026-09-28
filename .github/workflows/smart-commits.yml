@@ -1,0 +1,796 @@
+name: Smart Commits
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  issues: write
+
+env:
+  GH_REPO: CollegeFootballRisk/CFBR
+  PROJECT_OWNER: CollegeFootballRisk
+  PROJECT_NUMBER: "6"
+
+jobs:
+  smart-commit:
+    name: Process smart commit
+    runs-on: ubuntu-latest
+
+    steps:
+      # ============================================================
+      # Checkout
+      # ============================================================
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      # ============================================================
+      # Validate Project token
+      # ============================================================
+      - name: Validate Project token
+        env:
+          CFBR_PROJECT_TOKEN: ${{ secrets.CFBR_PROJECT_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$CFBR_PROJECT_TOKEN" ]; then
+            echo "::error::Missing repository secret CFBR_PROJECT_TOKEN."
+            exit 1
+          fi
+
+      # ============================================================
+      # Parse commits
+      # ============================================================
+      - name: Parse commits
+        id: parse
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.event.after }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          DATA_FILE="/tmp/smart-commits.dat"
+
+          # ----------------------------------------------------------
+          # Determine commits to process.
+          #
+          # Normal push:
+          #   Process everything between BEFORE_SHA and AFTER_SHA.
+          #
+          # Initial push:
+          #   Process the entire history reachable from AFTER_SHA.
+          #
+          # Force push:
+          #   BEFORE_SHA may no longer exist in the rewritten history,
+          #   so process the new commit only.
+          # ----------------------------------------------------------
+          if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            echo "Initial push detected."
+            COMMITS="$(git rev-list --reverse "$AFTER_SHA")"
+
+          elif git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
+            COMMITS="$(git rev-list --reverse "$BEFORE_SHA..$AFTER_SHA")"
+
+          else
+            echo "Force push detected; processing the new commit only."
+            COMMITS="$AFTER_SHA"
+          fi
+
+          : > "$DATA_FILE"
+
+          while IFS= read -r SHA; do
+            [ -n "$SHA" ] || continue
+
+            MESSAGE="$(git log -1 --format=%B "$SHA")"
+            SUBJECT="$(git log -1 --format=%s "$SHA")"
+
+            # Ignore workflow-generated release metadata commits.
+            if printf '%s\n' "$MESSAGE" | grep -qE '^chore\(release\):'; then
+              continue
+            fi
+
+            # --------------------------------------------------------
+            # Issue references
+            # --------------------------------------------------------
+            ISSUE_MATCHES="$(
+              printf '%s\n' "$MESSAGE" |
+                grep -oE '#[0-9]+' ||
+                true
+            )"
+
+            ISSUES="$(
+              printf '%s\n' "$ISSUE_MATCHES" |
+                sed '/^$/d' |
+                sed 's/^#//' |
+                sort -nu |
+                paste -sd, - ||
+                true
+            )"
+
+            # --------------------------------------------------------
+            # Status directive
+            # --------------------------------------------------------
+            STATUS_MATCHES="$(
+              printf '%s\n' "$MESSAGE" |
+                grep -oiE '#(backlog|in-progress|continued-development|done)([^[:alnum:]_-]|$)' |
+                grep -oiE '#(backlog|in-progress|continued-development|done)' ||
+                true
+            )"
+
+            STATUS_COUNT="$(
+              printf '%s\n' "$STATUS_MATCHES" |
+                sed '/^$/d' |
+                sort -fu |
+                wc -l |
+                tr -d ' '
+            )"
+
+            STATUS="$(
+              printf '%s\n' "$STATUS_MATCHES" |
+                sed '/^$/d' |
+                head -n1 |
+                tr '[:upper:]' '[:lower:]' ||
+                true
+            )"
+
+            # --------------------------------------------------------
+            # Version directive
+            # --------------------------------------------------------
+            VERSION_DIRECTIVES="$(
+              printf '%s\n' "$MESSAGE" |
+                grep -oiE '#(major|minor|explicit:[0-9]+\.[0-9]+\.[0-9]+|version:[0-9]+\.[0-9]+\.[0-9]+)([^[:alnum:]_.:-]|$)' |
+                grep -oiE '#(major|minor|explicit:[0-9]+\.[0-9]+\.[0-9]+|version:[0-9]+\.[0-9]+\.[0-9]+)' ||
+                true
+            )"
+
+            VERSION_DIRECTIVE_COUNT="$(
+              printf '%s\n' "$VERSION_DIRECTIVES" |
+                sed '/^$/d' |
+                sort -fu |
+                wc -l |
+                tr -d ' '
+            )"
+
+            VERSION_DIRECTIVE="$(
+              printf '%s\n' "$VERSION_DIRECTIVES" |
+                sed '/^$/d' |
+                head -n1 |
+                tr '[:upper:]' '[:lower:]' ||
+                true
+            )"
+
+            # --------------------------------------------------------
+            # Validation
+            # --------------------------------------------------------
+            if [ "$STATUS_COUNT" -gt 1 ]; then
+              echo "::error::Commit $SHA contains multiple status directives."
+              exit 1
+            fi
+
+            if [ "$VERSION_DIRECTIVE_COUNT" -gt 1 ]; then
+              echo "::error::Commit $SHA contains multiple version directives."
+              exit 1
+            fi
+
+            if [ -n "$VERSION_DIRECTIVE" ] && [ "$STATUS" != "#done" ]; then
+              echo "::error::Version directives require #done."
+              exit 1
+            fi
+
+            if [ -n "$STATUS" ] && [ -z "$ISSUES" ]; then
+              echo "::error::Status directive requires at least one issue reference."
+              exit 1
+            fi
+
+            # Unit Separator preserves empty fields.
+            #
+            # SHA | STATUS | VERSION | ISSUES | SUBJECT
+            printf '%s\x1f%s\x1f%s\x1f%s\x1f%s\n' \
+              "$SHA" \
+              "$STATUS" \
+              "$VERSION_DIRECTIVE" \
+              "$ISSUES" \
+              "$SUBJECT" \
+              >> "$DATA_FILE"
+
+            if [ -n "$STATUS" ]; then
+              echo "Processing smart commit: $SUBJECT"
+              echo "  Status: $STATUS"
+              echo "  Issues: $ISSUES"
+
+              if [ -n "$VERSION_DIRECTIVE" ]; then
+                echo "  Version: $VERSION_DIRECTIVE"
+              fi
+            fi
+
+          done <<< "$COMMITS"
+
+          # ----------------------------------------------------------
+          # Find latest #done commit
+          # ----------------------------------------------------------
+          LAST_DONE_LINE="$(
+            awk -F '\x1f' '$2 == "#done" { line=$0 } END { print line }' \
+              "$DATA_FILE"
+          )"
+
+          if [ -n "$LAST_DONE_LINE" ]; then
+            IFS=$'\x1f' read -r \
+              DONE_SHA \
+              DONE_STATUS \
+              DONE_VERSION \
+              DONE_ISSUES \
+              DONE_SUBJECT <<< "$LAST_DONE_LINE"
+
+            {
+              echo "done=true"
+              echo "done_sha=$DONE_SHA"
+              echo "done_version=$DONE_VERSION"
+              echo "done_issues=$DONE_ISSUES"
+              echo "done_subject<<EOF"
+              echo "$DONE_SUBJECT"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "done=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ============================================================
+      # Update issue labels and state
+      # ============================================================
+      - name: Update issue labels and state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          DATA_FILE="/tmp/smart-commits.dat"
+
+          while IFS=$'\x1f' read -r \
+            SHA \
+            STATUS \
+            VERSION \
+            ISSUES \
+            SUBJECT
+          do
+            [ -n "${SHA:-}" ] || continue
+            [ -n "${STATUS:-}" ] || continue
+
+            LABEL_NAME="${STATUS#\#}"
+
+            if [ -z "$ISSUES" ]; then
+              echo "::error::Status $STATUS has no issue references."
+              exit 1
+            fi
+
+            IFS=',' read -ra ISSUE_LIST <<< "$ISSUES"
+
+            for ISSUE in "${ISSUE_LIST[@]}"; do
+              [ -n "$ISSUE" ] || continue
+
+              echo "Updating issue #$ISSUE → $LABEL_NAME"
+
+              # Remove all CFBR smart-status labels first.
+              for LABEL in \
+                backlog \
+                in-progress \
+                continued-development \
+                done
+              do
+                gh issue edit "$ISSUE" \
+                  --repo "$GH_REPO" \
+                  --remove-label "$LABEL" \
+                  2>/dev/null || true
+              done
+
+              # Add current status label.
+              gh issue edit "$ISSUE" \
+                --repo "$GH_REPO" \
+                --add-label "$LABEL_NAME"
+
+              # #done closes issue.
+              if [ "$STATUS" = "#done" ]; then
+                gh issue close "$ISSUE" \
+                  --repo "$GH_REPO" \
+                  --reason completed \
+                  2>/dev/null || true
+              fi
+            done
+
+          done < "$DATA_FILE"
+
+      # ============================================================
+      # Load Project configuration
+      # ============================================================
+      - name: Load Project configuration
+        id: project
+        env:
+          GH_TOKEN: ${{ secrets.CFBR_PROJECT_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          QUERY='
+            query($owner:String!, $number:Int!) {
+              organization(login:$owner) {
+                projectV2(number:$number) {
+                  id
+                  title
+                  fields(first:50) {
+                    nodes {
+                      ... on ProjectV2SingleSelectField {
+                        id
+                        name
+                        options {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          '
+
+          DATA="$(
+            gh api graphql \
+              -f query="$QUERY" \
+              -F owner="$PROJECT_OWNER" \
+              -F number="$PROJECT_NUMBER"
+          )"
+
+          PROJECT_ID="$(
+            jq -r \
+              '.data.organization.projectV2.id // empty' \
+              <<< "$DATA"
+          )"
+
+          PROJECT_TITLE="$(
+            jq -r \
+              '.data.organization.projectV2.title // empty' \
+              <<< "$DATA"
+          )"
+
+          STATUS_FIELD_ID="$(
+            jq -r '
+              .data.organization.projectV2.fields.nodes[]
+              | select(.name == "Status")
+              | .id
+            ' <<< "$DATA"
+          )"
+
+          if [ -z "$PROJECT_ID" ] || [ -z "$STATUS_FIELD_ID" ]; then
+            echo "::error::Could not read Project #$PROJECT_NUMBER or its Status field."
+            exit 1
+          fi
+
+          echo "Project: $PROJECT_TITLE"
+
+          echo "project_id=$PROJECT_ID" >> "$GITHUB_OUTPUT"
+          echo "status_field_id=$STATUS_FIELD_ID" >> "$GITHUB_OUTPUT"
+
+          for STATUS_NAME in \
+            "Backlog" \
+            "In Progress" \
+            "Continued Development" \
+            "Done"
+          do
+
+            OPTION_ID="$(
+              jq -r \
+                --arg name "$STATUS_NAME" '
+                .data.organization.projectV2.fields.nodes[]
+                | select(.name == "Status")
+                | .options[]
+                | select(.name == $name)
+                | .id
+              ' <<< "$DATA"
+            )"
+
+            if [ -z "$OPTION_ID" ] || [ "$OPTION_ID" = "null" ]; then
+              echo "::error::Project Status option '$STATUS_NAME' was not found."
+              exit 1
+            fi
+
+            KEY="$(
+              printf '%s' "$STATUS_NAME" |
+                tr '[:upper:]' '[:lower:]' |
+                tr ' ' '_'
+            )"
+
+            echo "$KEY=$OPTION_ID" >> "$GITHUB_OUTPUT"
+          done
+
+      # ============================================================
+      # Update Project status
+      # ============================================================
+      - name: Update Project status
+        env:
+          GH_TOKEN: ${{ secrets.CFBR_PROJECT_TOKEN }}
+          PROJECT_ID: ${{ steps.project.outputs.project_id }}
+          STATUS_FIELD_ID: ${{ steps.project.outputs.status_field_id }}
+          BACKLOG_ID: ${{ steps.project.outputs.backlog }}
+          IN_PROGRESS_ID: ${{ steps.project.outputs.in_progress }}
+          CONTINUED_DEVELOPMENT_ID: ${{ steps.project.outputs.continued_development }}
+          DONE_ID: ${{ steps.project.outputs.done }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          DATA_FILE="/tmp/smart-commits.dat"
+
+          get_option_id() {
+            case "$1" in
+              '#backlog')
+                echo "$BACKLOG_ID"
+                ;;
+
+              '#in-progress')
+                echo "$IN_PROGRESS_ID"
+                ;;
+
+              '#continued-development')
+                echo "$CONTINUED_DEVELOPMENT_ID"
+                ;;
+
+              '#done')
+                echo "$DONE_ID"
+                ;;
+
+              *)
+                echo "::error::Unknown status directive: $1" >&2
+                return 1
+                ;;
+            esac
+          }
+
+          find_project_item() {
+            local issue_number="$1"
+
+            QUERY='
+              query($owner:String!, $number:Int!) {
+                organization(login:$owner) {
+                  projectV2(number:$number) {
+                    items(first:100) {
+                      nodes {
+                        id
+                        content {
+                          ... on Issue {
+                            number
+                            repository {
+                              nameWithOwner
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            '
+
+            RESPONSE="$(
+              gh api graphql \
+                -f query="$QUERY" \
+                -F owner="$PROJECT_OWNER" \
+                -F number="$PROJECT_NUMBER" \
+                2>&1
+            )" || {
+              echo "::error::Failed to query Project items."
+              echo "$RESPONSE" >&2
+              return 1
+            }
+
+            jq -r \
+              --arg issue "$issue_number" \
+              --arg repo "$GH_REPO" '
+              [
+                .data.organization.projectV2.items.nodes[]
+                | select(.content.number == ($issue | tonumber))
+                | select(.content.repository.nameWithOwner == $repo)
+                | .id
+              ][0] // empty
+            ' <<< "$RESPONSE"
+          }
+
+          add_project_item() {
+            local issue_number="$1"
+
+            ISSUE_NODE_ID="$(
+              gh api graphql \
+                -f query='
+                  query($owner:String!, $repo:String!, $issue:Int!) {
+                    repository(owner:$owner, name:$repo) {
+                      issue(number:$issue) {
+                        id
+                      }
+                    }
+                  }
+                ' \
+                -f owner="$PROJECT_OWNER" \
+                -f repo="CFBR" \
+                -F issue="$issue_number" \
+                --jq '.data.repository.issue.id'
+            )"
+
+            if [ -z "$ISSUE_NODE_ID" ] || [ "$ISSUE_NODE_ID" = "null" ]; then
+              echo "::error::Could not find GraphQL node ID for issue #$issue_number."
+              return 1
+            fi
+
+            RESPONSE="$(
+              gh api graphql \
+                -f query='
+                  mutation($project:ID!, $content:ID!) {
+                    addProjectV2ItemById(
+                      input:{
+                        projectId:$project
+                        contentId:$content
+                      }
+                    ) {
+                      item {
+                        id
+                      }
+                    }
+                  }
+                ' \
+                -f project="$PROJECT_ID" \
+                -f content="$ISSUE_NODE_ID" \
+                2>&1
+            )" || {
+              echo "::error::Failed to add issue #$issue_number to Project."
+              echo "$RESPONSE" >&2
+              return 1
+            }
+
+            ITEM_ID="$(
+              jq -r \
+                '.data.addProjectV2ItemById.item.id // empty' \
+                <<< "$RESPONSE"
+            )"
+
+            if [ -z "$ITEM_ID" ]; then
+              echo "::error::Project item was not returned after adding issue #$issue_number."
+              exit 1
+            fi
+
+            printf '%s\n' "$ITEM_ID"
+          }
+
+          update_item_status() {
+            local item_id="$1"
+            local option_id="$2"
+
+            QUERY='
+              mutation(
+                $project:ID!
+                $item:ID!
+                $field:ID!
+                $option:String!
+              ) {
+                updateProjectV2ItemFieldValue(
+                  input:{
+                    projectId:$project
+                    itemId:$item
+                    fieldId:$field
+                    value:{
+                      singleSelectOptionId:$option
+                    }
+                  }
+                ) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }
+            '
+
+            RESPONSE="$(
+              gh api graphql \
+                -f query="$QUERY" \
+                -f project="$PROJECT_ID" \
+                -f item="$item_id" \
+                -f field="$STATUS_FIELD_ID" \
+                -f option="$option_id" \
+                2>&1
+            )" || {
+              echo "::error::Project status mutation failed."
+              echo "$RESPONSE" >&2
+              exit 1
+            }
+
+            RETURNED_ITEM_ID="$(
+              jq -r \
+                '.data.updateProjectV2ItemFieldValue.projectV2Item.id // empty' \
+                <<< "$RESPONSE"
+            )"
+
+            if [ -z "$RETURNED_ITEM_ID" ]; then
+              echo "::error::Project status mutation returned no Project item ID."
+              echo "$RESPONSE" >&2
+              exit 1
+            fi
+
+            echo "Project status updated."
+          }
+
+          while IFS=$'\x1f' read -r \
+            SHA \
+            STATUS \
+            VERSION \
+            ISSUES \
+            SUBJECT
+          do
+            [ -n "${SHA:-}" ] || continue
+            [ -n "${STATUS:-}" ] || continue
+
+            OPTION_ID="$(get_option_id "$STATUS")"
+
+            if [ -z "$ISSUES" ]; then
+              echo "::error::Status '$STATUS' has no issue references."
+              exit 1
+            fi
+
+            IFS=',' read -ra ISSUE_LIST <<< "$ISSUES"
+
+            for ISSUE in "${ISSUE_LIST[@]}"; do
+              [ -n "$ISSUE" ] || continue
+
+              ITEM_ID="$(find_project_item "$ISSUE")"
+
+              if [ -z "$ITEM_ID" ]; then
+                echo "Adding issue #$ISSUE to Project #$PROJECT_NUMBER."
+                ITEM_ID="$(add_project_item "$ISSUE")"
+              fi
+
+              if [ -z "$ITEM_ID" ]; then
+                echo "::error::Could not obtain Project item ID for issue #$ISSUE."
+                exit 1
+              fi
+
+              update_item_status "$ITEM_ID" "$OPTION_ID"
+            done
+
+          done < "$DATA_FILE"
+
+      # ============================================================
+      # Create release
+      # ============================================================
+      - name: Create release
+        if: steps.parse.outputs.done == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DONE_SHA: ${{ steps.parse.outputs.done_sha }}
+          DONE_VERSION: ${{ steps.parse.outputs.done_version }}
+          DONE_ISSUES: ${{ steps.parse.outputs.done_issues }}
+          DONE_SUBJECT: ${{ steps.parse.outputs.done_subject }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git fetch --tags --force
+
+          CURRENT_TAG="$(
+            git tag --list 'v*' --sort=-v:refname |
+              head -n1 ||
+              true
+          )"
+
+          if [ -n "$CURRENT_TAG" ]; then
+            CURRENT_VERSION="${CURRENT_TAG#v}"
+          else
+            CURRENT_VERSION="0.0.0"
+          fi
+
+          if ! [[ "$CURRENT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Latest release tag '$CURRENT_TAG' is not major.minor.patch."
+            exit 1
+          fi
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+
+          case "$DONE_VERSION" in
+            "")
+              PATCH=$((PATCH + 1))
+              ;;
+
+            "#minor")
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+
+            "#major")
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+
+            "#explicit:"*)
+              TARGET="${DONE_VERSION#\#explicit:}"
+
+              if ! [[ "$TARGET" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                echo "::error::Invalid explicit version: $TARGET"
+                exit 1
+              fi
+
+              IFS='.' read -r MAJOR MINOR PATCH <<< "$TARGET"
+              ;;
+
+            "#version:"*)
+              TARGET="${DONE_VERSION#\#version:}"
+
+              if ! [[ "$TARGET" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                echo "::error::Invalid explicit version: $TARGET"
+                exit 1
+              fi
+
+              IFS='.' read -r MAJOR MINOR PATCH <<< "$TARGET"
+              ;;
+
+            *)
+              echo "::error::Unsupported version directive: $DONE_VERSION"
+              exit 1
+              ;;
+          esac
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+
+          version_gt() {
+            [ "$1" != "$2" ] &&
+            [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -n1)" = "$1" ]
+          }
+
+          if ! version_gt "$NEW_VERSION" "$CURRENT_VERSION"; then
+            echo "::error::New version $NEW_VERSION must be greater than current version $CURRENT_VERSION."
+            exit 1
+          fi
+
+          TAG="v$NEW_VERSION"
+
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists."
+            echo "Treating this as an idempotent rerun."
+            exit 0
+          fi
+
+          RELEASE_NOTES=$'## Completed\n\n'
+
+          IFS=',' read -ra ISSUE_LIST <<< "$DONE_ISSUES"
+
+          for ISSUE in "${ISSUE_LIST[@]}"; do
+            [ -n "$ISSUE" ] || continue
+
+            TITLE="$(
+              gh issue view "$ISSUE" \
+                --repo "$GH_REPO" \
+                --json title \
+                --jq '.title'
+            )"
+
+            RELEASE_NOTES+="- $TITLE (#$ISSUE)"$'\n'
+          done
+
+          RELEASE_NOTES+=$'\n## Commit\n\n'
+          RELEASE_NOTES+="- $DONE_SUBJECT"$'\n'
+
+          echo "Creating $TAG at $DONE_SHA"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git tag -a "$TAG" "$DONE_SHA" -m "Release $TAG"
+          git push origin "$TAG"
+
+          gh release create "$TAG" \
+            --repo "$GH_REPO" \
+            --target "$DONE_SHA" \
+            --title "$TAG" \
+            --notes "$RELEASE_NOTES"
+
+          echo "Released $TAG."

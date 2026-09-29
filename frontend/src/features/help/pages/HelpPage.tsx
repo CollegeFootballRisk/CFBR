@@ -1,4 +1,4 @@
-function HelpPage() {
+export default function HelpPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <article className="prose prose-slate max-w-none dark:prose-invert">
@@ -40,5 +40,3 @@ function HelpPage() {
     </div>
   );
 }
-
-export default HelpPage;

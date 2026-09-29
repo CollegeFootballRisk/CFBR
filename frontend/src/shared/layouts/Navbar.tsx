@@ -1,15 +1,22 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
-function Navbar() {
+import { useAppSettings } from "@/app/useAppSettings";
+import { BRANDING_IMAGES } from "@/app/settings";
+
+export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const { settings } = useAppSettings();
 
   const closeMobileMenu = () => {
     setMobileOpen(false);
   };
 
+  const logo = BRANDING_IMAGES[settings.branding];
+
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-primary text-primary-foreground backdrop-blur">
+    <header className="sticky top-0 z-50 border-b backdrop-blur">
       <nav className="mx-auto flex h-16 max-w-screen-2xl items-center px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
@@ -18,7 +25,7 @@ function Navbar() {
           className="flex shrink-0 items-center"
         >
           <img
-            src="/images/logo-rainbow.png"
+            src={logo}
             alt="College Football Risk"
             className="h-10 w-10 object-contain"
           />
@@ -49,7 +56,7 @@ function Navbar() {
         <button
           type="button"
           onClick={() => setMobileOpen((open) => !open)}
-          className="ml-auto inline-flex items-center justify-center rounded-md p-2 text-primary-foreground transition hover:bg-primary-foreground/10 md:hidden"
+          className="ml-auto inline-flex items-center justify-center rounded-md p-2 md:hidden"
           aria-label="Toggle navigation menu"
           aria-expanded={mobileOpen}
         >
@@ -59,7 +66,7 @@ function Navbar() {
 
       {/* Mobile navigation */}
       {mobileOpen && (
-        <div className="border-t border-primary-foreground/20 bg-primary md:hidden">
+        <div className="border-t md:hidden">
           <div className="space-y-1 px-4 py-3">
             <MobileNavItem to="login" onClick={closeMobileMenu}>
               Login
@@ -111,9 +118,7 @@ function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
       className={({ isActive }) =>
         [
           "rounded-md px-3 py-2 text-sm font-medium transition",
-          isActive
-            ? "bg-primary-foreground/15 text-primary-foreground"
-            : "text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground",
+          isActive ? "" : "",
         ].join(" ")
       }
     >
@@ -139,9 +144,7 @@ function MobileNavItem({
       className={({ isActive }) =>
         [
           "block rounded-md px-3 py-2 text-sm font-medium transition",
-          isActive
-            ? "bg-primary-foreground/15 text-primary-foreground"
-            : "text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground",
+          isActive ? "" : "",
         ].join(" ")
       }
     >
@@ -149,5 +152,3 @@ function MobileNavItem({
     </NavLink>
   );
 }
-
-export default Navbar;

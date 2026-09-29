@@ -7,25 +7,32 @@ import {
 } from "react";
 import { type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/shared/utils/cn";
-import ChevronIcon from "@/shared/components/Icons/ChevronIcon";
+import { cn } from "../../utils/cn";
+import ChevronIcon from "../Icons/ChevronIcon";
 
 import SelectMeasure from "./SelectMeasure";
-import SelectOptionItem from "./SelectOptionItem";
 import type { SelectOption } from "./selectTypes";
 import { selectVariants } from "./selectVariants";
 import useSelect from "./useSelect";
+import { SelectOptionItem } from "./SelectOptionItem";
 
 export interface SelectProps<T = string>
   extends
     Omit<HTMLAttributes<HTMLDivElement>, "onChange">,
     VariantProps<typeof selectVariants> {
   value?: T | "";
+
   options: SelectOption<T>[];
+
   onChange: (value: T | "") => void;
+
   placeholder?: string;
+
+  placeholderAsOption?: boolean;
   label?: string;
+
   hideLabel?: boolean;
+
   disabled?: boolean;
 }
 
@@ -36,12 +43,14 @@ export default function Select<T = string>({
 
   placeholder = "Select...",
 
+  placeholderAsOption = false,
+
   label,
+
   hideLabel = true,
 
   disabled = false,
 
-  variant,
   size,
   chevron = true,
 
@@ -51,7 +60,6 @@ export default function Select<T = string>({
 }: SelectProps<T>) {
   const labelId = useId();
   const selectId = useId();
-
   const [width, setWidth] = useState<number>();
   const [height, setHeight] = useState<number>();
   const [alignTop, setAlignTop] = useState(false);
@@ -76,6 +84,7 @@ export default function Select<T = string>({
     value,
     options,
     placeholder,
+    placeholderAsOption,
     disabled,
     onChange,
   });
@@ -85,7 +94,7 @@ export default function Select<T = string>({
 
     setWidth(measureRef.current.offsetWidth);
     setHeight(measureRef.current.offsetHeight);
-  }, [measureRef, longestOption, variant, size, chevron]);
+  }, [measureRef, longestOption, size, chevron]);
 
   useLayoutEffect(() => {
     if (!open || !rootRef.current) return;
@@ -118,7 +127,7 @@ export default function Select<T = string>({
   return (
     <div
       ref={rootRef}
-      // eslint-disable-next-line no-restricted-syntax -- dynamic position can't be represented in Tailwind
+      // eslint-disable-next-line no-restricted-syntax -- dynamic position can't be represented in tailwind
       style={{
         width,
         height,
@@ -138,7 +147,6 @@ export default function Select<T = string>({
 
       <SelectMeasure
         measureRef={measureRef}
-        variant={variant}
         size={size}
         chevron={chevron}
         open={open}
@@ -150,8 +158,6 @@ export default function Select<T = string>({
         id={selectId}
         type="button"
         aria-labelledby={label ? labelId : undefined}
-        aria-haspopup="listbox"
-        aria-expanded={open}
         disabled={disabled}
         onClick={() => {
           setOpen((previous) => !previous);
@@ -165,23 +171,15 @@ export default function Select<T = string>({
         onKeyDown={handleKeyDown}
         className={cn(
           selectVariants({
-            variant,
             size,
             chevron,
           }),
           "h-full w-full",
         )}
       >
-        <span className="truncate">{displayValue}</span>
+        <span className="flex-1 whitespace-nowrap">{displayValue}</span>
 
-        {chevron && (
-          <ChevronIcon
-            className={cn(
-              "shrink-0 transition-transform duration-150",
-              open && "rotate-180",
-            )}
-          />
-        )}
+        {chevron && <ChevronIcon className={cn(open && "rotate-180")} />}
       </button>
 
       {open && (
@@ -189,10 +187,9 @@ export default function Select<T = string>({
           role="listbox"
           aria-labelledby={label ? labelId : undefined}
           className={cn(
-            "absolute left-0 z-50 w-full max-h-64 overflow-y-auto",
-            "rounded-md border border-border",
-            "bg-card text-card-foreground",
-            "shadow-lg",
+            "absolute left-0 z-50 w-full overflow-y-auto",
+            "max-h-64 rounded-lg border-2 bg-control",
+            "shadow-xl",
             alignTop ? "bottom-full mb-2" : "top-full mt-2",
           )}
         >

@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 
-import { cn } from "@/shared/utils/cn";
+import { cn } from "../../utils/cn";
 
 interface SelectOptionItemProps {
   label: string;
@@ -11,31 +11,30 @@ interface SelectOptionItemProps {
   onClick: () => void;
 }
 
-const SelectOptionItem = forwardRef<HTMLLIElement, SelectOptionItemProps>(
-  function SelectOptionItem(
-    { label, selected, highlighted, disabled = false, onMouseEnter, onClick },
-    ref,
-  ) {
-    return (
-      <li
-        ref={ref}
-        role="option"
-        aria-selected={selected}
-        aria-disabled={disabled}
-        onMouseEnter={onMouseEnter}
-        onClick={onClick}
-        className={cn(
-          "cursor-pointer px-3 py-2 font-medium transition-colors",
-          "hover:bg-accent hover:text-accent-foreground",
-          selected && "bg-primary text-primary-foreground",
-          highlighted && !selected && "bg-muted text-foreground",
-          disabled && "cursor-not-allowed opacity-40",
-        )}
-      >
-        {label}
-      </li>
-    );
-  },
-);
-
-export default SelectOptionItem;
+export const SelectOptionItem = forwardRef<
+  HTMLLIElement,
+  SelectOptionItemProps
+>(function SelectOptionItem(
+  { label, selected, highlighted, disabled = false, onMouseEnter, onClick },
+  ref,
+) {
+  return (
+    <li
+      ref={ref}
+      role="option"
+      aria-selected={selected}
+      aria-disabled={disabled}
+      onMouseEnter={onMouseEnter}
+      onClick={onClick}
+      className={cn(
+        "cursor-pointer px-5 py-3 text-control-foreground",
+        selected && "",
+        highlighted && !selected && "",
+        disabled &&
+          "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-inherit",
+      )}
+    >
+      {label}
+    </li>
+  );
+});

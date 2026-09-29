@@ -1,0 +1,20 @@
+services:
+  cfbr-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cfbr-app
+    restart: unless-stopped
+
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+
+    ports:
+      - "127.0.0.1:8010:8000"
+
+    networks:
+      - internal
+
+networks:
+  internal:
+    external: true

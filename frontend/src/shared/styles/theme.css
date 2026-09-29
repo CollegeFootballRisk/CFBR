@@ -1,77 +1,32 @@
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
+  /* #region APP */
+  --background: #2d2d32;
+  --foreground: #fff;
+  /* #endregion */
 
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-
-  --border: #e2e8f0;
-
-  --primary: #2563eb;
-  --primary-foreground: #ffffff;
-
-  --secondary: #e2e8f0;
-  --secondary-foreground: #0f172a;
-
-  --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
-
-  --success: #16a34a;
-  --warning: #d97706;
-  --error: #dc2626;
+  /* #region Controls */
+  --control: #ccc;
+  --control-checked: #56c080;
+  --control-foreground: #333;
 }
 
-.dark {
-  --background: #020617;
-  --foreground: #f8fafc;
+.light {
+  /* #region APP */
+  --background: #fff;
+  --foreground: #000;
 
-  --card: #0f172a;
-  --card-foreground: #f8fafc;
+  /* #endregion */
 
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
+  /* #region Controls */
 
-  --border: #334155;
-
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-
-  --secondary: #1e293b;
-  --secondary-foreground: #f8fafc;
-
-  --accent: #1e293b;
-  --accent-foreground: #f8fafc;
-
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --error: #ef4444;
+  /* #endregion */
 }
 
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-
-  --color-border: var(--border);
-
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-error: var(--error);
+  --color-control: var(--control);
+  --color-control-checked: var(--control-checked);
+  --color-control-foreground: var(--control-foreground);
 }

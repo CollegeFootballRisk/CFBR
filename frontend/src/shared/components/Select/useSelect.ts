@@ -13,6 +13,7 @@ interface UseSelectProps<T> {
   value?: T | "";
   options: SelectOption<T>[];
   placeholder: string;
+  placeholderAsOption: boolean;
   disabled: boolean;
   onChange: (value: T | "") => void;
 }
@@ -39,6 +40,7 @@ export default function useSelect<T>({
   value,
   options,
   placeholder,
+  placeholderAsOption,
   disabled,
   onChange,
 }: UseSelectProps<T>): UseSelectReturn<T> {
@@ -84,16 +86,24 @@ export default function useSelect<T>({
     };
   }, []);
 
-  const selectOptions = useMemo(
-    () => [
+  const selectOptions = useMemo(() => {
+    if (!placeholderAsOption) {
+      return options;
+    }
+
+    // Show the placeholder as an option only while no value is selected.
+    if (value !== "" && value !== undefined) {
+      return options;
+    }
+
+    return [
       {
         label: placeholder,
         value: "" as T,
       },
       ...options,
-    ],
-    [options, placeholder],
-  );
+    ];
+  }, [options, placeholder, placeholderAsOption, value]);
 
   const selectedOption = useMemo(
     () => selectOptions.find((option) => Object.is(option.value, value)),
@@ -102,15 +112,13 @@ export default function useSelect<T>({
 
   const displayValue = selectedOption?.label ?? placeholder;
 
-  const longestOption = useMemo(
-    () =>
-      selectOptions.reduce(
-        (largest, current) =>
-          current.label.length > largest.length ? current.label : largest,
-        "",
-      ),
-    [selectOptions],
-  );
+  const longestOption = useMemo(() => {
+    return [placeholder, ...selectOptions.map((option) => option.label)].reduce(
+      (largest, current) =>
+        current.length > largest.length ? current : largest,
+      "",
+    );
+  }, [placeholder, selectOptions]);
 
   function findMatchingOption(search: string, startIndex: number) {
     const normalized = search.toLowerCase();
@@ -216,17 +224,23 @@ export default function useSelect<T>({
 
       case "Escape":
         event.preventDefault();
+
         setOpen(false);
+
         break;
 
       case "Home":
         event.preventDefault();
+
         setHighlightedIndex(0);
+
         break;
 
       case "End":
         event.preventDefault();
+
         setHighlightedIndex(selectOptions.length - 1);
+
         break;
     }
   }

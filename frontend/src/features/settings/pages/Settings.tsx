@@ -3,16 +3,16 @@ import { Select } from "@/shared/components/Select";
 import { Switch } from "@/shared/components/Switch";
 import PageContainer from "@/shared/layouts/PageContainer";
 
-export default function SettingsPage() {
+export default function Settings() {
   const { settings, updateSetting } = useAppSettings();
 
   return (
     <>
-      <h1 className="text-2xl">Settings</h1>
+      <h1 className="text-4xl font-bold text-center my-4">Settings</h1>
       <PageContainer>
         <div className="mt-8">
           <div className="divide-y">
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Show Background Images"
                 checked={settings.showBackgroundImages}
@@ -23,7 +23,7 @@ export default function SettingsPage() {
               <p className="text-sm">Background Images</p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Enable Light Mode"
                 checked={settings.theme === "light"}
@@ -34,7 +34,7 @@ export default function SettingsPage() {
               <p className="text-sm">Light Mode</p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Show move prompting"
                 checked={settings.showPromptMove}
@@ -45,7 +45,7 @@ export default function SettingsPage() {
               <p className="text-sm">Prompt me to make a move if I haven't</p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Show territory pin"
                 checked={settings.showTerritoryPin}
@@ -58,7 +58,7 @@ export default function SettingsPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Show territory fade/pulse"
                 checked={settings.showPulseTerritory}
@@ -71,7 +71,7 @@ export default function SettingsPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Show bridges"
                 checked={settings.showBridges}
@@ -80,7 +80,7 @@ export default function SettingsPage() {
               <p className="text-sm">Show bridges when the map first loads</p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Show regions"
                 checked={settings.showRegions}
@@ -89,7 +89,7 @@ export default function SettingsPage() {
               <p className="text-sm">Show regions when the map first loads</p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Opt-in for experiments"
                 checked={settings.showExperiments}
@@ -102,7 +102,7 @@ export default function SettingsPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Show labels"
                 checked={settings.showMapLabels}
@@ -113,7 +113,7 @@ export default function SettingsPage() {
               <p className="text-sm">Show labels on map buttons</p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Add extra space for scrolling"
                 checked={settings.addBottomSpace}
@@ -126,7 +126,7 @@ export default function SettingsPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Select
                 value={settings.pageSize}
                 options={[
@@ -149,7 +149,7 @@ export default function SettingsPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-4 px-6 py-4">
+            <div className="flex items-center gap-4 py-4">
               <Select
                 value={settings.branding}
                 options={[

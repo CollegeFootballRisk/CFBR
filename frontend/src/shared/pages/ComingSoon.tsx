@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 
-interface ComingSoonPageProps {
+interface ComingSoonProps {
   title: string;
   description?: string;
 }
 
-export default function ComingSoonPage({
+export default function ComingSoon({
   title,
   description = "This part of College Football Risk is still being rebuilt.",
-}: ComingSoonPageProps) {
+}: ComingSoonProps) {
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
       <div className="max-w-lg text-center">

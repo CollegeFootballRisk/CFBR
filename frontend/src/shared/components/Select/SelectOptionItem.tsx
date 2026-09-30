@@ -27,7 +27,7 @@ export const SelectOptionItem = forwardRef<
       onMouseEnter={onMouseEnter}
       onClick={onClick}
       className={cn(
-        "cursor-pointer px-5 py-3 text-control-foreground",
+        "cursor-pointer px-4 py-2 text-control-foreground",
         selected && "",
         highlighted && !selected && "",
         disabled &&

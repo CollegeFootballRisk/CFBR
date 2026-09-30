@@ -1,26 +1,26 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import HomePage from "@/features/home/pages/HomePage";
-import HelpPage from "@/features/help/pages/HelpPage";
 import AppLayout from "@/shared/layouts/AppLayout";
-import ComingSoonPage from "@/shared/pages/ComingSoonPage";
-import SettingsPage from "@/features/settings/pages/SettingsPage";
+import Help from "@/features/help/pages/Help";
+import Home from "@/features/home/pages/Home";
+import ComingSoon from "@/shared/pages/ComingSoon";
+import Settings from "@/features/settings/pages/Settings";
+import Info from "@/features/help/pages/Info";
+import Policies from "@/features/help/pages/Policies";
 
 export const router = createBrowserRouter([
   {
     element: <AppLayout />,
     children: [
-      // Main
       {
         path: "/",
-        element: <HomePage />,
+        element: <Home />,
       },
 
-      // Map
       {
         path: "/map",
         element: (
-          <ComingSoonPage
+          <ComingSoon
             title="Map"
             description="The CFBR map is being rebuilt."
           />
@@ -29,77 +29,66 @@ export const router = createBrowserRouter([
       {
         path: "/map/:season/:day",
         element: (
-          <ComingSoonPage
+          <ComingSoon
             title="Historical Map"
             description="Historical map views are being rebuilt."
           />
         ),
       },
 
-      // Odds
       {
         path: "/odds/:season/:day/:team",
         element: (
-          <ComingSoonPage
+          <ComingSoon
             title="Odds"
             description="Battle odds are being rebuilt."
           />
         ),
       },
 
-      // Visited territories
       {
         path: "/visited/:team/:season",
         element: (
-          <ComingSoonPage
+          <ComingSoon
             title="Visited Territories"
             description="Visited territory history is being rebuilt."
           />
         ),
       },
 
-      // Players
       {
         path: "/player/:player",
         element: (
-          <ComingSoonPage
+          <ComingSoon
             title="Player"
             description="Player profiles are being rebuilt."
           />
         ),
       },
 
-      // Teams
       {
         path: "/team/:team",
         element: (
-          <ComingSoonPage
+          <ComingSoon
             title="Team"
             description="Team pages are being rebuilt."
           />
         ),
       },
 
-      // Settings
       {
         path: "/settings",
-        element: <SettingsPage />,
+        element: <Settings />,
       },
 
-      // Information
       {
         path: "/info",
-        element: (
-          <ComingSoonPage
-            title="Info"
-            description="CFBR information pages are being rebuilt."
-          />
-        ),
+        element: <Info />,
       },
       {
         path: "/about",
         element: (
-          <ComingSoonPage
+          <ComingSoon
             title="About"
             description="The CFBR about page is being rebuilt."
           />
@@ -107,23 +96,17 @@ export const router = createBrowserRouter([
       },
       {
         path: "/help",
-        element: <HelpPage />,
+        element: <Help />,
       },
       {
         path: "/policies",
-        element: (
-          <ComingSoonPage
-            title="Policies"
-            description="CFBR policies are being rebuilt."
-          />
-        ),
+        element: <Policies />,
       },
 
-      // Miscellaneous
       {
         path: "/thanks",
         element: (
-          <ComingSoonPage
+          <ComingSoon
             title="Thanks"
             description="This page is being rebuilt."
           />
@@ -131,16 +114,13 @@ export const router = createBrowserRouter([
       },
       {
         path: "/error/:error",
-        element: (
-          <ComingSoonPage title="Error" description="An error occurred." />
-        ),
+        element: <ComingSoon title="Error" description="An error occurred." />,
       },
 
-      // Catch-all
       {
         path: "*",
         element: (
-          <ComingSoonPage
+          <ComingSoon
             title="Page Not Found"
             description="The page you're looking for doesn't exist."
           />

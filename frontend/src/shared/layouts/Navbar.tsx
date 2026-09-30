@@ -32,7 +32,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop navigation */}
-        <div className="ml-auto hidden items-end gap-1 md:flex">
+        <div className="ml-auto hidden items-end gap-2 md:flex">
           <NavItem to="login">Login</NavItem>
 
           <NavItem to="#leaderboard">Leaderboard</NavItem>
@@ -67,7 +67,7 @@ export default function Navbar() {
       {/* Mobile navigation */}
       {mobileOpen && (
         <div className="border-t md:hidden">
-          <div className="space-y-1 px-4 py-3">
+          <div className="p-4">
             <MobileNavItem to="login" onClick={closeMobileMenu}>
               Login
             </MobileNavItem>
@@ -117,7 +117,7 @@ function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
       end={to === "/"}
       className={({ isActive }) =>
         [
-          "rounded-md px-3 py-2 text-sm font-medium transition",
+          "rounded-md px-4 py-2 text-sm font-medium transition",
           isActive ? "" : "",
         ].join(" ")
       }
@@ -143,7 +143,7 @@ function MobileNavItem({
       onClick={onClick}
       className={({ isActive }) =>
         [
-          "block rounded-md px-3 py-2 text-sm font-medium transition",
+          "block rounded-md px-4 py-2 text-sm font-medium transition",
           isActive ? "" : "",
         ].join(" ")
       }

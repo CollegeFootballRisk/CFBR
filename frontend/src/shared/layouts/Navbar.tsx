@@ -16,9 +16,8 @@ export default function Navbar() {
   const logo = BRANDING_IMAGES[settings.branding];
 
   return (
-    <header className="sticky top-0 z-50 border-b backdrop-blur">
-      <nav className="mx-auto flex h-16 max-w-screen-2xl items-center px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
+    <header className="sticky top-0 z-50 h-16 bg-linear-to-r from-accent-2 to-accent-1 backdrop-blur">
+      <nav className="mx-auto flex h-full max-w-screen-2xl items-center px-4">
         <Link
           to="/"
           onClick={closeMobileMenu}
@@ -110,6 +109,7 @@ export default function Navbar() {
   );
 }
 
+// TODO Fix the anchor tag colors
 function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
   return (
     <NavLink
@@ -117,7 +117,7 @@ function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
       end={to === "/"}
       className={({ isActive }) =>
         [
-          "rounded-md px-4 py-2 text-sm font-medium transition",
+          "rounded-md px-4 py-2 text-sm font-medium transition text-white!",
           isActive ? "" : "",
         ].join(" ")
       }

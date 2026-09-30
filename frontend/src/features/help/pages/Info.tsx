@@ -1,16 +1,143 @@
+import type { ReactNode } from "react";
+
 import PageContainer from "@/shared/layouts/PageContainer";
 
-export default function Info() {
+interface InfoSectionProps {
+  title: string;
+  children: ReactNode;
+}
+
+interface StarCategory {
+  name: string;
+  description: string;
+  thresholds: string[];
+}
+
+interface GameDifference {
+  title: string;
+  description: string;
+}
+
+const starCategories: StarCategory[] = [
+  {
+    name: "MVPs",
+    description: "when you are the MVP of a territory",
+    thresholds: [
+      "0 MVPs: 1 Star",
+      "1–4 MVPs: 2 Stars",
+      "5–9 MVPs: 3 Stars",
+      "10–24 MVPs: 4 Stars",
+      "25+ MVPs: 5 Stars",
+    ],
+  },
+  {
+    name: "Turns",
+    description: "how many turns you've had in all College Football Risk games",
+    thresholds: [
+      "0–9 Turns: 1 Star",
+      "10–24 Turns: 2 Stars",
+      "25–49 Turns: 3 Stars",
+      "50–99 Turns: 4 Stars",
+      "100+ Turns: 5 Stars",
+    ],
+  },
+  {
+    name: "Game Turns",
+    description: "all the turns you've made in this game",
+    thresholds: [
+      "0–4 Turns: 1 Star",
+      "5–9 Turns: 2 Stars",
+      "10–24 Turns: 3 Stars",
+      "25–39 Turns: 4 Stars",
+      "40+ Turns: 5 Stars",
+    ],
+  },
+  {
+    name: "Streak",
+    description: "how many consecutive turns you've made",
+    thresholds: [
+      "0–2 Turns: 1 Star",
+      "3–4 Turns: 2 Stars",
+      "5–9 Turns: 3 Stars",
+      "10–24 Turns: 4 Stars",
+      "25+ Turns: 5 Stars",
+    ],
+  },
+];
+
+const gameDifferences: GameDifference[] = [
+  {
+    title: "Significantly larger map",
+    description:
+      "Canada, Mexico, and the Caribbean were added, 51 territories in all.",
+  },
+  {
+    title: "Colonizable Territory",
+    description: "Grab free land while it's hot!",
+  },
+  {
+    title: "3-Turn Head Start for most teams",
+    description:
+      "Some teams start in a harder spot than others. Use this head start to gobble up a region quickly, or just to get the heck out of there! Surviving teams from the last game can only defend for the first 3 turns, and Stanford for the 1st Turn, in an effort to give smaller teams a chance to survive the first few turns.",
+  },
+  {
+    title: "Region Bonuses",
+    description:
+      "Like Continent bonuses in real Risk, your whole team gets a power multiplier for holding a region of territories.",
+  },
+  {
+    title: "Permanent mercenaries (Transfer portal)",
+    description:
+      "You can now choose to permanently join another team if yours is eliminated. Be nice to teams with their back against the wall, maybe their players will join you! And be careful what team you kill—they may make your enemies stronger.",
+  },
+  {
+    title: "New Chaos mechanics",
+    description:
+      "Chaos, based in Bermuda, can now attack a completely random set of territories every turn. Nowhere is safe!",
+  },
+  {
+    title: "Sunday Breaks",
+    description: "Can still place your move for 48 hours.",
+  },
+  {
+    title: "3x Or Nothing Bonus if facing elimination",
+    description:
+      "Do you only have one territory left? Gamble it all with a 50% chance to either multiply your star power by 3, or by zero!",
+  },
+  {
+    title: "More map bridges/ferries",
+    description:
+      "Move around the map quicker than ever and limit safe corners.",
+  },
+  {
+    title: "Star power tweaks",
+    description:
+      "The power gap between 5-star players and 1-star players has been reduced.",
+  },
+  {
+    title: "New User Interface",
+    description: "Even has customizable backgrounds!",
+  },
+  {
+    title: "Open Source",
+    description:
+      "This version of the game is entirely open-source. Anyone can look at its code and submit pull requests to change the game. The backend is written in Python with FastAPI and the frontend is written in React/TypeScript.",
+  },
+];
+
+function InfoSection({ title, children }: InfoSectionProps) {
+  return (
+    <section className="mb-6">
+      <h3 className="mb-2 text-xl font-bold">{title}</h3>
+      {children}
+    </section>
+  );
+}
+
+function GameOverview() {
   return (
     <>
-      <h1 className="my-4 text-center text-4xl font-bold">Information</h1>
-      <h2 className="my-4 text-center text-2xl font-bold">
-        Playing College Football Risk
-      </h2>
-      <PageContainer>
-        <h3 className="mb-2 text-xl font-bold">
-          What is College Football Risk?
-        </h3>
+      <InfoSection title="What is College Football Risk?">
         <p className="mb-4">
           College Football Risk is a multiplayer game where teams can work
           together to control a map of North America. The objective is for a
@@ -20,7 +147,7 @@ export default function Info() {
           <a
             href="https://www.reddit.com/r/CFB"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             r/CFB
           </a>{" "}
@@ -28,7 +155,7 @@ export default function Info() {
           <a
             href="https://www.reddit.com/user/BlueSCar"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             BlueSCar
           </a>{" "}
@@ -36,7 +163,7 @@ export default function Info() {
           <a
             href="https://www.reddit.com/user/Mautamu/"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             Mautamu
           </a>{" "}
@@ -45,8 +172,9 @@ export default function Info() {
           goal is to control as much territory as possible for ultimate
           domination of the map.
         </p>
+      </InfoSection>
 
-        <h3 className="mb-2 text-xl font-bold">How do I play?</h3>
+      <InfoSection title="How do I play?">
         <p className="mb-4">
           Once a day, visit the site and choose a territory to defend or attack.
           Most of the fun comes from coordinating with others on your team. A
@@ -59,8 +187,31 @@ export default function Info() {
           you acknowledge and agree to the{" "}
           <a href="/policies#test-game-policy">test game policy</a>.
         </p>
+      </InfoSection>
 
-        <h3 className="mb-2 text-xl font-bold">How does the game work?</h3>
+      <InfoSection title="How can I participate in the community and/or find my team's central command?">
+        <p className="mb-4">
+          We mainly use Discord for our team's community and central command.
+          This is our{" "}
+          <a
+            href="https://discord.gg/NwXjDS7mGN"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            official Discord server
+          </a>
+          where you can find teams and then be invited to your corresponding
+          team servers.
+        </p>
+      </InfoSection>
+    </>
+  );
+}
+
+function GameRules() {
+  return (
+    <>
+      <InfoSection title="How does the game work?">
         <p className="mb-4">
           Every day at 21:30 U.S. Central Standard Time, the map is redrawn. For
           each territory on the map, the total{" "}
@@ -69,9 +220,9 @@ export default function Info() {
           whose player that number corresponds to is labeled{" "}
           <a href="#mvp">MVP</a> and wins the territory for that team.
         </p>
+      </InfoSection>
 
-        <h3 className="mb-2 text-xl font-bold">What multipliers are there?</h3>
-
+      <InfoSection title="What multipliers are there?">
         <p className="mb-2">The multipliers are as follows:</p>
 
         <ul className="mb-4 list-disc space-y-2 pl-6">
@@ -100,120 +251,9 @@ export default function Info() {
           multiplier would have (1.5) × (1.0 + 0.5) = 2.25 multiplier. This is
           then multiplied by their star number to determine their overall power.
         </p>
+      </InfoSection>
 
-        <h3 className="mb-2 text-xl font-bold">
-          How can I participate in the community and/or find my team's central
-          command?
-        </h3>
-
-        <p className="mb-4">
-          We mainly use Discord for our team's community and central command.
-          This is our{" "}
-          <a
-            href="https://discord.gg/NwXjDS7mGN"
-            target="_blank"
-            rel="noreferrer"
-          >
-            official Discord server
-          </a>
-          where you can find teams and then be invited to your corresponding
-          team servers.
-        </p>
-
-        <h3 className="mb-2 text-xl font-bold">
-          How is this different from older versions of College Football Risk?
-        </h3>
-
-        <p className="mb-2">
-          This game is quite similar to older versions of CFBR. However, it
-          differs in the following ways:
-        </p>
-
-        <ul className="mb-4 list-disc space-y-2 pl-6">
-          <li>
-            <strong>Significantly larger map</strong> – Canada, Mexico, and the
-            Caribbean were added, 51 territories in all.
-          </li>
-
-          <li>
-            <strong>Colonizable Territory</strong> – Grab free land while it's
-            hot!
-          </li>
-
-          <li>
-            <strong>3-Turn Head Start for most teams</strong> – Some teams start
-            in a harder spot than others. Use this head start to gobble up a
-            region quickly, or just to get the heck out of there! (Note: this
-            means that surviving teams from the last game can only defend for
-            the first 3 turns, and Stanford for the 1st Turn, in an effort to
-            give smaller teams a chance to survive the first few turns)
-          </li>
-
-          <li>
-            <strong>Region Bonuses</strong> – Like Continent bonuses in real
-            Risk, in this case your whole team gets a power multiplier for
-            holding a region of territories
-          </li>
-
-          <li>
-            <strong>Permanent mercenaries (Transfer portal)</strong> – You can
-            now choose to permanently join another team if yours is eliminated.
-            So be nice to teams with their back against the wall, maybe their
-            players will join you! And be careful what team you kill…they may
-            make your enemies stronger.
-          </li>
-
-          <li>
-            <strong>New Chaos mechanics</strong> – Chaos, based in Bermuda, can
-            now attack a completely random set of territories every turn.
-            Nowhere is safe!
-          </li>
-
-          <li>
-            <strong>Sunday Breaks</strong> – Can still place your move for 48
-            hours
-          </li>
-
-          <li>
-            <strong>3x Or Nothing Bonus if facing elimination</strong> – Do you
-            only have one territory left? Gamble it all with a 50% chance to
-            either multiply your star power by 3, or by zero!
-          </li>
-
-          <li>
-            <strong>More map bridges/ferries</strong> – move around the map
-            quicker than ever and limit “safe corners”
-          </li>
-
-          <li>
-            <strong>Star power tweaks</strong> – The 'power' gap between 5-star
-            players and 1-star players has been reduced
-          </li>
-
-          <li>
-            <strong>New User Interface</strong> – Even has customizable
-            backgrounds!
-          </li>
-
-          <li>
-            <strong>Open Source</strong> – This version of the game is entirely
-            open-source. Anyone can go look at its{" "}
-            <a
-              href="https://github.com/collegefootballrisk/cfbr"
-              target="_blank"
-              rel="noreferrer"
-            >
-              code
-            </a>{" "}
-            , and submit pull requests to change the game.
-            <br />
-            The backend version is written in Python with FastAPI and the
-            frontend is written in React/Typescript.
-          </li>
-        </ul>
-
-        <h3 className="mb-2 text-xl font-bold">Gameplay</h3>
-
+      <InfoSection title="Gameplay">
         <p className="mb-4">
           For each turn, if a team controls only one territory, each player is
           granted the ability to triple or nothing their power. This means that
@@ -226,86 +266,97 @@ export default function Info() {
           Finally, all players on a dead team are prompted to join a new team.
           They may choose to join Chaos as well.
         </p>
+      </InfoSection>
+    </>
+  );
+}
 
-        <h3 className="mb-2 text-xl font-bold">
-          How do I get stars / move up in rank?
-        </h3>
+function GameDifferences() {
+  return (
+    <InfoSection title="How is this different from older versions of College Football Risk?">
+      <p className="mb-2">
+        This game is quite similar to older versions of CFBR. However, it
+        differs in the following ways:
+      </p>
 
-        <p className="mb-2">
-          Your total/overall starcount is the <i>median</i> of your stars for
-          each of the following categories:
-        </p>
+      <ul className="mb-4 list-disc space-y-2 pl-6">
+        {gameDifferences.map((difference) => (
+          <li key={difference.title}>
+            <strong>{difference.title}</strong> – {difference.description}
+          </li>
+        ))}
+      </ul>
+    </InfoSection>
+  );
+}
 
-        <ul className="mb-4 list-disc space-y-4 pl-6">
-          <li>
-            <strong>MVPs</strong> (when you are the MVP of a territory):
-            <ul className="list-circle mt-2 list-inside space-y-1 pl-4">
-              <li>0 MVPs: 1 Star</li>
-              <li>1–4 MVPs: 2 Stars</li>
-              <li>5–9 MVPs: 3 Stars</li>
-              <li>10–24 MVPs: 4 Stars</li>
-              <li>25+ MVPs: 5 Stars</li>
+function StarGuide() {
+  return (
+    <InfoSection title="How do I get stars / move up in rank?">
+      <p className="mb-2">
+        Your total/overall starcount is the <i>median</i> of your stars for each
+        of the following categories:
+      </p>
+
+      <ul className="mb-4 list-disc space-y-4 pl-6">
+        {starCategories.map((category) => (
+          <li key={category.name}>
+            <strong>{category.name}</strong> ({category.description}):
+            <ul className="mt-2 list-inside list-circle space-y-1 pl-4">
+              {category.thresholds.map((threshold) => (
+                <li key={threshold}>{threshold}</li>
+              ))}
             </ul>
           </li>
+        ))}
+      </ul>
+    </InfoSection>
+  );
+}
 
-          <li>
-            <strong>Turns</strong> (how many turns you've had in all College
-            Football Risk games):
-            <ul className="list-circle mt-2 list-inside space-y-1 pl-4">
-              <li>0–9 Turns: 1 Star</li>
-              <li>10–24 Turns: 2 Stars</li>
-              <li>25–49 Turns: 3 Stars</li>
-              <li>50–99 Turns: 4 Stars</li>
-              <li>100+ Turns: 5 Stars</li>
-            </ul>
-          </li>
+function SurvivalGuide() {
+  return (
+    <InfoSection title="Survival Guide">
+      <p className="mb-4">
+        <a href="/player/The_Ghost_of_TxAg70">TxAg70</a> has put together a
+        wonderful guide for how teams can dominate in CFBR. CFBR is grateful to
+        him for putting it together. You can view it below or{" "}
+        <a
+          href="/files/CFBRisk_Guide_1_7.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="CFBR Surival Guide"
+        >
+          here
+        </a>
+        .
+      </p>
 
-          <li>
-            <strong>Game Turns</strong> (all the turns you've made in this
-            game):
-            <ul className="list-circle mt-2 list-inside space-y-1 pl-4">
-              <li>0–4 Turns: 1 Star</li>
-              <li>5–9 Turns: 2 Stars</li>
-              <li>10–24 Turns: 3 Stars</li>
-              <li>25–39 Turns: 4 Stars</li>
-              <li>40+ Turns: 5 Stars</li>
-            </ul>
-          </li>
+      <iframe
+        className="mx-auto block w-full max-w-5xl"
+        src="/files/CFBRisk_Guide_1_7.pdf"
+        title="Survival Guide"
+        height="900"
+      />
+    </InfoSection>
+  );
+}
 
-          <li>
-            <strong>Streak</strong> (how many consecutive turns you've made):
-            <ul className="list-circle mt-2 list-inside space-y-1 pl-4">
-              <li>0–2 Turns: 1 Star</li>
-              <li>3–4 Turns: 2 Stars</li>
-              <li>5–9 Turns: 3 Stars</li>
-              <li>10–24 Turns: 4 Stars</li>
-              <li>25+ Turns: 5 Stars</li>
-            </ul>
-          </li>
-        </ul>
+export default function Info() {
+  return (
+    <>
+      <h1 className="my-4 text-center text-4xl font-bold">Information</h1>
 
-        <h3 className="mb-2 text-xl font-bold">Survival Guide</h3>
+      <h2 className="my-4 text-center text-2xl font-bold">
+        Playing College Football Risk
+      </h2>
 
-        <p className="mb-4">
-          <a href="/player/The_Ghost_of_TxAg70">TxAg70</a> has put together a
-          wonderful guide for how teams can dominate in CFBR. CFBR is grateful
-          to him for putting it together. You can view it below or{" "}
-          <a
-            href="/files/CFBRisk_Guide_1_7.pdf"
-            target="_blank"
-            rel="noreferrer"
-          >
-            here
-          </a>
-          .
-        </p>
-
-        <iframe
-          className="mx-auto block w-full max-w-5xl"
-          src="/files/CFBRisk_Guide_1_7.pdf"
-          title="Survival Guide"
-          height="900px"
-        />
+      <PageContainer>
+        <GameOverview />
+        <GameRules />
+        <GameDifferences />
+        <StarGuide />
+        <SurvivalGuide />
       </PageContainer>
     </>
   );

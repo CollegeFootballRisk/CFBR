@@ -1,20 +1,24 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import AppLayout from "@/shared/layouts/AppLayout";
 import Help from "@/features/help/pages/Help";
-import Home from "@/features/home/pages/Home";
-import ComingSoon from "@/shared/pages/ComingSoon";
-import Settings from "@/features/settings/pages/Settings";
 import Info from "@/features/help/pages/Info";
 import Policies from "@/features/help/pages/Policies";
+import Home from "@/features/home/pages/Home";
+import Settings from "@/features/settings/pages/Settings";
+import ComingSoon from "@/shared/pages/ComingSoon";
+import AppLayout from "@/shared/layouts/AppLayout";
 
 export const router = createBrowserRouter([
   {
     element: <AppLayout />,
+
     children: [
       {
         path: "/",
         element: <Home />,
+        handle: {
+          sidebar: true,
+        },
       },
 
       {
@@ -25,7 +29,11 @@ export const router = createBrowserRouter([
             description="The CFBR map is being rebuilt."
           />
         ),
+        handle: {
+          sidebar: true,
+        },
       },
+
       {
         path: "/map/:season/:day",
         element: (
@@ -34,6 +42,9 @@ export const router = createBrowserRouter([
             description="Historical map views are being rebuilt."
           />
         ),
+        handle: {
+          sidebar: true,
+        },
       },
 
       {
@@ -44,6 +55,9 @@ export const router = createBrowserRouter([
             description="Battle odds are being rebuilt."
           />
         ),
+        handle: {
+          sidebar: true,
+        },
       },
 
       {
@@ -54,6 +68,9 @@ export const router = createBrowserRouter([
             description="Visited territory history is being rebuilt."
           />
         ),
+        handle: {
+          sidebar: true,
+        },
       },
 
       {
@@ -64,6 +81,9 @@ export const router = createBrowserRouter([
             description="Player profiles are being rebuilt."
           />
         ),
+        handle: {
+          sidebar: true,
+        },
       },
 
       {
@@ -74,6 +94,9 @@ export const router = createBrowserRouter([
             description="Team pages are being rebuilt."
           />
         ),
+        handle: {
+          sidebar: true,
+        },
       },
 
       {
@@ -85,6 +108,7 @@ export const router = createBrowserRouter([
         path: "/info",
         element: <Info />,
       },
+
       {
         path: "/about",
         element: (
@@ -94,10 +118,12 @@ export const router = createBrowserRouter([
           />
         ),
       },
+
       {
         path: "/help",
         element: <Help />,
       },
+
       {
         path: "/policies",
         element: <Policies />,
@@ -108,10 +134,11 @@ export const router = createBrowserRouter([
         element: (
           <ComingSoon
             title="Thanks"
-            description="This page is being rebuilt."
+            description="The thanks page is being rebuilt."
           />
         ),
       },
+
       {
         path: "/error/:error",
         element: <ComingSoon title="Error" description="An error occurred." />,

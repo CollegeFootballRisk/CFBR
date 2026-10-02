@@ -7,11 +7,16 @@ import {
   type RefObject,
 } from "react";
 
-import type { SelectOption } from "./selectTypes";
+import {
+  buildSelectItems,
+  type SelectItem,
+  type SelectOption,
+  type SelectRenderItem,
+} from "./selectTypes";
 
 interface UseSelectProps<T> {
   value?: T | "";
-  options: SelectOption<T>[];
+  options: SelectItem<T>[];
   placeholder: string;
   placeholderAsOption: boolean;
   disabled: boolean;
@@ -30,10 +35,33 @@ interface UseSelectReturn<T> {
   optionRefs: React.RefObject<(HTMLLIElement | null)[]>;
 
   selectOptions: SelectOption<T>[];
+  renderItems: SelectRenderItem<T>[];
+
   displayValue: string;
   longestOption: string;
 
   handleKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
+}
+
+function getDisplayLabel<T>(
+  option: SelectOption<T>,
+  renderItems: SelectRenderItem<T>[],
+): string {
+  for (const item of renderItems) {
+    if (item.kind !== "group") {
+      continue;
+    }
+
+    const isInGroup = item.options.some(({ option: groupOption }) =>
+      Object.is(groupOption.value, option.value),
+    );
+
+    if (isInGroup) {
+      return `${item.label} - ${option.label}`;
+    }
+  }
+
+  return option.label;
 }
 
 export default function useSelect<T>({
@@ -86,39 +114,35 @@ export default function useSelect<T>({
     };
   }, []);
 
-  const selectOptions = useMemo(() => {
-    if (!placeholderAsOption) {
-      return options;
-    }
-
-    // Show the placeholder as an option only while no value is selected.
-    if (value !== "" && value !== undefined) {
-      return options;
-    }
-
-    return [
-      {
-        label: placeholder,
-        value: "" as T,
-      },
-      ...options,
-    ];
-  }, [options, placeholder, placeholderAsOption, value]);
+  const { selectOptions, renderItems } = useMemo(
+    () =>
+      buildSelectItems(options, placeholder, placeholderAsOption, value ?? ""),
+    [options, placeholder, placeholderAsOption, value],
+  );
 
   const selectedOption = useMemo(
     () => selectOptions.find((option) => Object.is(option.value, value)),
     [selectOptions, value],
   );
 
-  const displayValue = selectedOption?.label ?? placeholder;
+  const displayValue = useMemo(() => {
+    if (!selectedOption) {
+      return placeholder;
+    }
+
+    return getDisplayLabel(selectedOption, renderItems);
+  }, [placeholder, renderItems, selectedOption]);
 
   const longestOption = useMemo(() => {
-    return [placeholder, ...selectOptions.map((option) => option.label)].reduce(
+    return [
+      placeholder,
+      ...selectOptions.map((option) => getDisplayLabel(option, renderItems)),
+    ].reduce(
       (largest, current) =>
         current.length > largest.length ? current : largest,
       "",
     );
-  }, [placeholder, selectOptions]);
+  }, [placeholder, renderItems, selectOptions]);
 
   function findMatchingOption(search: string, startIndex: number) {
     const normalized = search.toLowerCase();
@@ -214,7 +238,7 @@ export default function useSelect<T>({
 
         const selected = selectOptions[highlightedIndex];
 
-        if (selected.disabled) return;
+        if (!selected || selected.disabled) return;
 
         onChange(selected.value);
         setOpen(false);
@@ -239,7 +263,7 @@ export default function useSelect<T>({
       case "End":
         event.preventDefault();
 
-        setHighlightedIndex(selectOptions.length - 1);
+        setHighlightedIndex(Math.max(selectOptions.length - 1, 0));
 
         break;
     }
@@ -257,6 +281,8 @@ export default function useSelect<T>({
     optionRefs,
 
     selectOptions,
+    renderItems,
+
     displayValue,
     longestOption,
 

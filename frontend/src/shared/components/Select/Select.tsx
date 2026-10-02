@@ -11,7 +11,7 @@ import { cn } from "../../utils/cn";
 import ChevronIcon from "../Icons/ChevronIcon";
 
 import SelectMeasure from "./SelectMeasure";
-import type { SelectOption } from "./selectTypes";
+import type { SelectItem } from "./selectTypes";
 import { selectVariants } from "./selectVariants";
 import useSelect from "./useSelect";
 import { SelectOptionItem } from "./SelectOptionItem";
@@ -22,13 +22,14 @@ export interface SelectProps<T = string>
     VariantProps<typeof selectVariants> {
   value?: T | "";
 
-  options: SelectOption<T>[];
+  options: SelectItem<T>[];
 
   onChange: (value: T | "") => void;
 
   placeholder?: string;
 
   placeholderAsOption?: boolean;
+
   label?: string;
 
   hideLabel?: boolean;
@@ -60,6 +61,7 @@ export default function Select<T = string>({
 }: SelectProps<T>) {
   const labelId = useId();
   const selectId = useId();
+
   const [width, setWidth] = useState<number>();
   const [height, setHeight] = useState<number>();
   const [alignTop, setAlignTop] = useState(false);
@@ -76,6 +78,7 @@ export default function Select<T = string>({
     optionRefs,
 
     selectOptions,
+    renderItems,
     displayValue,
     longestOption,
 
@@ -193,25 +196,63 @@ export default function Select<T = string>({
             alignTop ? "bottom-full mb-2" : "top-full mt-2",
           )}
         >
-          {selectOptions.map((option, index) => (
-            <SelectOptionItem
-              key={String(option.value)}
-              ref={(element) => {
-                optionRefs.current[index] = element;
-              }}
-              label={option.label}
-              selected={Object.is(option.value, value)}
-              highlighted={index === highlightedIndex}
-              disabled={option.disabled}
-              onMouseEnter={() => setHighlightedIndex(index)}
-              onClick={() => {
-                if (option.disabled) return;
+          {renderItems.map((item, itemIndex) => {
+            if (item.kind === "group") {
+              return (
+                <li
+                  key={`group-${itemIndex}-${item.label}`}
+                  role="group"
+                  aria-label={item.label}
+                >
+                  <div className="mx-3 mt-2 border-b border-control-foreground/20 px-1 pb-1 text-xs font-semibold uppercase tracking-wider text-control-foreground/60">
+                    {item.label}
+                  </div>
 
-                onChange(option.value);
-                setOpen(false);
-              }}
-            />
-          ))}
+                  {item.options.map(({ option, index }) => (
+                    <SelectOptionItem
+                      key={`option-${index}-${String(option.value)}`}
+                      ref={(element) => {
+                        optionRefs.current[index] = element;
+                      }}
+                      label={option.label}
+                      selected={Object.is(option.value, value)}
+                      highlighted={index === highlightedIndex}
+                      disabled={option.disabled}
+                      onMouseEnter={() => setHighlightedIndex(index)}
+                      onClick={() => {
+                        if (option.disabled) return;
+
+                        onChange(option.value);
+                        setOpen(false);
+                      }}
+                    />
+                  ))}
+                </li>
+              );
+            }
+
+            const { option, index } = item;
+
+            return (
+              <SelectOptionItem
+                key={`option-${index}-${String(option.value)}`}
+                ref={(element) => {
+                  optionRefs.current[index] = element;
+                }}
+                label={option.label}
+                selected={Object.is(option.value, value)}
+                highlighted={index === highlightedIndex}
+                disabled={option.disabled}
+                onMouseEnter={() => setHighlightedIndex(index)}
+                onClick={() => {
+                  if (option.disabled) return;
+
+                  onChange(option.value);
+                  setOpen(false);
+                }}
+              />
+            );
+          })}
         </ul>
       )}
     </div>

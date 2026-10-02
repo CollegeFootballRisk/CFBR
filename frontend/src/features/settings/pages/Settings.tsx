@@ -1,3 +1,4 @@
+import type { Branding } from "@/app/settings";
 import { useAppSettings } from "@/app/useAppSettings";
 import { Select } from "@/shared/components/Select";
 import { Switch } from "@/shared/components/Switch";
@@ -150,23 +151,41 @@ export default function Settings() {
             </div>
 
             <div className="flex items-center gap-4 py-4">
-              <Select
+              <Select<Branding>
                 value={settings.branding}
                 options={[
-                  { label: "Normal - Rainbow", value: "normal-rainbow" },
-                  { label: "Goose", value: "goose" },
-                  { label: "Pizza", value: "pizza" },
-                  { label: "Classic", value: "classic" },
-                  { label: "Normal - White", value: "normal-white" },
+                  {
+                    type: "group",
+                    label: "Default",
+                    options: [
+                      { label: "Rainbow", value: "default-rainbow" },
+                      { label: "White", value: "default-white" },
+                    ],
+                  },
+                  {
+                    type: "group",
+                    label: "Classic",
+                    options: [
+                      { label: "Rainbow", value: "classic-rainbow" },
+                      { label: "White", value: "classic-white" },
+                    ],
+                  },
+                  {
+                    type: "group",
+                    label: "Original",
+                    options: [{ label: "White", value: "original" }],
+                  },
+                  {
+                    type: "group",
+                    label: "Variety",
+                    options: [
+                      { label: "Goose", value: "goose" },
+                      { label: "Pizza", value: "pizza" },
+                    ],
+                  },
                 ]}
                 onChange={(value) => {
-                  if (
-                    value === "normal-rainbow" ||
-                    value === "goose" ||
-                    value === "pizza" ||
-                    value === "classic" ||
-                    value === "normal-white"
-                  ) {
+                  if (value !== "") {
                     updateSetting("branding", value);
                   }
                 }}

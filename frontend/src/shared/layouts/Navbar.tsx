@@ -26,7 +26,7 @@ export default function Navbar() {
           <img
             src={logo}
             alt="College Football Risk"
-            className="h-10 w-10 object-contain"
+            className="h-14 w-14 object-contain"
           />
         </Link>
 

@@ -1,14 +1,22 @@
 export type Theme = "light" | "dark";
 
 export type Branding =
-  "normal-rainbow" | "goose" | "pizza" | "classic" | "normal-white";
+  | "default-rainbow"
+  | "default-white"
+  | "classic-rainbow"
+  | "classic-white"
+  | "original"
+  | "goose"
+  | "pizza";
 
 export const BRANDING_IMAGES: Record<Branding, string> = {
-  "normal-rainbow": "/images/logo-rainbow.png",
-  "normal-white": "/images/logo-white.svg",
+  "default-rainbow": "/images/logo-rainbow.svg",
+  "default-white": "/images/logo-white.svg",
+  "classic-rainbow": "/images/logo-rust-rainbow.png",
+  "classic-white": "/images/logo-rust-white.svg",
+  original: "/images/logo-original.png",
   goose: "/images/logo-goose-white.svg",
   pizza: "/images/logo-pizza-white.svg",
-  classic: "/images/logo-classic.png",
 };
 
 export interface AppSettings {
@@ -29,7 +37,7 @@ export interface AppSettings {
 
 export const DEFAULT_SETTINGS: AppSettings = {
   theme: "dark",
-  branding: "normal-rainbow",
+  branding: "default-rainbow",
   pageSize: 25,
 
   showBackgroundImages: false,

@@ -28,8 +28,8 @@ export const SelectOptionItem = forwardRef<
       onClick={onClick}
       className={cn(
         "cursor-pointer px-4 py-2 text-control-foreground",
-        selected && "",
-        highlighted && !selected && "",
+        selected && "bg-accent-2 text-white font-medium",
+        highlighted && !selected && "bg-accent-2 text-white",
         disabled &&
           "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-inherit",
       )}

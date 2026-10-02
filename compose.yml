@@ -1,8 +1,6 @@
 services:
   cfbr-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/collegefootballrisk/cfbr:main
     container_name: cfbr-app
     restart: unless-stopped
 

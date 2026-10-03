@@ -1,11 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type RefObject,
-} from "react";
+import { type KeyboardEvent, type RefObject, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   buildSelectItems,
@@ -32,7 +25,7 @@ interface UseSelectReturn<T> {
 
   rootRef: RefObject<HTMLDivElement | null>;
   measureRef: RefObject<HTMLButtonElement | null>;
-  optionRefs: React.RefObject<(HTMLLIElement | null)[]>;
+  optionRefs: React.RefObject<(HTMLDivElement | null)[]>;
 
   selectOptions: SelectOption<T>[];
   renderItems: SelectRenderItem<T>[];
@@ -43,10 +36,7 @@ interface UseSelectReturn<T> {
   handleKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
 }
 
-function getDisplayLabel<T>(
-  option: SelectOption<T>,
-  renderItems: SelectRenderItem<T>[],
-): string {
+function getDisplayLabel<T>(option: SelectOption<T>, renderItems: SelectRenderItem<T>[]): string {
   for (const item of renderItems) {
     if (item.kind !== "group") {
       continue;
@@ -77,13 +67,12 @@ export default function useSelect<T>({
 
   const rootRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLButtonElement>(null);
-  const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const optionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const typeaheadRef = useRef("");
-  const typeaheadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
+  const typeaheadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // TODO: add typeahead
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
@@ -115,8 +104,7 @@ export default function useSelect<T>({
   }, []);
 
   const { selectOptions, renderItems } = useMemo(
-    () =>
-      buildSelectItems(options, placeholder, placeholderAsOption, value ?? ""),
+    () => buildSelectItems(options, placeholder, placeholderAsOption, value ?? ""),
     [options, placeholder, placeholderAsOption, value],
   );
 
@@ -137,21 +125,13 @@ export default function useSelect<T>({
     return [
       placeholder,
       ...selectOptions.map((option) => getDisplayLabel(option, renderItems)),
-    ].reduce(
-      (largest, current) =>
-        current.length > largest.length ? current : largest,
-      "",
-    );
+    ].reduce((largest, current) => (current.length > largest.length ? current : largest), "");
   }, [placeholder, renderItems, selectOptions]);
 
   function findMatchingOption(search: string, startIndex: number) {
     const normalized = search.toLowerCase();
 
-    for (
-      let selectOption = 0;
-      selectOption < selectOptions.length;
-      selectOption++
-    ) {
+    for (let selectOption = 0; selectOption < selectOptions.length; selectOption++) {
       const index = (startIndex + selectOption) % selectOptions.length;
       const option = selectOptions[index];
 
@@ -168,24 +148,17 @@ export default function useSelect<T>({
   function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     if (disabled) return;
 
-    if (
-      event.key.length === 1 &&
-      !event.altKey &&
-      !event.ctrlKey &&
-      !event.metaKey
-    ) {
+    if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey) {
       event.preventDefault();
 
       const previous = typeaheadRef.current;
 
-      const nextSearch =
-        previous &&
-        previous
-          .toLowerCase()
-          .split("")
-          .every((character) => character === event.key.toLowerCase())
-          ? event.key
-          : previous + event.key;
+      const nextSearch = previous
+        ?.toLowerCase()
+        .split("")
+        .every((character) => character === event.key.toLowerCase())
+        ? event.key
+        : previous + event.key;
 
       typeaheadRef.current = nextSearch;
 
@@ -213,9 +186,7 @@ export default function useSelect<T>({
 
         setOpen(true);
 
-        setHighlightedIndex((previous) =>
-          Math.min(previous + 1, selectOptions.length - 1),
-        );
+        setHighlightedIndex((previous) => Math.min(previous + 1, selectOptions.length - 1));
 
         break;
 

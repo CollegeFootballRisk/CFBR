@@ -24,12 +24,9 @@ export interface SelectRenderGroup<T = string> {
   options: SelectRenderOption<T>[];
 }
 
-export type SelectRenderItem<T = string> =
-  SelectRenderOption<T> | SelectRenderGroup<T>;
+export type SelectRenderItem<T = string> = SelectRenderOption<T> | SelectRenderGroup<T>;
 
-export function isSelectOptionGroup<T>(
-  item: SelectItem<T>,
-): item is SelectOptionGroup<T> {
+export function isSelectOptionGroup<T>(item: SelectItem<T>): item is SelectOptionGroup<T> {
   return "type" in item && item.type === "group";
 }
 
@@ -47,8 +44,7 @@ export function buildSelectItems<T>(
 
   let index = 0;
 
-  const shouldShowPlaceholder =
-    placeholderAsOption && (value === "" || value === undefined);
+  const shouldShowPlaceholder = placeholderAsOption && (value === "" || value === undefined);
 
   if (shouldShowPlaceholder) {
     const placeholderOption: SelectOption<T> = {

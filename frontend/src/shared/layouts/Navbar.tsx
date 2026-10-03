@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
-import { useAppSettings } from "@/app/useAppSettings";
 import { BRANDING_IMAGES } from "@/app/settings";
+import { useAppSettings } from "@/app/useAppSettings";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -18,16 +18,8 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 h-16 bg-linear-to-r from-accent-2 to-accent-1 backdrop-blur">
       <nav className="mx-auto flex h-full max-w-screen-2xl items-center px-4">
-        <Link
-          to="/"
-          onClick={closeMobileMenu}
-          className="flex shrink-0 items-center"
-        >
-          <img
-            src={logo}
-            alt="College Football Risk"
-            className="h-14 w-14 object-contain"
-          />
+        <Link to="/" onClick={closeMobileMenu} className="flex shrink-0 items-center">
+          <img src={logo} alt="College Football Risk" className="h-14 w-14 object-contain" />
         </Link>
 
         {/* Desktop navigation */}
@@ -142,10 +134,7 @@ function MobileNavItem({
       end={to === "/"}
       onClick={onClick}
       className={({ isActive }) =>
-        [
-          "block rounded-md px-4 py-2 text-sm font-medium transition",
-          isActive ? "" : "",
-        ].join(" ")
+        ["block rounded-md px-4 py-2 text-sm font-medium transition", isActive ? "" : ""].join(" ")
       }
     >
       {children}

@@ -1,7 +1,7 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import { AppSettingsContext } from "@/app/AppSettingsContext";
-import { DEFAULT_SETTINGS, type AppSettings } from "@/app/settings";
+import { type AppSettings, DEFAULT_SETTINGS } from "@/app/settings";
 
 const STORAGE_KEY = "cfbr-settings";
 
@@ -34,18 +34,12 @@ function AppSettingsProvider({ children }: AppSettingsProviderProps) {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
 
-    document.documentElement.classList.toggle(
-      "light",
-      settings.theme === "light",
-    );
+    document.documentElement.classList.toggle("light", settings.theme === "light");
 
     document.documentElement.style.colorScheme = settings.theme;
   }, [settings]);
 
-  const updateSetting = <K extends keyof AppSettings>(
-    key: K,
-    value: AppSettings[K],
-  ) => {
+  const updateSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
     setSettings((current) => ({
       ...current,
       [key]: value,

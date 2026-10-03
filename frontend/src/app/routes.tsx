@@ -5,8 +5,8 @@ import Info from "@/features/help/pages/Info";
 import Policies from "@/features/help/pages/Policies";
 import Home from "@/features/home/pages/Home";
 import Settings from "@/features/settings/pages/Settings";
-import ComingSoon from "@/shared/pages/ComingSoon";
 import AppLayout from "@/shared/layouts/AppLayout";
+import ComingSoon from "@/shared/pages/ComingSoon";
 
 export const router = createBrowserRouter([
   {
@@ -23,12 +23,7 @@ export const router = createBrowserRouter([
 
       {
         path: "/map",
-        element: (
-          <ComingSoon
-            title="Map"
-            description="The CFBR map is being rebuilt."
-          />
-        ),
+        element: <ComingSoon title="Map" description="The CFBR map is being rebuilt." />,
         handle: {
           sidebar: true,
         },
@@ -49,12 +44,7 @@ export const router = createBrowserRouter([
 
       {
         path: "/odds/:season/:day/:team",
-        element: (
-          <ComingSoon
-            title="Odds"
-            description="Battle odds are being rebuilt."
-          />
-        ),
+        element: <ComingSoon title="Odds" description="Battle odds are being rebuilt." />,
         handle: {
           sidebar: true,
         },
@@ -75,12 +65,7 @@ export const router = createBrowserRouter([
 
       {
         path: "/player/:player",
-        element: (
-          <ComingSoon
-            title="Player"
-            description="Player profiles are being rebuilt."
-          />
-        ),
+        element: <ComingSoon title="Player" description="Player profiles are being rebuilt." />,
         handle: {
           sidebar: true,
         },
@@ -88,12 +73,7 @@ export const router = createBrowserRouter([
 
       {
         path: "/team/:team",
-        element: (
-          <ComingSoon
-            title="Team"
-            description="Team pages are being rebuilt."
-          />
-        ),
+        element: <ComingSoon title="Team" description="Team pages are being rebuilt." />,
         handle: {
           sidebar: true,
         },
@@ -111,12 +91,7 @@ export const router = createBrowserRouter([
 
       {
         path: "/about",
-        element: (
-          <ComingSoon
-            title="About"
-            description="The CFBR about page is being rebuilt."
-          />
-        ),
+        element: <ComingSoon title="About" description="The CFBR about page is being rebuilt." />,
       },
 
       {
@@ -131,12 +106,7 @@ export const router = createBrowserRouter([
 
       {
         path: "/thanks",
-        element: (
-          <ComingSoon
-            title="Thanks"
-            description="The thanks page is being rebuilt."
-          />
-        ),
+        element: <ComingSoon title="Thanks" description="The thanks page is being rebuilt." />,
       },
 
       {

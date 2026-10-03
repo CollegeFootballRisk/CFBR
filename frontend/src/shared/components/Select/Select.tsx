@@ -1,24 +1,17 @@
-import {
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useState,
-  type HTMLAttributes,
-} from "react";
-import { type VariantProps } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
+import { type HTMLAttributes, useId, useLayoutEffect, useState } from "react";
 
 import { cn } from "../../utils/cn";
 import ChevronIcon from "../Icons/ChevronIcon";
 
 import SelectMeasure from "./SelectMeasure";
+import { SelectOptionItem } from "./SelectOptionItem";
 import type { SelectItem } from "./selectTypes";
 import { selectVariants } from "./selectVariants";
 import useSelect from "./useSelect";
-import { SelectOptionItem } from "./SelectOptionItem";
 
 export interface SelectProps<T = string>
-  extends
-    Omit<HTMLAttributes<HTMLDivElement>, "onChange">,
+  extends Omit<HTMLAttributes<HTMLDivElement>, "onChange">,
     VariantProps<typeof selectVariants> {
   value?: T | "";
 
@@ -92,12 +85,23 @@ export default function Select<T = string>({
     onChange,
   });
 
-  useEffect(() => {
-    if (!measureRef.current) return;
+  useLayoutEffect(() => {
+    const measureElement = measureRef.current;
 
-    setWidth(measureRef.current.offsetWidth);
-    setHeight(measureRef.current.offsetHeight);
-  }, [measureRef, longestOption, size, chevron]);
+    if (!measureElement) return;
+
+    const updateSize = () => {
+      setWidth(measureElement.offsetWidth);
+      setHeight(measureElement.offsetHeight);
+    };
+
+    updateSize();
+
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(measureElement);
+
+    return () => observer.disconnect();
+  }, [measureRef]);
 
   useLayoutEffect(() => {
     if (!open || !rootRef.current) return;
@@ -130,7 +134,6 @@ export default function Select<T = string>({
   return (
     <div
       ref={rootRef}
-      // eslint-disable-next-line no-restricted-syntax -- dynamic position can't be represented in tailwind
       style={{
         width,
         height,
@@ -139,21 +142,12 @@ export default function Select<T = string>({
       {...props}
     >
       {label && (
-        <label
-          id={labelId}
-          htmlFor={selectId}
-          className={cn(hideLabel && "sr-only")}
-        >
+        <label id={labelId} htmlFor={selectId} className={cn(hideLabel && "sr-only")}>
           {label}
         </label>
       )}
 
-      <SelectMeasure
-        measureRef={measureRef}
-        size={size}
-        chevron={chevron}
-        open={open}
-      >
+      <SelectMeasure measureRef={measureRef} size={size} chevron={chevron} open={open}>
         {longestOption}
       </SelectMeasure>
 
@@ -165,9 +159,7 @@ export default function Select<T = string>({
         onClick={() => {
           setOpen((previous) => !previous);
 
-          const currentIndex = selectOptions.findIndex((option) =>
-            Object.is(option.value, value),
-          );
+          const currentIndex = selectOptions.findIndex((option) => Object.is(option.value, value));
 
           setHighlightedIndex(currentIndex >= 0 ? currentIndex : 0);
         }}
@@ -186,7 +178,7 @@ export default function Select<T = string>({
       </button>
 
       {open && (
-        <ul
+        <div
           role="listbox"
           aria-labelledby={label ? labelId : undefined}
           className={cn(
@@ -196,14 +188,11 @@ export default function Select<T = string>({
             alignTop ? "bottom-full mb-2" : "top-full mt-2",
           )}
         >
-          {renderItems.map((item, itemIndex) => {
+          {renderItems.map((item) => {
             if (item.kind === "group") {
               return (
-                <li
-                  key={`group-${itemIndex}-${item.label}`}
-                  role="group"
-                  aria-label={item.label}
-                >
+                // biome-ignore lint/a11y/useSemanticElements: listbox option groups are not form control groups
+                <div key={`group-${item.label}`} role="group" aria-label={item.label}>
                   <div className="mx-3 mt-2 border-b border-control-foreground/20 px-1 pb-1 text-xs font-semibold uppercase tracking-wider text-control-foreground/60">
                     {item.label}
                   </div>
@@ -227,7 +216,7 @@ export default function Select<T = string>({
                       }}
                     />
                   ))}
-                </li>
+                </div>
               );
             }
 
@@ -235,7 +224,7 @@ export default function Select<T = string>({
 
             return (
               <SelectOptionItem
-                key={`option-${index}-${String(option.value)}`}
+                key={String(option.value)}
                 ref={(element) => {
                   optionRefs.current[index] = element;
                 }}
@@ -253,7 +242,7 @@ export default function Select<T = string>({
               />
             );
           })}
-        </ul>
+        </div>
       )}
     </div>
   );

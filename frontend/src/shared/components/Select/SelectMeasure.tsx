@@ -1,5 +1,5 @@
-import type { RefObject } from "react";
 import type { VariantProps } from "class-variance-authority";
+import type { RefObject } from "react";
 
 import { cn } from "../../utils/cn";
 import ChevronIcon from "../Icons/ChevronIcon";

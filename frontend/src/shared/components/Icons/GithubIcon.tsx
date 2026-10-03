@@ -6,13 +6,7 @@ interface GitHubIconProps {
 
 export default function GitHubIcon({ className }: GitHubIconProps) {
   return (
-    <span
-      className={cn(
-        "inline-block h-12 w-12 overflow-hidden",
-        "text-(--accent-fg)",
-        className,
-      )}
-    >
+    <span className={cn("inline-block h-12 w-12 overflow-hidden", "text-(--accent-fg)", className)}>
       <svg
         viewBox="0 0 64 64"
         className="h-full w-full rounded-full"

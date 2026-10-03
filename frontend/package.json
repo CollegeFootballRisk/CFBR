@@ -6,15 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint . --fix --max-warnings=0",
-    "format": "prettier . --write",
-    "format:check": "prettier . --check",
+    "biome": "biome check --write . --error-on-warnings",
+    "biome:ci": "biome check . --error-on-warnings",
     "knip": "knip",
+    "architecture": "node scripts/validate-frontend-architecture.mjs",
     "map": "node scripts/repo-map.mjs",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit --pretty false",
-    "review": "npm run format && npm run lint && npm run typecheck && npm run knip && npm run build",
-    "review:ci": "npm run format:check && npm run lint && npm run typecheck && npm run knip && npm run build"
+    "typecheck": "tsc --noEmit",
+    "typecheck:ci": "tsc --noEmit --pretty false",
+    "review": "npm run biome && npm run architecture && npm run typecheck && npm run knip && npm run build",
+    "review:ci": "npm run biome:check && npm run architecture && npm run typecheck:ci && npm run knip && npm run build"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -22,27 +23,18 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.18.4",
-    "tailwindcss": "^4.1.18",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@biomejs/biome": "2.5.15",
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
-    "eslint": "^10.8.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import-x": "^4.17.1",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "eslint-plugin-unused-imports": "^4.4.1",
-    "globals": "^16.5.0",
     "knip": "^6.29.0",
-    "prettier": "^3.9.6",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4"
   }
 }

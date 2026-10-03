@@ -5,12 +5,10 @@ interface ChevronIconProps {
   className?: string;
 }
 
-export default function ChevronIcon({
-  direction = "down",
-  className,
-}: ChevronIconProps) {
+export default function ChevronIcon({ direction = "down", className }: ChevronIconProps) {
   return (
     <svg
+      aria-hidden="true"
       viewBox="0 0 20 20"
       fill="currentColor"
       className={cn(

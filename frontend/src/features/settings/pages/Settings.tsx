@@ -17,9 +17,7 @@ export default function Settings() {
               <Switch
                 aria-label="Show Background Images"
                 checked={settings.showBackgroundImages}
-                onCheckedChange={(value) =>
-                  updateSetting("showBackgroundImages", value)
-                }
+                onCheckedChange={(value) => updateSetting("showBackgroundImages", value)}
               />
               <p className="text-sm">Background Images</p>
             </div>
@@ -28,9 +26,7 @@ export default function Settings() {
               <Switch
                 aria-label="Enable Light Mode"
                 checked={settings.theme === "light"}
-                onCheckedChange={(checked) =>
-                  updateSetting("theme", checked ? "light" : "dark")
-                }
+                onCheckedChange={(checked) => updateSetting("theme", checked ? "light" : "dark")}
               />
               <p className="text-sm">Light Mode</p>
             </div>
@@ -39,9 +35,7 @@ export default function Settings() {
               <Switch
                 aria-label="Show move prompting"
                 checked={settings.showPromptMove}
-                onCheckedChange={(value) =>
-                  updateSetting("showPromptMove", value)
-                }
+                onCheckedChange={(value) => updateSetting("showPromptMove", value)}
               />
               <p className="text-sm">Prompt me to make a move if I haven't</p>
             </div>
@@ -50,26 +44,18 @@ export default function Settings() {
               <Switch
                 aria-label="Show territory pin"
                 checked={settings.showTerritoryPin}
-                onCheckedChange={(value) =>
-                  updateSetting("showTerritoryPin", value)
-                }
+                onCheckedChange={(value) => updateSetting("showTerritoryPin", value)}
               />
-              <p className="text-sm">
-                Place a pin over the territory on which I am moving
-              </p>
+              <p className="text-sm">Place a pin over the territory on which I am moving</p>
             </div>
 
             <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Show territory fade/pulse"
                 checked={settings.showPulseTerritory}
-                onCheckedChange={(value) =>
-                  updateSetting("showPulseTerritory", value)
-                }
+                onCheckedChange={(value) => updateSetting("showPulseTerritory", value)}
               />
-              <p className="text-sm">
-                Fade/pulse the territory in and out on which I am moving
-              </p>
+              <p className="text-sm">Fade/pulse the territory in and out on which I am moving</p>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -94,22 +80,16 @@ export default function Settings() {
               <Switch
                 aria-label="Opt-in for experiments"
                 checked={settings.showExperiments}
-                onCheckedChange={(value) =>
-                  updateSetting("showExperiments", value)
-                }
+                onCheckedChange={(value) => updateSetting("showExperiments", value)}
               />
-              <p className="text-sm">
-                Opt-in to temporary experiments (e.g. bug fixes)
-              </p>
+              <p className="text-sm">Opt-in to temporary experiments (e.g. bug fixes)</p>
             </div>
 
             <div className="flex items-center gap-4 py-4">
               <Switch
                 aria-label="Show labels"
                 checked={settings.showMapLabels}
-                onCheckedChange={(value) =>
-                  updateSetting("showMapLabels", value)
-                }
+                onCheckedChange={(value) => updateSetting("showMapLabels", value)}
               />
               <p className="text-sm">Show labels on map buttons</p>
             </div>
@@ -118,9 +98,7 @@ export default function Settings() {
               <Switch
                 aria-label="Add extra space for scrolling"
                 checked={settings.addBottomSpace}
-                onCheckedChange={(value) =>
-                  updateSetting("addBottomSpace", value)
-                }
+                onCheckedChange={(value) => updateSetting("addBottomSpace", value)}
               />
               <p className="text-sm">
                 Add extra space to the bottom of some prompts (for scrolling)
@@ -145,9 +123,7 @@ export default function Settings() {
                   }
                 }}
               />
-              <p className="text-sm">
-                How many rows to show on tables by default
-              </p>
+              <p className="text-sm">How many rows to show on tables by default</p>
             </div>
 
             <div className="flex items-center gap-4 py-4">

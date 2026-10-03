@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-
 import PageContainer from "@/shared/layouts/PageContainer";
 
 interface InfoSectionProps {

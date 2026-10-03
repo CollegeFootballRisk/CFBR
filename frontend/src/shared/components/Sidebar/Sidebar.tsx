@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-
-import ChevronIcon from "../Icons/ChevronIcon";
-import DiscordIcon from "../Icons/DiscordIcon";
-import GitHubIcon from "../Icons/GithubIcon";
+import { ChevronIcon, DiscordIcon, GitHubIcon } from "../Icons";
 
 interface SidebarProps {
   defaultOpen?: boolean;

@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   issues: write
+  actions: write
 
 env:
   GH_REPO: CollegeFootballRisk/CFBR
@@ -17,6 +18,7 @@ env:
 jobs:
   smart-commit:
     name: Process smart commit
+    if: "!startsWith(github.event.head_commit.message, 'chore(release):')"
     runs-on: ubuntu-latest
 
     steps:
@@ -433,7 +435,7 @@ jobs:
               '#architecture')
                 echo "$ARCHITECTURE_ID"
                 ;;
-                
+
               '#backlog')
                 echo "$BACKLOG_ID"
                 ;;
@@ -683,6 +685,9 @@ jobs:
 
           git fetch --tags --force
 
+          # ----------------------------------------------------------
+          # Determine current version from the latest v* tag.
+          # ----------------------------------------------------------
           CURRENT_TAG="$(
             git tag --list 'v*' --sort=-v:refname |
               head -n1 ||
@@ -702,6 +707,9 @@ jobs:
 
           IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
 
+          # ----------------------------------------------------------
+          # Calculate new version.
+          # ----------------------------------------------------------
           case "$DONE_VERSION" in
             "")
               PATCH=$((PATCH + 1))
@@ -748,6 +756,9 @@ jobs:
 
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
+          # ----------------------------------------------------------
+          # Verify the new version is greater than the current version.
+          # ----------------------------------------------------------
           version_gt() {
             [ "$1" != "$2" ] &&
             [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -n1)" = "$1" ]
@@ -760,11 +771,84 @@ jobs:
 
           TAG="v$NEW_VERSION"
 
+          # ----------------------------------------------------------
+          # Idempotency check.
+          # ----------------------------------------------------------
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             echo "Tag $TAG already exists."
             echo "Treating this as an idempotent rerun."
             exit 0
           fi
+
+          # ----------------------------------------------------------
+          # Update frontend/package.json.
+          # ----------------------------------------------------------
+          PACKAGE_JSON="frontend/package.json"
+
+          if [ ! -f "$PACKAGE_JSON" ]; then
+            echo "::error::$PACKAGE_JSON was not found."
+            exit 1
+          fi
+
+          CURRENT_PACKAGE_VERSION="$(
+            python - "$PACKAGE_JSON" <<'PY'
+          import json
+          import sys
+
+          package_path = sys.argv[1]
+
+          with open(package_path, encoding="utf-8") as f:
+              package = json.load(f)
+
+          print(package.get("version", ""))
+          PY
+          )"
+
+          echo "Current frontend/package.json version: $CURRENT_PACKAGE_VERSION"
+          echo "New version: $NEW_VERSION"
+
+          python - "$PACKAGE_JSON" "$NEW_VERSION" <<'PY'
+          import json
+          import sys
+
+          package_path = sys.argv[1]
+          new_version = sys.argv[2]
+
+          with open(package_path, encoding="utf-8") as f:
+              package = json.load(f)
+
+          package["version"] = new_version
+
+          with open(package_path, "w", encoding="utf-8") as f:
+              json.dump(package, f, indent=2)
+              f.write("\n")
+
+          print(f"Updated {package_path} to {new_version}")
+          PY
+
+          # ----------------------------------------------------------
+          # Commit the package.json version update.
+          #
+          # This commit is intentionally ignored by the smart-commit
+          # parser because it starts with chore(release):.
+          # ----------------------------------------------------------
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add "$PACKAGE_JSON"
+
+          if git diff --cached --quiet; then
+            echo "$PACKAGE_JSON already contains version $NEW_VERSION."
+          else
+            git commit -m "chore(release): $TAG"
+            git push origin HEAD:main
+          fi
+
+          # ----------------------------------------------------------
+          # The release tag must point to the commit containing the
+          # updated package.json.
+          # ----------------------------------------------------------
+          RELEASE_SHA="$(git rev-parse HEAD)"
 
           RELEASE_NOTES=$'## Completed\n\n'
 
@@ -786,18 +870,37 @@ jobs:
           RELEASE_NOTES+=$'\n## Commit\n\n'
           RELEASE_NOTES+="- $DONE_SUBJECT"$'\n'
 
-          echo "Creating $TAG at $DONE_SHA"
+          echo "Creating $TAG at $RELEASE_SHA"
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git tag -a "$TAG" "$DONE_SHA" -m "Release $TAG"
+          git tag -a "$TAG" "$RELEASE_SHA" -m "Release $TAG"
           git push origin "$TAG"
 
           gh release create "$TAG" \
             --repo "$GH_REPO" \
-            --target "$DONE_SHA" \
+            --target "$RELEASE_SHA" \
             --title "$TAG" \
             --notes "$RELEASE_NOTES"
 
           echo "Released $TAG."
+
+            # ============================================================
+      # Trigger Docker build
+      # ============================================================
+      - name: Trigger Docker build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          BUILD_SHA="$(git rev-parse HEAD)"
+
+          echo "Triggering Docker build for:"
+          echo "  SHA: $BUILD_SHA"
+
+          gh workflow run docker.yml \
+            --repo "$GH_REPO" \
+            --ref main \
+            -f ref="$BUILD_SHA"
+
+          echo "Docker workflow dispatched."

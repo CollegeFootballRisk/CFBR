@@ -3,14 +3,7 @@
   --background: #2d2d32;
   --foreground: #fff;
 
-  --accent-1: #4ea8ff;
-  --accent-2: #4060a8;
   /* #endregion */
-
-  /* #region Controls */
-  --control: #ccc;
-  --control-checked: #56c080;
-  --control-foreground: #333;
 }
 
 .light {
@@ -19,20 +12,18 @@
   --foreground: #000;
 
   /* #endregion */
-
-  /* #region Controls */
-
-  /* #endregion */
 }
 
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-accent-1: var(--accent-1);
-  --color-accent-2: var(--accent-2);
+  --color-accent-1: #4ea8ff;
+  --color-accent-2: #4060a8;
 
-  --color-control: var(--control);
-  --color-control-checked: var(--control-checked);
-  --color-control-foreground: var(--control-foreground);
+  --color-control: #ccc;
+  --color-control-checked: #56c080;
+  --color-control-foreground: #333;
+
+  --color-red: #ff0000;
 }

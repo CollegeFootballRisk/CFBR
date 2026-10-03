@@ -72,7 +72,6 @@ export default function useSelect<T>({
   const typeaheadRef = useRef("");
   const typeaheadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // TODO: add typeahead
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (rootRef.current && !rootRef.current.contains(event.target as Node)) {

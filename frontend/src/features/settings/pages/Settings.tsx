@@ -1,11 +1,21 @@
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { Branding } from "@/app/settings";
 import { useAppSettings } from "@/app/useAppSettings";
+import Modal from "@/shared/components/Modal";
 import { Select } from "@/shared/components/Select";
 import { Switch } from "@/shared/components/Switch";
 import PageContainer from "@/shared/layouts/PageContainer";
-
 export default function Settings() {
   const { settings, updateSetting } = useAppSettings();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [versionModalOpen, setVersionModalOpen] = useState(location.hash === "#info");
+
+  useEffect(() => {
+    setVersionModalOpen(location.hash === "#info");
+  }, [location.hash]);
 
   return (
     <>
@@ -170,7 +180,28 @@ export default function Settings() {
             </div>
           </div>
         </div>
+        <Link to="/settings#info">Version Information</Link>
+        <p className="text-red">Logout</p>
       </PageContainer>
+      <Modal
+        open={versionModalOpen}
+        onClose={() => {
+          navigate("/settings");
+        }}
+        title="Version Information"
+        variant="compact"
+      >
+        <div className="text-left">
+          <p>
+            <span className="font-semibold">App Version:</span> {__APP_VERSION__}-{__GIT_BRANCH__}-
+            {__GIT_COMMIT__}
+          </p>
+
+          <p>
+            <span className="font-semibold">Browser Version:</span> {navigator.userAgent}
+          </p>
+        </div>
+      </Modal>
     </>
   );
 }

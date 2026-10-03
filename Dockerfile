@@ -3,6 +3,14 @@
 # ============================================
 FROM node:22-alpine AS frontend-build
 
+ARG APP_VERSION=0.0.0
+ARG GIT_BRANCH=local
+ARG GIT_COMMIT=local
+
+ENV APP_VERSION=$APP_VERSION
+ENV GITHUB_REF_NAME=$GIT_BRANCH
+ENV GITHUB_SHA=$GIT_COMMIT
+
 WORKDIR /app/frontend
 
 COPY frontend/package*.json ./

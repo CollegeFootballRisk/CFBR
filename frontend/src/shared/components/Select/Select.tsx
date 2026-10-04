@@ -191,7 +191,7 @@ export default function Select<T = string>({
           aria-labelledby={label ? labelId : undefined}
           className={cn(
             "absolute left-0 z-50 w-full overflow-y-auto",
-            "max-h-64 rounded-md border-2 bg-control",
+            "max-h-64 rounded-md border bg-control",
             "shadow-xl",
             alignTop ? "bottom-full mb-2" : "top-full mt-2",
           )}

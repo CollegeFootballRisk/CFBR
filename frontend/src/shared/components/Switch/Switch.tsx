@@ -47,7 +47,7 @@ export default function Switch({
       className={cn(
         [
           "relative inline-flex h-8 w-15 shrink-0 cursor-pointer items-center",
-          "rounded-full border-2 border-transparent",
+          "rounded-full border border-control-border",
           "focus-visible:outline-none",
           "focus-visible:ring-2 focus-visible:ring-primary",
           "focus-visible:ring-offset-2 focus-visible:ring-offset-background",

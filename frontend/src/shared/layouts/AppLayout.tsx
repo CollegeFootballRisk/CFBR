@@ -1,8 +1,8 @@
 import { Outlet, useMatches } from "react-router-dom";
 
 import HashScroll from "../components/HashScroll";
+import { ModalHost, ModalProvider } from "../components/Modal";
 import { Sidebar } from "../components/Sidebar";
-
 import Navbar from "./Navbar";
 
 interface RouteHandle {
@@ -19,16 +19,20 @@ export default function AppLayout() {
   });
 
   return (
-    <div className="min-h-screen">
-      <Navbar />
+    <ModalProvider>
+      <div className="min-h-screen">
+        <Navbar />
 
-      {sidebarEnabled && <Sidebar />}
+        {sidebarEnabled && <Sidebar />}
 
-      <HashScroll />
+        <HashScroll />
 
-      <main>
-        <Outlet />
-      </main>
-    </div>
+        <main>
+          <Outlet />
+        </main>
+      </div>
+
+      <ModalHost />
+    </ModalProvider>
   );
 }

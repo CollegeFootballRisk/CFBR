@@ -1,68 +1,16 @@
 import type { ReactNode } from "react";
 import PageContainer from "@/shared/layouts/PageContainer";
+import { StarCalculator } from "../components/StarCalculator";
 
 interface InfoSectionProps {
   title: string;
   children: ReactNode;
 }
 
-interface StarCategory {
-  name: string;
-  description: string;
-  thresholds: string[];
-}
-
 interface GameDifference {
   title: string;
-  description: string;
+  description: ReactNode;
 }
-
-const starCategories: StarCategory[] = [
-  {
-    name: "MVPs",
-    description: "when you are the MVP of a territory",
-    thresholds: [
-      "0 MVPs: 1 Star",
-      "1–4 MVPs: 2 Stars",
-      "5–9 MVPs: 3 Stars",
-      "10–24 MVPs: 4 Stars",
-      "25+ MVPs: 5 Stars",
-    ],
-  },
-  {
-    name: "Turns",
-    description: "how many turns you've had in all College Football Risk games",
-    thresholds: [
-      "0–9 Turns: 1 Star",
-      "10–24 Turns: 2 Stars",
-      "25–49 Turns: 3 Stars",
-      "50–99 Turns: 4 Stars",
-      "100+ Turns: 5 Stars",
-    ],
-  },
-  {
-    name: "Game Turns",
-    description: "all the turns you've made in this game",
-    thresholds: [
-      "0–4 Turns: 1 Star",
-      "5–9 Turns: 2 Stars",
-      "10–24 Turns: 3 Stars",
-      "25–39 Turns: 4 Stars",
-      "40+ Turns: 5 Stars",
-    ],
-  },
-  {
-    name: "Streak",
-    description: "how many consecutive turns you've made",
-    thresholds: [
-      "0–2 Turns: 1 Star",
-      "3–4 Turns: 2 Stars",
-      "5–9 Turns: 3 Stars",
-      "10–24 Turns: 4 Stars",
-      "25+ Turns: 5 Stars",
-    ],
-  },
-];
 
 const gameDifferences: GameDifference[] = [
   {
@@ -116,8 +64,20 @@ const gameDifferences: GameDifference[] = [
   },
   {
     title: "Open Source",
-    description:
-      "This version of the game is entirely open-source. Anyone can look at its code and submit pull requests to change the game. The backend is written in Python with FastAPI and the frontend is written in React/TypeScript.",
+    description: (
+      <>
+        "This version of the game is entirely open-source. Anyone can look at its{" "}
+        <a
+          href="https://github.com/CollegeFootballRisk/cfbr"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          code
+        </a>{" "}
+        and submit pull requests to change the game. The backend is written in Python with FastAPI
+        and the frontend is written in React/TypeScript.
+      </>
+    ),
   },
 ];
 
@@ -174,7 +134,7 @@ function GameOverview() {
           We mainly use Discord for our team's community and central command. This is our{" "}
           <a href="https://discord.gg/NwXjDS7mGN" target="_blank" rel="noopener noreferrer">
             official Discord server
-          </a>
+          </a>{" "}
           where you can find teams and then be invited to your corresponding team servers.
         </p>
       </InfoSection>
@@ -260,26 +220,10 @@ function GameDifferences() {
   );
 }
 
-function StarGuide() {
+function Stars() {
   return (
     <InfoSection title="How do I get stars / move up in rank?">
-      <p className="mb-2">
-        Your total/overall starcount is the <i>median</i> of your stars for each of the following
-        categories:
-      </p>
-
-      <ul className="mb-4 list-disc space-y-4 pl-6">
-        {starCategories.map((category) => (
-          <li key={category.name}>
-            <strong>{category.name}</strong> ({category.description}):
-            <ul className="mt-2 list-inside list-circle space-y-1 pl-4">
-              {category.thresholds.map((threshold) => (
-                <li key={threshold}>{threshold}</li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+      <StarCalculator />
     </InfoSection>
   );
 }
@@ -323,7 +267,7 @@ export default function Info() {
         <GameOverview />
         <GameRules />
         <GameDifferences />
-        <StarGuide />
+        <Stars />
         <SurvivalGuide />
       </PageContainer>
     </>

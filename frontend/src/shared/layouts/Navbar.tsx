@@ -3,10 +3,11 @@ import { Link, NavLink } from "react-router-dom";
 
 import { BRANDING_IMAGES } from "@/app/settings";
 import { useAppSettings } from "@/app/useAppSettings";
-
+import { useModal } from "@/shared/components/Modal";
+import { Button } from "../components/Button";
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-
+  const { openModal } = useModal();
   const { settings } = useAppSettings();
 
   const closeMobileMenu = () => {
@@ -24,7 +25,7 @@ export default function Navbar() {
 
         {/* Desktop navigation */}
         <div className="ml-auto hidden items-end gap-2 md:flex">
-          <NavItem to="login">Login</NavItem>
+          <NavItem onClick={() => openModal("login")}>Login</NavItem>
 
           <NavItem to="#leaderboard">Leaderboard</NavItem>
 
@@ -32,11 +33,11 @@ export default function Navbar() {
 
           <NavItem to="/odds">Odds</NavItem>
 
-          <NavItem to="/info">Info</NavItem>
+          <NavItem onClick={() => openModal("tutorial")}>Info</NavItem>
 
           <NavItem to="/help">How to Play</NavItem>
 
-          <NavItem to="/docs">API</NavItem>
+          <ExternalNavItem href="/docs">API</ExternalNavItem>
 
           <NavItem to="/bugs">Bugs</NavItem>
 
@@ -44,25 +45,29 @@ export default function Navbar() {
         </div>
 
         {/* Mobile menu button */}
-        <button
-          type="button"
+        <Button
+          variant="nav"
           onClick={() => setMobileOpen((open) => !open)}
-          className="ml-auto inline-flex items-center justify-center rounded-md p-2 md:hidden"
+          className="ml-auto p-2 md:hidden text-white!"
           aria-label="Toggle navigation menu"
           aria-expanded={mobileOpen}
         >
           <span className="text-xl">{mobileOpen ? "✕" : "☰"}</span>
-        </button>
+        </Button>
       </nav>
 
       {/* Mobile navigation */}
       {mobileOpen && (
         <div className="border-t md:hidden">
           <div className="p-4">
-            <MobileNavItem to="login" onClick={closeMobileMenu}>
+            <MobileNavItem
+              onClick={() => {
+                closeMobileMenu();
+                openModal("login");
+              }}
+            >
               Login
             </MobileNavItem>
-
             <MobileNavItem to="#leaderboard" onClick={closeMobileMenu}>
               Leaderboard
             </MobileNavItem>
@@ -75,7 +80,12 @@ export default function Navbar() {
               Odds
             </MobileNavItem>
 
-            <MobileNavItem to="/info" onClick={closeMobileMenu}>
+            <MobileNavItem
+              onClick={() => {
+                closeMobileMenu();
+                openModal("tutorial");
+              }}
+            >
               Info
             </MobileNavItem>
 
@@ -83,9 +93,9 @@ export default function Navbar() {
               How to Play
             </MobileNavItem>
 
-            <MobileNavItem to="/docs" onClick={closeMobileMenu}>
+            <ExternalMobileNavItem href="/docs" onClick={closeMobileMenu}>
               API
-            </MobileNavItem>
+            </ExternalMobileNavItem>
 
             <MobileNavItem to="/bugs" onClick={closeMobileMenu}>
               Bugs
@@ -101,33 +111,66 @@ export default function Navbar() {
   );
 }
 
-// TODO Fix the anchor tag colors
-function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
+type NavItemProps =
+  | {
+      to: string;
+      onClick?: never;
+      children: React.ReactNode;
+    }
+  | {
+      to?: never;
+      onClick: () => void;
+      children: React.ReactNode;
+    };
+
+function NavItem({ children, ...props }: NavItemProps) {
+  if ("onClick" in props) {
+    return (
+      <Button variant="nav" onClick={props.onClick}>
+        {children}
+      </Button>
+    );
+  }
+
   return (
     <NavLink
-      to={to}
-      end={to === "/"}
-      className={({ isActive }) =>
-        [
-          "rounded-md px-4 py-2 text-sm font-medium transition text-white!",
-          isActive ? "" : "",
-        ].join(" ")
-      }
+      to={props.to}
+      end={props.to === "/"}
+      className="rounded-md px-4 py-2 text-sm font-medium text-white! transition"
     >
-      {children}
+      <span className="inline-block hover:shadow-accent-glow hover:underline hover:decoration-dashed">
+        {children}
+      </span>
     </NavLink>
   );
 }
 
+function ExternalNavItem({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a href={href} className="rounded-md px-4 py-2 text-sm font-medium text-white! transition">
+      <span className="inline-block hover:shadow-accent-glow hover:underline hover:decoration-dashed">
+        {children}
+      </span>
+    </a>
+  );
+}
 function MobileNavItem({
   to,
-  children,
   onClick,
+  children,
 }: {
-  to: string;
-  children: React.ReactNode;
+  to?: string;
   onClick: () => void;
+  children: React.ReactNode;
 }) {
+  if (!to) {
+    return (
+      <Button variant="nav" onClick={onClick}>
+        {children}
+      </Button>
+    );
+  }
+
   return (
     <NavLink
       to={to}
@@ -139,5 +182,25 @@ function MobileNavItem({
     >
       {children}
     </NavLink>
+  );
+}
+
+function ExternalMobileNavItem({
+  href,
+  children,
+  onClick,
+}: {
+  href: string;
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <a
+      href={href}
+      onClick={onClick}
+      className="block rounded-md px-4 py-2 text-sm font-medium transition"
+    >
+      {children}
+    </a>
   );
 }

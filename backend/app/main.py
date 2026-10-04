@@ -56,27 +56,36 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     yield
 
 
-app = FastAPI(lifespan=lifespan, docs_url="/docs", redoc_url="/redoc", openapi_url="/openapi.json")
+app = FastAPI(
+    title="College Football Risk API",
+    version=os.getenv("APP_VERSION", "dev"),
+    license_info={
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT",
+    },
+    lifespan=lifespan,
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
+    # FIX 1: Explicitly enable the search explorer filter box
+    swagger_ui_parameters={"filter": True}, 
+)
 
 app.include_router(test_router)
 
-# CORS: match your app.use(cors()) (wide open)
-# You can tighten this later to your frontend origin(s).
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # same behavior as default cors() in many dev setups
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-# Health endpoint
 @app.get("/api/health")
 def health() -> str:
     return "Backend is running"
 
-
+# FIX 2: Safeguard the frontend catch-all router
 dist_path = os.path.join(os.path.dirname(__file__), "..", "dist")
 
 if os.path.exists(dist_path):
@@ -86,8 +95,12 @@ if os.path.exists(dist_path):
 
     @app.get("/{catchall:path}")
     def serve_react_app(catchall: str):
-        file_path = os.path.join(dist_path, catchall)
+        # Prevent the catch-all from breaking FastAPI documentation paths
+        if catchall.startswith(("docs", "redoc", "openapi.json", "api")):
+            from fastapi.exceptions import HTTPException
+            raise HTTPException(status_code=404)
 
+        file_path = os.path.join(dist_path, catchall)
         if os.path.exists(file_path) and os.path.isfile(file_path):
             return FileResponse(file_path)
 
@@ -96,3 +109,4 @@ if os.path.exists(dist_path):
             return FileResponse(index_file)
 
         return {"detail": "Frontend not built yet"}
+

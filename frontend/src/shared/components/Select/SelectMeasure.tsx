@@ -12,6 +12,7 @@ interface SelectMeasureProps {
   size: VariantProps<typeof selectVariants>["size"];
   chevron: VariantProps<typeof selectVariants>["chevron"];
   open: boolean;
+  rounded: VariantProps<typeof selectVariants>["rounded"];
   children: React.ReactNode;
 }
 
@@ -21,6 +22,7 @@ export default function SelectMeasure({
   size,
   chevron,
   open,
+  rounded,
   children,
 }: SelectMeasureProps) {
   return (
@@ -31,6 +33,7 @@ export default function SelectMeasure({
         selectVariants({
           size,
           chevron,
+          rounded,
         }),
         "absolute invisible whitespace-nowrap pointer-events-none",
         className,

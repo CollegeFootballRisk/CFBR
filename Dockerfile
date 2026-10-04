@@ -26,6 +26,10 @@ RUN npm run build
 # ============================================
 FROM python:3.12-slim
 
+ARG APP_VERSION=0.0.0
+
+ENV APP_VERSION=$APP_VERSION
+
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1

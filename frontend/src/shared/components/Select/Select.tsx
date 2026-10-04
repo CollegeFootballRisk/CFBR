@@ -31,6 +31,7 @@ export interface SelectProps<T = string>
 }
 
 export default function Select<T = string>({
+  rounded = false,
   value,
   options,
   onChange,
@@ -147,7 +148,13 @@ export default function Select<T = string>({
         </label>
       )}
 
-      <SelectMeasure measureRef={measureRef} size={size} chevron={chevron} open={open}>
+      <SelectMeasure
+        measureRef={measureRef}
+        size={size}
+        chevron={chevron}
+        open={open}
+        rounded={rounded}
+      >
         {longestOption}
       </SelectMeasure>
 
@@ -167,12 +174,13 @@ export default function Select<T = string>({
         className={cn(
           selectVariants({
             size,
+            rounded,
             chevron,
           }),
           "h-full w-full",
         )}
       >
-        <span className="flex-1 whitespace-nowrap">{displayValue}</span>
+        <span className="flex-1 whitespace-nowrap font-semibold">{displayValue}</span>
 
         {chevron && <ChevronIcon className={cn(open && "rotate-180")} />}
       </button>
@@ -183,7 +191,7 @@ export default function Select<T = string>({
           aria-labelledby={label ? labelId : undefined}
           className={cn(
             "absolute left-0 z-50 w-full overflow-y-auto",
-            "max-h-64 rounded-lg border-2 bg-control",
+            "max-h-64 rounded-md border-2 bg-control",
             "shadow-xl",
             alignTop ? "bottom-full mb-2" : "top-full mt-2",
           )}

@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import type { Branding } from "@/app/settings";
 import { useAppSettings } from "@/app/useAppSettings";
-import Modal from "@/shared/components/Modal";
+import { useModal } from "@/shared/components/Modal";
 import { Select } from "@/shared/components/Select";
 import { Switch } from "@/shared/components/Switch";
 import PageContainer from "@/shared/layouts/PageContainer";
 export default function Settings() {
   const { settings, updateSetting } = useAppSettings();
   const location = useLocation();
-  const navigate = useNavigate();
-
-  const [versionModalOpen, setVersionModalOpen] = useState(location.hash === "#info");
+  const { openModal } = useModal();
 
   useEffect(() => {
-    setVersionModalOpen(location.hash === "#info");
-  }, [location.hash]);
+    if (location.hash === "#info") {
+      openModal("version-info");
+    }
+  }, [location.hash, openModal]);
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function Settings() {
                 checked={settings.showBackgroundImages}
                 onCheckedChange={(value) => updateSetting("showBackgroundImages", value)}
               />
-              <p className="text-sm">Background Images</p>
+              <span className="text-sm">Background Images</span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -38,7 +38,7 @@ export default function Settings() {
                 checked={settings.theme === "light"}
                 onCheckedChange={(checked) => updateSetting("theme", checked ? "light" : "dark")}
               />
-              <p className="text-sm">Light Mode</p>
+              <span className="text-sm">Light Mode</span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -47,7 +47,7 @@ export default function Settings() {
                 checked={settings.showPromptMove}
                 onCheckedChange={(value) => updateSetting("showPromptMove", value)}
               />
-              <p className="text-sm">Prompt me to make a move if I haven't</p>
+              <span className="text-sm">Prompt me to make a move if I haven't</span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -56,7 +56,7 @@ export default function Settings() {
                 checked={settings.showTerritoryPin}
                 onCheckedChange={(value) => updateSetting("showTerritoryPin", value)}
               />
-              <p className="text-sm">Place a pin over the territory on which I am moving</p>
+              <span className="text-sm">Place a pin over the territory on which I am moving</span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -65,7 +65,9 @@ export default function Settings() {
                 checked={settings.showPulseTerritory}
                 onCheckedChange={(value) => updateSetting("showPulseTerritory", value)}
               />
-              <p className="text-sm">Fade/pulse the territory in and out on which I am moving</p>
+              <span className="text-sm">
+                Fade/pulse the territory in and out on which I am moving
+              </span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -74,7 +76,7 @@ export default function Settings() {
                 checked={settings.showBridges}
                 onCheckedChange={(value) => updateSetting("showBridges", value)}
               />
-              <p className="text-sm">Show bridges when the map first loads</p>
+              <span className="text-sm">Show bridges when the map first loads</span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -83,7 +85,7 @@ export default function Settings() {
                 checked={settings.showRegions}
                 onCheckedChange={(value) => updateSetting("showRegions", value)}
               />
-              <p className="text-sm">Show regions when the map first loads</p>
+              <span className="text-sm">Show regions when the map first loads</span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -92,7 +94,7 @@ export default function Settings() {
                 checked={settings.showExperiments}
                 onCheckedChange={(value) => updateSetting("showExperiments", value)}
               />
-              <p className="text-sm">Opt-in to temporary experiments (e.g. bug fixes)</p>
+              <span className="text-sm">Opt-in to temporary experiments (e.g. bug fixes)</span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -101,7 +103,7 @@ export default function Settings() {
                 checked={settings.showMapLabels}
                 onCheckedChange={(value) => updateSetting("showMapLabels", value)}
               />
-              <p className="text-sm">Show labels on map buttons</p>
+              <span className="text-sm">Show labels on map buttons</span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
@@ -110,13 +112,14 @@ export default function Settings() {
                 checked={settings.addBottomSpace}
                 onCheckedChange={(value) => updateSetting("addBottomSpace", value)}
               />
-              <p className="text-sm">
+              <span className="text-sm">
                 Add extra space to the bottom of some prompts (for scrolling)
-              </p>
+              </span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
               <Select
+                rounded={true}
                 value={settings.pageSize}
                 options={[
                   { label: "5", value: 5 },
@@ -133,11 +136,12 @@ export default function Settings() {
                   }
                 }}
               />
-              <p className="text-sm">How many rows to show on tables by default</p>
+              <span className="text-sm">How many rows to show on tables by default</span>
             </div>
 
             <div className="flex items-center gap-4 py-4">
               <Select<Branding>
+                rounded={true}
                 value={settings.branding}
                 options={[
                   {
@@ -176,32 +180,16 @@ export default function Settings() {
                   }
                 }}
               />
-              <p className="text-sm">Which branding to use</p>
+              <span className="text-sm">Which branding to use</span>
             </div>
           </div>
         </div>
         <Link to="/settings#info">Version Information</Link>
-        <p className="text-red">Logout</p>
+        <br />
+        <Link to="/settings#logout" className="text-red!">
+          Logout
+        </Link>
       </PageContainer>
-      <Modal
-        open={versionModalOpen}
-        onClose={() => {
-          navigate("/settings");
-        }}
-        title="Version Information"
-        variant="compact"
-      >
-        <div className="text-left">
-          <p>
-            <span className="font-semibold">App Version:</span> {__APP_VERSION__}-{__GIT_BRANCH__}-
-            {__GIT_COMMIT__}
-          </p>
-
-          <p>
-            <span className="font-semibold">Browser Version:</span> {navigator.userAgent}
-          </p>
-        </div>
-      </Modal>
     </>
   );
 }

@@ -1,3 +1,5 @@
+import { cn } from "@/shared/utils/cn";
+
 interface StarIconProps {
   className?: string;
 }
@@ -10,7 +12,7 @@ export default function StarIcon({ className }: StarIconProps) {
       fill="currentColor"
       role="img"
       aria-label="Star"
-      className={className}
+      className={cn("inline-block size-10 text-foreground", className)}
     >
       <path
         fillRule="evenodd"

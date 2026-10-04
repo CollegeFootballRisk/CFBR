@@ -32,7 +32,7 @@ export const SelectOptionItem = forwardRef<HTMLDivElement, SelectOptionItemProps
           }
         }}
         className={cn(
-          "cursor-pointer px-4 py-2 text-control-foreground",
+          "px-4 py-2 text-control-foreground",
           selected && "bg-accent-2 text-white font-medium",
           highlighted && !selected && "bg-accent-2 text-white",
           disabled && "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-inherit",

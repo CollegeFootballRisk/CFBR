@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import PageContainer from "@/shared/layouts/PageContainer";
 
 export default function Policies() {

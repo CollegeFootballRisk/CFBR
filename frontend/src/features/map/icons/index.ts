@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 export { default as BridgesIcon } from "./BridgesIcon";
 export { default as HeatmapIcon } from "./HeatmapIcon";
 export { default as LeaderboardIcon } from "./LeaderboardIcon";

@@ -36,5 +36,6 @@ dist-ssr
 .ruff_cache/
 
 scripts/
-
+!frontend/scripts/
+!frontend/scripts/validate-frontend-architecture.mjs
 .clinerules/

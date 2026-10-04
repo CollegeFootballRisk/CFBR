@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import LoginModal from "@/features/auth/components/LoginModal";
 import TutorialModal from "@/features/help/components/TutorialModal";
 import VersionInformationModal from "@/features/settings/components/VersionInformationModal";

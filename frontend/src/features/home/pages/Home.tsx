@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import MapControls from "@/features/map/components/MapControls";
 
 export default function Home() {

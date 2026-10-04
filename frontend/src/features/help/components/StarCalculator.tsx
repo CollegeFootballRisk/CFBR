@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { useState } from "react";
 import { getOverallStarRating, getStarRating, STAR_CATEGORIES } from "../utils/stars";
 import { StarCategory } from "./StarCategory";

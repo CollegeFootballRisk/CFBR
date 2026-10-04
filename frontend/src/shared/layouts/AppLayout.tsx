@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { Outlet, useMatches } from "react-router-dom";
 
 import HashScroll from "../components/HashScroll";

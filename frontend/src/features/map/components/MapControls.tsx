@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { useState } from "react";
 import { Button } from "@/shared/components/Button";
 import { ChevronIcon } from "@/shared/components/Icons";

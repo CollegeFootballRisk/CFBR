@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { useId } from "react";
 
 import MapIcon from "./MapIcon";

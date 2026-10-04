@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { Link } from "@/shared/components/Link";
 
 interface ComingSoonProps {

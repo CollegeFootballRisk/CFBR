@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 export interface SelectOption<T = string> {
   label: string;
   value: T;

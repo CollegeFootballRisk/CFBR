@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { type ReactNode, useContext, useId } from "react";
 import { RadioGroupContext } from "./RadioGroup";
 

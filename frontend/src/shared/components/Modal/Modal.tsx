@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { cva, type VariantProps } from "class-variance-authority";
 import { type MouseEvent, type ReactNode, type RefObject, useEffect, useId, useRef } from "react";
 

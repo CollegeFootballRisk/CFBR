@@ -10,7 +10,6 @@
     "biome:ci": "biome check . --error-on-warnings",
     "knip": "knip",
     "architecture": "node scripts/validate-frontend-architecture.mjs",
-    "map": "node scripts/repo-map.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "typecheck:ci": "tsc --noEmit --pretty false",

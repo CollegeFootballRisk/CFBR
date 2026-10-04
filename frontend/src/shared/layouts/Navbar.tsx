@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { useState } from "react";
 import { BRANDING_IMAGES } from "@/app/settings";
 import { useAppSettings } from "@/app/useAppSettings";

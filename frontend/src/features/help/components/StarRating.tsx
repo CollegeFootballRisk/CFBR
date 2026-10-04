@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { StarIcon } from "@/shared/components/Icons";
 
 export function StarRating({ value }: { value: number }) {

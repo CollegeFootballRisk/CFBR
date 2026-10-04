@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import MapIcon from "./MapIcon";
 
 export default function LeaderboardIcon() {

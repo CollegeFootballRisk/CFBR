@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MPL-2.0
+
 from fastapi import APIRouter
 from sqlalchemy import text
 

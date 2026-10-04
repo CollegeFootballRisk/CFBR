@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import type { ReactNode } from "react";
 import { Link } from "@/shared/components/Link";
 import PageContainer from "@/shared/layouts/PageContainer";

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 export { default as ChevronIcon } from "./ChevronIcon";
 export { default as DiscordIcon } from "./DiscordIcon";
 export { default as FailureIcon } from "./FailureIcon";

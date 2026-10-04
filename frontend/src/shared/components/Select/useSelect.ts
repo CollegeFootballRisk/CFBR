@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { type KeyboardEvent, type RefObject, useEffect, useMemo, useRef, useState } from "react";
 
 import {

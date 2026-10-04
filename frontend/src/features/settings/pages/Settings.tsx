@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import type { Branding } from "@/app/settings";

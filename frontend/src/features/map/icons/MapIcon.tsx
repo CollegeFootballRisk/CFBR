@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import type { PropsWithChildren, SVGProps } from "react";
 
 export type MapIconProps = PropsWithChildren<SVGProps<SVGSVGElement>>;

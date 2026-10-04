@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { useRef, useState } from "react";
 
 import { useAppSettings } from "@/app/useAppSettings";

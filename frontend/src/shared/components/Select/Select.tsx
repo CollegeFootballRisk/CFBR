@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import type { VariantProps } from "class-variance-authority";
 import { type HTMLAttributes, useId, useLayoutEffect, useState } from "react";
 

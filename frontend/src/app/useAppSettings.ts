@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { useContext } from "react";
 
 import { AppSettingsContext } from "@/app/AppSettingsContext";

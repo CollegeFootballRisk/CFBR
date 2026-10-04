@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { Link as RouterLink, type LinkProps as RouterLinkProps } from "react-router-dom";
 

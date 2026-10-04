@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { createBrowserRouter } from "react-router-dom";
 
 import Help from "@/features/help/pages/Help";

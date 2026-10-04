@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 import { Input } from "@/shared/components/Input";
 import { StarRating } from "./StarRating";
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronIcon, DiscordIcon, GitHubIcon } from "../Icons";
+import { Link } from "../Link";
 
 interface SidebarProps {
   defaultOpen?: boolean;
@@ -55,22 +56,20 @@ export default function Sidebar({ defaultOpen = true }: SidebarProps) {
       </button>
 
       <div className="flex justify-center gap-1 my-4 mx-2 border-t-2 pt-4">
-        <a
+        <Link
+          external
           href="https://discord.gg/NwXjDS7mGN"
-          target="_blank"
-          rel="noreferrer"
           aria-label="College Football Risk Discord"
         >
           <DiscordIcon />
-        </a>
-        <a
+        </Link>
+        <Link
+          external
           href="https://github.com/CollegeFootballRisk/"
-          target="_blank"
-          rel="noreferrer"
           aria-label="College Football Risk GitHub"
         >
           <GitHubIcon />
-        </a>
+        </Link>
       </div>
     </aside>
   );

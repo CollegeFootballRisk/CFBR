@@ -14,9 +14,14 @@ interface StarCategoryProps {
 }
 export function StarCategory({ category, value, rating, onChange }: StarCategoryProps) {
   return (
-    <div className="flex h-full flex-col rounded-md border p-3">
-      <div className="flex gap-3">
-        <div className="flex min-w-0 flex-1 flex-col items-center gap-2">
+    <div className="@container flex h-full flex-col rounded-md border p-3">
+      <div className="flex flex-col gap-3 @xs:flex-row @xs:items-center @xs:gap-4">
+        <div className="text-left @xs:min-w-0 @xs:flex-1">
+          <h3 className="font-bold">{category.name}</h3>
+          <p className="italic">{category.description}</p>
+        </div>
+
+        <div className="flex flex-col items-center gap-2 @xs:w-52 @xs:shrink-0">
           <StarRating value={rating} />
           <Input
             id={`${category.name}-value`}
@@ -30,11 +35,8 @@ export function StarCategory({ category, value, rating, onChange }: StarCategory
             className="w-20"
           />
         </div>
-        <div className="w-36 shrink-0 text-left">
-          <h3 className="font-bold">{category.name}</h3>
-          <p className="italic">{category.description}</p>
-        </div>
       </div>
+
       <ul className="mt-auto list-inside list-disc pt-3 text-center">
         {category.thresholdLabels.map((threshold) => (
           <li key={threshold}>{threshold}</li>

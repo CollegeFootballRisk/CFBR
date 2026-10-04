@@ -3,12 +3,17 @@
   --background: #2d2d32;
   --foreground: #fff;
 
+  --accent-1: #4ea8ff;
+
   --control: #3a3a41;
   --control-foreground: #fff;
   --control-border: #f3f4f6;
 
   --failure: #ff6b6b;
   --success: #56c080;
+
+  --nav-hover-foreground: #fff;
+
   /* #endregion */
 }
 
@@ -17,12 +22,17 @@
   --background: #fff;
   --foreground: #000;
 
+  --accent-1: #0066b3;
+
   --control: #f3f4f6;
   --control-foreground: #171717;
   --control-border: #3a3a41;
 
   --failure: #c62828;
   --success: #16803c;
+
+  --nav-hover-foreground: #000;
+
   /* #endregion */
 }
 
@@ -30,13 +40,15 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-accent-1: #4ea8ff;
+  --color-accent-1: var(--accent-1);
   --color-accent-2: #4060a8;
 
   --color-control: var(--control);
   --color-control-foreground: var(--control-foreground);
   --color-control-border: var(--control-border);
   --color-control-checked: var(--success);
+
+  --color-nav-hover-foreground: var(--nav-hover-foreground);
 
   --color-success: var(--success);
   --color-failure: var(--failure);

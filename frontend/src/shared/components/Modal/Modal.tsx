@@ -149,6 +149,24 @@ export default function Modal({
     }
   };
 
+  const closeButton = (
+    <button
+      type="button"
+      onClick={onClose}
+      aria-label="Close modal"
+      className={cn(
+        "flex h-9 w-9 shrink-0 items-center justify-center rounded-full outline-1 outline-black",
+        "bg-white text-black transition-colors",
+        "hover:bg-black hover:text-white",
+        "focus-visible:outline-2 focus-visible:outline-foreground",
+      )}
+    >
+      <span aria-hidden="true" className="-mt-0.5 text-2xl leading-none">
+        &times;
+      </span>
+    </button>
+  );
+
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: modal backdrop
     <div
@@ -180,33 +198,19 @@ export default function Modal({
           )}
         />
 
-        {/* Modal header overlay */}
-        {headerActions && (
-          <div className="absolute inset-x-0 top-0 z-20 rounded-t-sm bg-background px-4 pb-2 pt-4">
-            {headerActions}
+        {headerActions ? (
+          /* Header: actions get the flexible column, close button gets its own fixed column */
+          <div className="flex shrink-0 items-start gap-4 rounded-t-sm bg-background px-4 pb-2 pt-4">
+            <div className="min-w-0 flex-1">{headerActions}</div>
+            {closeButton}
           </div>
+        ) : (
+          <div className="absolute right-4 top-4 z-30">{closeButton}</div>
         )}
-
-        {/* Close button */}
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close modal"
-          className={cn(
-            "absolute right-4 top-5 z-30 flex h-6 w-6 items-end justify-center rounded-full outline-1 outline-black",
-            "bg-white text-black transition-colors",
-            "hover:bg-black hover:text-white",
-            "focus-visible:outline-2 focus-visible:outline-accent-1",
-          )}
-        >
-          <span aria-hidden="true" className="text-3xl leading-none">
-            &times;
-          </span>
-        </button>
 
         {/* Scrollable modal body */}
         <div ref={scrollContainerRef} className="min-h-0 overflow-y-auto px-4 pb-4 text-center">
-          <div className={cn(headerActions ? "pt-20" : "pt-4")}>
+          <div className={cn(headerActions ? "pt-4" : "pt-4")}>
             <h2 id={titleId} className="text-center text-3xl font-bold leading-tight sm:text-4xl">
               {title}
             </h2>

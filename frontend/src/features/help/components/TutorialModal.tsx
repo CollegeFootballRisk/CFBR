@@ -121,12 +121,26 @@ function TutorialNavigation({
   }));
 
   return (
-    <div className="flex w-full min-w-0 items-center justify-center gap-2">
-      <Button variant="secondary" onClick={onPrevious} disabled={sectionIndex === 0}>
+    <div className="grid w-full min-w-0 grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-center">
+      <Button
+        variant="secondary"
+        onClick={onPrevious}
+        disabled={sectionIndex === 0}
+        className="w-full sm:w-auto"
+      >
         Previous
       </Button>
 
-      <div className="min-w-0">
+      <Button
+        variant="secondary"
+        onClick={onNext}
+        disabled={sectionIndex === sections.length - 1}
+        className="order-2 w-full sm:order-3 sm:w-auto"
+      >
+        Next
+      </Button>
+
+      <div className="order-3 col-span-2 min-w-0 sm:order-2 sm:w-auto">
         <Select
           value={section}
           options={options}
@@ -137,10 +151,6 @@ function TutorialNavigation({
           }}
         />
       </div>
-
-      <Button variant="secondary" onClick={onNext} disabled={sectionIndex === sections.length - 1}>
-        Next
-      </Button>
     </div>
   );
 }
@@ -439,8 +449,8 @@ function RespawnSection() {
         <li>We process submap 0 (the main map) as normal</li>
 
         <li>
-          If any teams have previously been on submap id 1 but are now present on submap 0, then we
-          discard any turns made on submap id 1 by players on those teams
+          We determine which team(s) were eliminated on the main map and which have not yet used any
+          respawns (teams.respawn_count &lt; 1)
         </li>
 
         <li>

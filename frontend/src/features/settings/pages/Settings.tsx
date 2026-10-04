@@ -1,11 +1,13 @@
 import { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import type { Branding } from "@/app/settings";
 import { useAppSettings } from "@/app/useAppSettings";
+import { Link } from "@/shared/components/Link";
 import { useModal } from "@/shared/components/Modal";
 import { Select } from "@/shared/components/Select";
 import { Switch } from "@/shared/components/Switch";
 import PageContainer from "@/shared/layouts/PageContainer";
+
 export default function Settings() {
   const { settings, updateSetting } = useAppSettings();
   const location = useLocation();
@@ -186,7 +188,7 @@ export default function Settings() {
         </div>
         <Link to="/settings#info">Version Information</Link>
         <br />
-        <Link to="/settings#logout" className="text-red!">
+        <Link to="/settings#logout" variant="muted">
           Logout
         </Link>
       </PageContainer>

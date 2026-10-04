@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-
 import { BRANDING_IMAGES } from "@/app/settings";
 import { useAppSettings } from "@/app/useAppSettings";
+import { Link, NavLink } from "@/shared/components/Link";
 import { useModal } from "@/shared/components/Modal";
 import { Button } from "../components/Button";
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { openModal } = useModal();
@@ -52,14 +52,14 @@ export default function Navbar() {
           aria-label="Toggle navigation menu"
           aria-expanded={mobileOpen}
         >
-          <span className="text-xl">{mobileOpen ? "✕" : "☰"}</span>
+          <span className="text-2xl">{mobileOpen ? "✕" : "☰"}</span>
         </Button>
       </nav>
 
       {/* Mobile navigation */}
       {mobileOpen && (
-        <div className="border-t md:hidden">
-          <div className="p-4">
+        <div className="absolute inset-x-0 top-16 border-t border-white/20 bg-linear-to-r from-accent-2 to-accent-1 md:hidden">
+          <div className="divide-y divide-white/20">
             <MobileNavItem
               onClick={() => {
                 closeMobileMenu();
@@ -136,7 +136,8 @@ function NavItem({ children, ...props }: NavItemProps) {
     <NavLink
       to={props.to}
       end={props.to === "/"}
-      className="rounded-md px-4 py-2 text-sm font-medium text-white! transition"
+      variant="inherit"
+      className="rounded-md px-4 py-2 text-sm font-medium text-white"
     >
       <span className="inline-block hover:shadow-accent-glow hover:underline hover:decoration-dashed">
         {children}
@@ -147,13 +148,18 @@ function NavItem({ children, ...props }: NavItemProps) {
 
 function ExternalNavItem({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a href={href} className="rounded-md px-4 py-2 text-sm font-medium text-white! transition">
+    <Link
+      href={href}
+      variant="inherit"
+      className="rounded-md px-4 py-2 text-sm font-medium text-white"
+    >
       <span className="inline-block hover:shadow-accent-glow hover:underline hover:decoration-dashed">
         {children}
       </span>
-    </a>
+    </Link>
   );
 }
+
 function MobileNavItem({
   to,
   onClick,
@@ -165,7 +171,11 @@ function MobileNavItem({
 }) {
   if (!to) {
     return (
-      <Button variant="nav" onClick={onClick}>
+      <Button
+        variant="nav"
+        onClick={onClick}
+        className="w-full justify-center rounded-none py-3 text-sm text-center"
+      >
         {children}
       </Button>
     );
@@ -176,9 +186,8 @@ function MobileNavItem({
       to={to}
       end={to === "/"}
       onClick={onClick}
-      className={({ isActive }) =>
-        ["block rounded-md px-4 py-2 text-sm font-medium transition", isActive ? "" : ""].join(" ")
-      }
+      variant="inherit"
+      className="block w-full rounded-none py-3 text-center text-sm font-medium text-white"
     >
       {children}
     </NavLink>
@@ -195,12 +204,13 @@ function ExternalMobileNavItem({
   onClick: () => void;
 }) {
   return (
-    <a
+    <Link
       href={href}
+      variant="inherit"
       onClick={onClick}
-      className="block rounded-md px-4 py-2 text-sm font-medium transition"
+      className="block w-full rounded-none py-3 text-center text-sm font-medium text-white"
     >
       {children}
-    </a>
+    </Link>
   );
 }

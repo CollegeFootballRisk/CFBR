@@ -10,11 +10,6 @@ body {
   @apply bg-background text-foreground;
 }
 
-/* TODO:Fix color */
-a {
-  @apply text-blue-500 underline-offset-2 hover:text-blue-500 hover:underline;
-}
-
 @keyframes modal-rainbow {
   0% {
     background-position: 0% 50%;

@@ -21,7 +21,7 @@ export function StarCalculator() {
   const overallStars = getOverallStarRating(Object.values(ratings));
 
   return (
-    <div className="space-y-4">
+    <div className="@container space-y-4">
       <p>
         You can see how your overall star count works with the median of the 4 categories with the
         model below:
@@ -31,7 +31,7 @@ export function StarCalculator() {
         <StarRating value={overallStars} />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 @3xl:grid-cols-2 @3xl:gap-6">
         <StarCategory
           category={STAR_CATEGORIES.mvps}
           value={starValues.mvps}

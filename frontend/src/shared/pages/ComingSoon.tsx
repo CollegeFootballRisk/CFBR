@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@/shared/components/Link";
 
 interface ComingSoonProps {
   title: string;
@@ -16,10 +16,7 @@ export default function ComingSoon({
 
         <p className="mt-4 ">{description}</p>
 
-        <Link
-          to="/"
-          className="mt-6 inline-flex rounded-md px-4 py-2 text-sm font-medium transition"
-        >
+        <Link to="/" className="mt-6 inline-flex rounded-md px-4 py-2 text-sm font-medium">
           Back to Map
         </Link>
       </div>

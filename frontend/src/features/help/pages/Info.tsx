@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link } from "@/shared/components/Link";
 import PageContainer from "@/shared/layouts/PageContainer";
 import { StarCalculator } from "../components/StarCalculator";
 
@@ -66,14 +67,10 @@ const gameDifferences: GameDifference[] = [
     title: "Open Source",
     description: (
       <>
-        "This version of the game is entirely open-source. Anyone can look at its{" "}
-        <a
-          href="https://github.com/CollegeFootballRisk/cfbr"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        This version of the game is entirely open-source. Anyone can look at its{" "}
+        <Link external href="https://github.com/CollegeFootballRisk/cfbr">
           code
-        </a>{" "}
+        </Link>{" "}
         and submit pull requests to change the game. The backend is written in Python with FastAPI
         and the frontend is written in React/TypeScript.
       </>
@@ -99,17 +96,17 @@ function GameOverview() {
           of North America. The objective is for a team to have the largest number of territories of
           any team at the end of the season. College Football Risk is a continuation of a popular
           CFB Risk game run by{" "}
-          <a href="https://www.reddit.com/r/CFB" target="_blank" rel="noopener noreferrer">
+          <Link href="https://www.reddit.com/r/CFB" target="_blank" rel="noopener noreferrer">
             r/CFB
-          </a>{" "}
+          </Link>{" "}
           in the Spring and Summer of 2018, by{" "}
-          <a href="https://www.reddit.com/user/BlueSCar" target="_blank" rel="noopener noreferrer">
+          <Link external href="https://www.reddit.com/user/BlueSCar">
             BlueSCar
-          </a>{" "}
+          </Link>{" "}
           in the Spring of 2020, and by{" "}
-          <a href="https://www.reddit.com/user/Mautamu/" target="_blank" rel="noopener noreferrer">
+          <Link external href="https://www.reddit.com/user/Mautamu/">
             Mautamu
-          </a>{" "}
+          </Link>{" "}
           in 2023. It is an MMO-style game where college football fanbases compete for control of a
           fictionalized map of the United States. The goal is to control as much territory as
           possible for ultimate domination of the map.
@@ -123,18 +120,18 @@ function GameOverview() {
           to coordinate strategy, usually in the form of a subreddit or Discord channel. Find yours
           and participate!
           <br />
-          By making a move, you agree to play by the <a href="/policies">code of conduct</a> and, if
-          this is a test game, you acknowledge and agree to the{" "}
-          <a href="/policies#test-game-policy">test game policy</a>.
+          By making a move, you agree to play by the <Link href="/policies">code of conduct</Link>{" "}
+          and, if this is a test game, you acknowledge and agree to the{" "}
+          <Link href="/policies#test-game-policy">test game policy</Link>.
         </p>
       </InfoSection>
 
       <InfoSection title="How can I participate in the community and/or find my team's central command?">
         <p className="mb-4">
           We mainly use Discord for our team's community and central command. This is our{" "}
-          <a href="https://discord.gg/NwXjDS7mGN" target="_blank" rel="noopener noreferrer">
+          <Link href="https://discord.gg/NwXjDS7mGN" target="_blank" rel="noopener noreferrer">
             official Discord server
-          </a>{" "}
+          </Link>{" "}
           where you can find teams and then be invited to your corresponding team servers.
         </p>
       </InfoSection>
@@ -147,11 +144,11 @@ function GameRules() {
     <>
       <InfoSection title="How does the game work?">
         <p className="mb-4">
-          Every day at 21:30 U.S. Central Standard Time, the map is redrawn. For each territory on
-          the map, the total <a href="#starpower">starpower</a> is calculated for each team that
-          made moves in that territory. A random number is drawn and the team whose player that
-          number corresponds to is labeled <a href="#mvp">MVP</a> and wins the territory for that
-          team.
+          Every day at 22:30 U.S. Eastern Standard Time, the map is redrawn. For each territory on
+          the map, the total <Link href="#starpower">starpower</Link> is calculated for each team
+          that made moves in that territory. A random number is drawn and the team whose player that
+          number corresponds to is labeled <Link href="#mvp">MVP</Link> and wins the territory for
+          that team.
         </p>
       </InfoSection>
 
@@ -232,17 +229,12 @@ function SurvivalGuide() {
   return (
     <InfoSection title="Survival Guide">
       <p className="mb-4">
-        <a href="/player/The_Ghost_of_TxAg70">TxAg70</a> has put together a wonderful guide for how
-        teams can dominate in CFBR. CFBR is grateful to him for putting it together. You can view it
-        below or{" "}
-        <a
-          href="/files/CFBRisk_Guide_1_7.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="CFBR Surival Guide"
-        >
-          here
-        </a>
+        <Link href="/player/The_Ghost_of_TxAg70">TxAg70</Link> has put together a wonderful guide
+        for how teams can dominate in CFBR. CFBR is grateful to him for putting it together. You can
+        view it below or{" "}
+        <Link external href="/files/CFBRisk_Guide_1_7.pdf" aria-label="CFBR Survival Guide">
+          Open the Survival Guide PDF
+        </Link>
         .
       </p>
 

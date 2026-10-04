@@ -48,7 +48,7 @@ export default function Navbar() {
         <Button
           variant="nav"
           onClick={() => setMobileOpen((open) => !open)}
-          className="ml-auto p-2 md:hidden text-white!"
+          className="ml-auto p-2 md:hidden"
           aria-label="Toggle navigation menu"
           aria-expanded={mobileOpen}
         >
@@ -58,8 +58,8 @@ export default function Navbar() {
 
       {/* Mobile navigation */}
       {mobileOpen && (
-        <div className="absolute inset-x-0 top-16 border-t border-white/20 bg-linear-to-r from-accent-2 to-accent-1 md:hidden">
-          <div className="divide-y divide-white/20">
+        <div className="absolute inset-x-0 top-16 border-t border-foreground/20 bg-linear-to-r from-accent-2 to-accent-1 md:hidden">
+          <div className="divide-y divide-foreground/20">
             <MobileNavItem
               onClick={() => {
                 closeMobileMenu();
@@ -136,8 +136,7 @@ function NavItem({ children, ...props }: NavItemProps) {
     <NavLink
       to={props.to}
       end={props.to === "/"}
-      variant="inherit"
-      className="rounded-md px-4 py-2 text-sm font-medium text-white"
+      className="rounded-md px-4 py-2 text-sm font-medium"
     >
       <span className="inline-block hover:shadow-accent-glow hover:underline hover:decoration-dashed">
         {children}
@@ -148,11 +147,7 @@ function NavItem({ children, ...props }: NavItemProps) {
 
 function ExternalNavItem({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link
-      href={href}
-      variant="inherit"
-      className="rounded-md px-4 py-2 text-sm font-medium text-white"
-    >
+    <Link href={href} variant="nav" className="rounded-md px-4 py-2 text-sm font-medium">
       <span className="inline-block hover:shadow-accent-glow hover:underline hover:decoration-dashed">
         {children}
       </span>
@@ -186,8 +181,7 @@ function MobileNavItem({
       to={to}
       end={to === "/"}
       onClick={onClick}
-      variant="inherit"
-      className="block w-full rounded-none py-3 text-center text-sm font-medium text-white"
+      className="block w-full rounded-none py-3 text-center text-sm font-medium"
     >
       {children}
     </NavLink>
@@ -206,9 +200,9 @@ function ExternalMobileNavItem({
   return (
     <Link
       href={href}
-      variant="inherit"
+      variant="nav"
       onClick={onClick}
-      className="block w-full rounded-none py-3 text-center text-sm font-medium text-white"
+      className="block w-full rounded-none py-3 text-center text-sm font-medium"
     >
       {children}
     </Link>

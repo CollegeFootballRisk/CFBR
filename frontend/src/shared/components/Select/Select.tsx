@@ -190,9 +190,8 @@ export default function Select<T = string>({
           role="listbox"
           aria-labelledby={label ? labelId : undefined}
           className={cn(
-            "absolute left-0 z-50 w-full overflow-y-auto",
-            "max-h-64 rounded-md border bg-control",
-            "shadow-xl",
+            "absolute left-0 z-50 w-full overflow-y-auto max-h-64 rounded-md border " +
+              "bg-control shadow-xl ",
             alignTop ? "bottom-full mb-2" : "top-full mt-2",
           )}
         >
@@ -201,7 +200,7 @@ export default function Select<T = string>({
               return (
                 // biome-ignore lint/a11y/useSemanticElements: listbox option groups are not form control groups
                 <div key={`group-${item.label}`} role="group" aria-label={item.label}>
-                  <div className="mx-3 mt-2 border-b border-control-foreground/20 px-1 pb-1 text-xs font-semibold uppercase tracking-wider text-control-foreground/60">
+                  <div className="mx-3 mt-2 border-b border-control-border px-1 pb-1 text-xs font-semibold uppercase tracking-wider">
                     {item.label}
                   </div>
 

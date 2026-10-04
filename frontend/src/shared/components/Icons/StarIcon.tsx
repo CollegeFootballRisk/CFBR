@@ -12,7 +12,7 @@ export default function StarIcon({ className }: StarIconProps) {
       fill="currentColor"
       role="img"
       aria-label="Star"
-      className={cn("inline-block size-10 text-foreground", className)}
+      className={cn("inline-block size-10", className)}
     >
       <path
         fillRule="evenodd"

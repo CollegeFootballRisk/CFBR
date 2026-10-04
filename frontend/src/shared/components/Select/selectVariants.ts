@@ -1,7 +1,10 @@
 import { cva } from "class-variance-authority";
 
 export const selectVariants = cva(
-  "flex items-center justify-between border border-control-border bg-control text-control-foreground font-sans tracking-wider disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-foreground",
+  "flex items-center justify-between border font-sans tracking-wider " +
+    "bg-control text-foreground border-control-border " +
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground " +
+    "disabled:cursor-not-allowed disabled:opacity-40",
   {
     variants: {
       size: {

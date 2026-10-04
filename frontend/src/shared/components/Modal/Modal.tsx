@@ -155,10 +155,11 @@ export default function Modal({
       onClick={onClose}
       aria-label="Close modal"
       className={cn(
-        "flex h-9 w-9 shrink-0 items-center justify-center rounded-full outline-1 outline-black",
-        "bg-white text-black transition-colors",
-        "hover:bg-black hover:text-white",
-        "focus-visible:outline-2 focus-visible:outline-foreground",
+        "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+        "border border-control-border",
+        "bg-control text-foreground transition-colors",
+        "hover:bg-foreground hover:text-background",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
       )}
     >
       <span aria-hidden="true" className="-mt-0.5 text-2xl leading-none">
@@ -170,7 +171,7 @@ export default function Modal({
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: modal backdrop
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black/60 p-4"
+      className="fixed inset-0 z-60 flex items-center justify-center overflow-hidden bg-background/60 p-4 backdrop-blur-sm"
       role="presentation"
       onMouseDown={handleBackdropClick}
     >
@@ -192,7 +193,7 @@ export default function Modal({
           className={cn(
             "pointer-events-none absolute -inset-0.75 -z-10",
             "rounded-md",
-            "bg-[linear-gradient(60deg,#f79533,#f37055,#ef4e7b,#a166ab,#5073b8,#1098ad,#07b39b,#6fba82)]",
+            "bg-rainbow",
             "bg-size-[300%_300%]",
             "animate-modal-rainbow",
           )}
@@ -200,7 +201,7 @@ export default function Modal({
 
         {headerActions ? (
           /* Header: actions get the flexible column, close button gets its own fixed column */
-          <div className="flex shrink-0 items-start gap-4 rounded-t-sm bg-background px-4 pb-2 pt-4">
+          <div className="flex shrink-0 items-start gap-4 rounded-t-sm  px-4 pb-2 pt-4">
             <div className="min-w-0 flex-1">{headerActions}</div>
             {closeButton}
           </div>

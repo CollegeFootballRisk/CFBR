@@ -188,7 +188,7 @@ export default function Settings() {
         </div>
         <Link to="/settings#info">Version Information</Link>
         <br />
-        <Link to="/settings#logout" variant="muted">
+        <Link to="/settings#logout" variant="exit">
           Logout
         </Link>
       </PageContainer>

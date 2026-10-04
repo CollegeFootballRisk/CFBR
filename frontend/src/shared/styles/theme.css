@@ -1,57 +1,63 @@
 :root {
-  /* #region APP */
   --background: #2d2d32;
   --foreground: #fff;
 
-  --accent-1: #4ea8ff;
+  --accent-2: #4060a8;
 
   --control: #3a3a41;
-  --control-foreground: #fff;
   --control-border: #f3f4f6;
 
   --failure: #ff6b6b;
   --success: #56c080;
 
-  --nav-hover-foreground: #fff;
-
-  /* #endregion */
+  --link: #8fb8ff;
 }
 
 .light {
-  /* #region APP */
   --background: #fff;
   --foreground: #000;
 
-  --accent-1: #0066b3;
+  --accent-2: #6f93c4;
 
   --control: #f3f4f6;
-  --control-foreground: #171717;
   --control-border: #3a3a41;
 
   --failure: #c62828;
   --success: #16803c;
 
-  --nav-hover-foreground: #000;
-
-  /* #endregion */
+  --link: #245a9c;
 }
+
+/* TODO: Smooth out transitions on hovering */
 
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-accent-1: var(--accent-1);
-  --color-accent-2: #4060a8;
+  --color-accent-1: #4a78a8;
+
+  --color-accent-2: var(--accent-2);
 
   --color-control: var(--control);
-  --color-control-foreground: var(--control-foreground);
   --color-control-border: var(--control-border);
-  --color-control-checked: var(--success);
 
-  --color-nav-hover-foreground: var(--nav-hover-foreground);
-
-  --color-success: var(--success);
   --color-failure: var(--failure);
+  --color-success: var(--success);
+
+  --color-link: var(--link);
+
+  --background-image-rainbow: linear-gradient(
+    60deg,
+    #f79533,
+    #f37055,
+    #ef4e7b,
+    #a166ab,
+    #5073b8,
+    #1098ad,
+    #07b39b,
+    #6fba82
+  );
+
   --shadow-accent-glow:
     0px 0px 16px 10px var(--color-accent-2), inset 0px 0px 5px 10px var(--color-accent-2);
 }

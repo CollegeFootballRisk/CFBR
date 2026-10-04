@@ -46,12 +46,12 @@ export default function Switch({
       onClick={handleClick}
       className={cn(
         [
-          "relative inline-flex h-8 w-15 shrink-0 cursor-pointer items-center",
+          "relative inline-flex h-8 w-15 shrink-0 cursor-pointer items-center px-0.5",
           "rounded-full border border-control-border",
-          "focus-visible:outline-2 focus-visible:outline-foreground",
-          "disabled:cursor-not-allowed disabled:opacity-50",
+          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
+          "disabled:cursor-not-allowed disabled:opacity-40",
         ],
-        isChecked ? "bg-control-checked" : "bg-control",
+        isChecked ? "bg-success" : "bg-control",
         className,
       )}
       {...props}
@@ -60,10 +60,10 @@ export default function Switch({
         className={cn(
           [
             "pointer-events-none block h-6.5 w-6.5 rounded-full",
-            "bg-white shadow-sm ring-0",
+            "shadow-sm ring-0",
             "transition-transform duration-200 ease-in-out",
           ],
-          isChecked ? "translate-x-full" : "translate-x-0",
+          isChecked ? "translate-x-7 bg-background" : "translate-x-0 bg-foreground",
         )}
       />
     </button>

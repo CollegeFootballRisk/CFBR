@@ -32,21 +32,22 @@ export default function Sidebar({ defaultOpen = true }: SidebarProps) {
       className={[
         "fixed left-0 top-16 bottom-0 z-40 w-60",
         "overflow-visible border-r-4",
+        "bg-accent-1 text-foreground",
         "transition-transform duration-500 ease-in-out",
-        "bg-accent-1",
         open ? "translate-x-0" : "-translate-x-full",
       ].join(" ")}
     >
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
+        aria-expanded={open}
         className={[
           "absolute top-1/2 -translate-y-1/2",
           "flex h-16 w-10 items-center justify-center",
-          "border-4",
-          "bg-accent-1",
+          "rounded-r-xl border-4 bg-accent-1 text-foreground",
+          "hover:bg-foreground hover:text-background",
+          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
           "transition-all duration-500 ease-in-out",
-          "rounded-r-xl",
           open ? "left-[calc(100%+8px)]" : "left-[calc(100%+4px)]",
         ].join(" ")}
         aria-label={open ? "Close sidebar" : "Open sidebar"}
@@ -55,7 +56,13 @@ export default function Sidebar({ defaultOpen = true }: SidebarProps) {
         <ChevronIcon direction={open ? "right" : "left"} className="h-5 w-5" />
       </button>
 
-      <div className="flex justify-center gap-1 my-4 mx-2 border-t-2 pt-4">
+      <div
+        className={[
+          "mx-2 my-4 flex justify-center gap-1 border-t-2 pt-4",
+          "transition-[visibility] duration-500",
+          open ? "visible" : "invisible",
+        ].join(" ")}
+      >
         <Link
           external
           href="https://discord.gg/NwXjDS7mGN"

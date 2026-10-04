@@ -1,7 +1,7 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { Link as RouterLink, type LinkProps as RouterLinkProps } from "react-router-dom";
 
-type LinkVariant = "default" | "accent" | "muted" | "inherit";
+type LinkVariant = "default" | "exit" | "nav";
 
 interface BaseLinkProps {
   children: ReactNode;
@@ -24,10 +24,9 @@ type ExternalLinkProps = BaseLinkProps &
 export type LinkProps = InternalLinkProps | ExternalLinkProps;
 
 const variants: Record<LinkVariant, string> = {
-  default: "text-accent-1 hover:text-accent-1 hover:underline",
-  accent: "text-accent-1 hover:text-accent-1 hover:underline",
-  muted: "text-failure hover:text-foreground hover:underline",
-  inherit: "text-inherit hover:text-inherit",
+  default: "text-link",
+  exit: "text-failure",
+  nav: "text-inherit",
 };
 
 export function Link({
@@ -38,7 +37,7 @@ export function Link({
   ...props
 }: LinkProps) {
   const classes = [
-    "underline-offset-2 transition focus-visible:outline-2 focus-visible:outline-foreground",
+    "underline-offset-2 transition focus-visible:outline-2 focus-visible:outline-offset-2 hover:underline",
     variants[variant],
     className,
   ]

@@ -23,7 +23,7 @@ export function Input({ id, label, className = "", ...props }: InputProps) {
         id={id}
         {...props}
         className={[
-          "rounded-md border border-control-border bg-control px-2 py-1 text-control-foreground transition-colors",
+          "rounded-md border border-control-border bg-control px-2 py-1 text-foreground transition-colors",
           "focus-visible:outline-2 focus-visible:outline-foreground",
           className,
         ]

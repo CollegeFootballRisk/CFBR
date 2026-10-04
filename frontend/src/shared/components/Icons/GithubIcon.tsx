@@ -13,7 +13,7 @@ export default function GitHubIcon({ className }: GitHubIconProps) {
         fillRule="evenodd"
         aria-hidden="true"
       >
-        <g fill="white">
+        <g className="fill-foreground">
           <path
             d="
               M32,16
@@ -45,7 +45,7 @@ export default function GitHubIcon({ className }: GitHubIconProps) {
             "
           />
 
-          <g fill="var(--color-accent-2)">
+          <g className="fill-accent-2">
             <path
               d="
                 M0,0

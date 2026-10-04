@@ -13,11 +13,11 @@ export default function DiscordIcon({ className }: DiscordIconProps) {
         fillRule="evenodd"
         aria-hidden="true"
       >
-        <g fill="white">
+        <g className="fill-foreground">
           <path d="M 0,0 H 64 V 64 H 0 Z" />
         </g>
 
-        <g fill="var(--color-accent-2)">
+        <g className="fill-accent-2">
           <path
             d="M 0 0 L 0 64 L 64 64 L 64 0 L 0 0 z
             M 26.404297 16.828125 L 26.769531 17.259766

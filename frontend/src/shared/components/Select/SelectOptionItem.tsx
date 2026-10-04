@@ -32,10 +32,10 @@ export const SelectOptionItem = forwardRef<HTMLDivElement, SelectOptionItemProps
           }
         }}
         className={cn(
-          "px-4 py-2 text-control-foreground",
-          selected && "bg-accent-2 text-white font-medium",
-          highlighted && !selected && "bg-accent-2 text-white",
-          disabled && "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-inherit",
+          "px-4 py-2",
+          highlighted && "bg-accent-1 text-foreground",
+          selected && "bg-accent-1 font-medium",
+          disabled && "cursor-not-allowed opacity-40",
         )}
       >
         {label}

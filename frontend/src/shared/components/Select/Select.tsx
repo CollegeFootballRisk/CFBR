@@ -48,6 +48,7 @@ export default function Select<T = string>({
 
   size,
   chevron = true,
+  variant = "default",
 
   className,
 
@@ -154,6 +155,7 @@ export default function Select<T = string>({
         chevron={chevron}
         open={open}
         rounded={rounded}
+        variant={variant}
       >
         {longestOption}
       </SelectMeasure>
@@ -176,6 +178,7 @@ export default function Select<T = string>({
             size,
             rounded,
             chevron,
+            variant,
           }),
           "h-full w-full",
         )}

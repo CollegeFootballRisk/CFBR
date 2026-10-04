@@ -53,7 +53,7 @@ export default function Sidebar({ defaultOpen = true }: SidebarProps) {
         aria-label={open ? "Close sidebar" : "Open sidebar"}
         title={open ? "Close sidebar" : "Open sidebar"}
       >
-        <ChevronIcon direction={open ? "right" : "left"} className="h-5 w-5" />
+        <ChevronIcon direction={open ? "right" : "left"} size="lg" />
       </button>
 
       <div

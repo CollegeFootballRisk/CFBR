@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 export const selectVariants = cva(
-  "flex items-center justify-between border font-sans tracking-wider " +
+  "flex items-center justify-between border font-sans " +
     "bg-control text-foreground border-control-border " +
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground " +
     "disabled:cursor-not-allowed disabled:opacity-40",
@@ -20,12 +20,19 @@ export const selectVariants = cva(
         true: "rounded-full",
         false: "rounded-md",
       },
+
+      variant: {
+        default: "tracking-wider",
+        "map-control":
+          "rounded-none border-0 px-3 py-2 text-xl font-medium bg-accent-1 hover:bg-accent-2",
+      },
     },
 
     defaultVariants: {
       size: "medium",
       chevron: true,
       rounded: false,
+      variant: "default",
     },
   },
 );

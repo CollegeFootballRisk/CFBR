@@ -1,9 +1,16 @@
+import MapControls from "@/features/map/components/MapControls";
+
 export default function Home() {
   return (
-    <div className="min-h-[calc(100vh-4rem)] text-center p-8">
-      <h1 className="text-2xl">College Football Risk</h1>
+    <div className="relative h-[calc(100vh-4rem)] overflow-hidden bg-background">
+      <MapControls />
 
-      <p className="mt-2">Map coming soon.</p>
+      <div className="absolute inset-0 flex items-center justify-center text-center">
+        <div>
+          <h1 className="text-2xl font-semibold">College Football Risk</h1>
+          <p className="mt-2">Map coming soon.</p>
+        </div>
+      </div>
     </div>
   );
 }

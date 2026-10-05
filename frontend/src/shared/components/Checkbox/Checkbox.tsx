@@ -1,25 +1,39 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import type { InputHTMLAttributes, ReactNode } from "react";
+import { type InputHTMLAttributes, type ReactNode, useId } from "react";
+
 import { CheckIcon } from "../Icons";
+
+type CheckboxInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
 
 type CheckboxProps =
   | ({
       label: ReactNode;
       "aria-label"?: never;
       error?: ReactNode;
-    } & InputHTMLAttributes<HTMLInputElement>)
+    } & CheckboxInputProps)
   | ({
       label?: never;
       "aria-label": string;
       error?: ReactNode;
-    } & InputHTMLAttributes<HTMLInputElement>);
+    } & CheckboxInputProps);
 
-export function Checkbox({ id, label, error, className = "", ...props }: CheckboxProps) {
+export function Checkbox({
+  id,
+  label,
+  error,
+  className = "",
+  "aria-describedby": ariaDescribedBy,
+  ...props
+}: CheckboxProps) {
+  const generatedId = useId();
+  const checkboxId = id ?? generatedId;
+  const errorId = error ? `${checkboxId}-error` : undefined;
+
   return (
     <div className="flex flex-col gap-1">
       <label
-        htmlFor={id}
+        htmlFor={checkboxId}
         className={[
           "flex items-center gap-2 font-medium",
           props.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
@@ -29,10 +43,10 @@ export function Checkbox({ id, label, error, className = "", ...props }: Checkbo
       >
         <span className="relative size-4 shrink-0">
           <input
-            id={id}
-            type="checkbox"
             {...props}
-            aria-describedby={error && id ? `${id}-error` : undefined}
+            id={checkboxId}
+            type="checkbox"
+            aria-describedby={[ariaDescribedBy, errorId].filter(Boolean).join(" ") || undefined}
             className={[
               "peer size-4 appearance-none rounded border border-control-border bg-control",
               "focus-visible:outline-2 focus-visible:outline-foreground",
@@ -60,7 +74,7 @@ export function Checkbox({ id, label, error, className = "", ...props }: Checkbo
       </label>
 
       {error && (
-        <p id={id ? `${id}-error` : undefined} className="text-sm text-failure">
+        <p id={errorId} className="text-sm text-failure">
           {error}
         </p>
       )}

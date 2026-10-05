@@ -17,7 +17,11 @@ export default function ChevronIcon({
     <svg
       aria-hidden="true"
       viewBox="0 0 20 20"
-      fill="currentColor"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className={cn(
         "transition-transform",
         size === "default" && "size-4",
@@ -28,11 +32,7 @@ export default function ChevronIcon({
         className,
       )}
     >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.15l3.71-3.92a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1-1.06-.02Z"
-      />
+      <path d="M6 8l4 4 4-4" />
     </svg>
   );
 }

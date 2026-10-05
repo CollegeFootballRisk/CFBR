@@ -13,6 +13,7 @@ const NATIVE_UI_ELEMENTS = new Map([
   ["select", "Select"],
   ["button", "Button"],
   ["input", "Input"],
+  ["textarea", "Textarea"]
 ]);
 
 const REACT_ROUTER_LINK_IMPORTS = new Set(["Link", "NavLink"]);

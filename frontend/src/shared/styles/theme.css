@@ -12,7 +12,7 @@
   --failure: #ff6b6b;
   --success: #56c080;
 
-  --link: #8fb8ff;
+  --info: #8fb8ff;
 }
 
 .light {
@@ -27,7 +27,7 @@
   --failure: #c62828;
   --success: #16803c;
 
-  --link: #245a9c;
+  --info: #245a9c;
 }
 
 /* TODO: Smooth out transitions on hovering */
@@ -46,7 +46,7 @@
   --color-failure: var(--failure);
   --color-success: var(--success);
 
-  --color-link: var(--link);
+  --color-info: var(--info);
 
   --background-image-rainbow: linear-gradient(
     60deg,

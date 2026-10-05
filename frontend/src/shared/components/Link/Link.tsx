@@ -26,7 +26,7 @@ type ExternalLinkProps = BaseLinkProps &
 export type LinkProps = InternalLinkProps | ExternalLinkProps;
 
 const variants: Record<LinkVariant, string> = {
-  default: "text-link",
+  default: "text-info",
   exit: "text-failure",
   nav: "text-inherit",
 };

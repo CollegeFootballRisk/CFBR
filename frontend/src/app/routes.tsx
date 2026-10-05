@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { createBrowserRouter } from "react-router-dom";
-
+import Bugs from "@/features/bugs/pages/Bug";
 import Help from "@/features/help/pages/Help";
 import Info from "@/features/help/pages/Info";
 import Policies from "@/features/help/pages/Policies";
@@ -93,7 +93,7 @@ export const router = createBrowserRouter([
 
       {
         path: "/about",
-        element: <ComingSoon title="About" description="The CFBR about page is being rebuilt." />,
+        element: <Info />,
       },
 
       {
@@ -114,6 +114,11 @@ export const router = createBrowserRouter([
       {
         path: "/error/:error",
         element: <ComingSoon title="Error" description="An error occurred." />,
+      },
+
+      {
+        path: "/bugs",
+        element: <Bugs />,
       },
 
       {

@@ -60,8 +60,8 @@ export default function Navbar() {
 
       {/* Mobile navigation */}
       {mobileOpen && (
-        <div className="absolute inset-x-0 top-16 border-t border-foreground/20 bg-linear-to-r from-accent-2 to-accent-1 md:hidden">
-          <div className="divide-y divide-foreground/20">
+        <div className="absolute inset-x-0 top-16 border-t border-foreground bg-linear-to-r from-accent-2 to-accent-1 md:hidden">
+          <div className="divide-y divide-foreground">
             <MobileNavItem
               onClick={() => {
                 closeMobileMenu();

@@ -311,28 +311,38 @@ function validateNativeUiElement(sourceFile, node) {
     return;
   }
 
-  if (normalizedName === "input") {
-    const typeAttribute = openingElement.attributes.properties.find(
-      (attribute) =>
-        ts.isJsxAttribute(attribute) &&
-        ts.isIdentifier(attribute.name) &&
-        attribute.name.text === "type",
-    );
+if (normalizedName === "input") {
+  const typeAttribute = openingElement.attributes.properties.find(
+    (attribute) =>
+      ts.isJsxAttribute(attribute) &&
+      ts.isIdentifier(attribute.name) &&
+      attribute.name.text === "type",
+  );
 
-    if (
-      typeAttribute?.initializer &&
-      ts.isStringLiteral(typeAttribute.initializer) &&
-      typeAttribute.initializer.text === "date"
-    ) {
+  if (typeAttribute?.initializer && ts.isStringLiteral(typeAttribute.initializer)) {
+    const inputType = typeAttribute.initializer.text.toLowerCase();
+
+    if (inputType === "date") {
       report(
         sourceFile,
         openingElement,
-        'Use DatePicker from @/shared instead of native <input type="date">.',
+        "Use DatePicker from @/shared instead of native <input type=\"date\">.",
+      );
+
+      return;
+    }
+
+    if (inputType === "checkbox") {
+      report(
+        sourceFile,
+        openingElement,
+        "Use Checkbox from @/shared instead of native <input type=\"checkbox\">.",
       );
 
       return;
     }
   }
+}
 
   report(
     sourceFile,

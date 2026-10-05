@@ -28,6 +28,11 @@ export const selectVariants = cva(
         "map-control":
           "rounded-none border-0 px-3 py-2 text-xl font-medium bg-accent-1 hover:bg-accent-2",
       },
+
+      invalid: {
+        true: "border-accent-1 focus-visible:outline-accent-1",
+        false: "",
+      },
     },
 
     defaultVariants: {

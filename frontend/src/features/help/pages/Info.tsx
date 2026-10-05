@@ -98,7 +98,7 @@ function GameOverview() {
           of North America. The objective is for a team to have the largest number of territories of
           any team at the end of the season. College Football Risk is a continuation of a popular
           CFB Risk game run by{" "}
-          <Link href="https://www.reddit.com/r/CFB" target="_blank" rel="noopener noreferrer">
+          <Link external href="https://www.reddit.com/r/CFB">
             r/CFB
           </Link>{" "}
           in the Spring and Summer of 2018, by{" "}
@@ -131,7 +131,7 @@ function GameOverview() {
       <InfoSection title="How can I participate in the community and/or find my team's central command?">
         <p className="mb-4">
           We mainly use Discord for our team's community and central command. This is our{" "}
-          <Link href="https://discord.gg/NwXjDS7mGN" target="_blank" rel="noopener noreferrer">
+          <Link external href="https://discord.gg/NwXjDS7mGN">
             official Discord server
           </Link>{" "}
           where you can find teams and then be invited to your corresponding team servers.

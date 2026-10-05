@@ -29,6 +29,8 @@ export interface SelectProps<T = string>
 
   hideLabel?: boolean;
 
+  required?: boolean;
+  error?: string;
   disabled?: boolean;
 }
 
@@ -46,6 +48,8 @@ export default function Select<T = string>({
 
   hideLabel = true,
 
+  required = false,
+  error,
   disabled = false,
 
   size,
@@ -148,6 +152,7 @@ export default function Select<T = string>({
       {label && (
         <label id={labelId} htmlFor={selectId} className={cn(hideLabel && "sr-only")}>
           {label}
+          {required && <span className="ml-1 text-info">*</span>}
         </label>
       )}
 
@@ -166,6 +171,10 @@ export default function Select<T = string>({
         id={selectId}
         type="button"
         aria-labelledby={label ? labelId : undefined}
+        aria-describedby={error ? `${selectId}-error` : undefined}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-invalid={error ? true : undefined}
         disabled={disabled}
         onClick={() => {
           setOpen((previous) => !previous);
@@ -181,6 +190,7 @@ export default function Select<T = string>({
             rounded,
             chevron,
             variant,
+            invalid: Boolean(error),
           }),
           "h-full w-full",
         )}
@@ -189,6 +199,12 @@ export default function Select<T = string>({
 
         {chevron && <ChevronIcon className={cn(open && "rotate-180")} />}
       </button>
+
+      {error && (
+        <p id={`${selectId}-error`} className="mt-1 text-sm text-accent-1">
+          {error}
+        </p>
+      )}
 
       {open && (
         <div

@@ -5,6 +5,7 @@ import Bugs from "@/features/bugs/pages/Bug";
 import Help from "@/features/help/pages/Help";
 import Info from "@/features/help/pages/Info";
 import Policies from "@/features/help/pages/Policies";
+import Thanks from "@/features/help/pages/Thanks";
 import Home from "@/features/home/pages/Home";
 import Odds from "@/features/odds/pages/Odds";
 import Settings from "@/features/settings/pages/Settings";
@@ -118,7 +119,7 @@ export const router = createBrowserRouter([
 
       {
         path: "/thanks",
-        element: <ComingSoon title="Thanks" description="The thanks page is being rebuilt." />,
+        element: <Thanks />,
       },
 
       {

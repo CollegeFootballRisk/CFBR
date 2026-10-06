@@ -74,7 +74,7 @@ export default function Sidebar({ defaultOpen = true }: SidebarProps) {
         </Link>
         <Link
           external
-          href="https://github.com/CollegeFootballRisk/"
+          href="https://github.com/CollegeFootballRisk/cfbr"
           aria-label="College Football Risk GitHub"
         >
           <GitHubIcon />

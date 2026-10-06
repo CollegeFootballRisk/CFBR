@@ -14,13 +14,15 @@ export default function QuestionIcon({ className }: OddsInfoIconProps) {
       role="img"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 512 512"
-      className={cn("h-6 w-6 fill-accent-1 hover:fill-accent-2", className)}
+      className={cn("h-6 w-6", className)}
     >
-      <path
-        d="
-          M256 512A256 256 0 1 0 256 0
-          a256 256 0 1 0 0 512z
+      {/* Circle/background */}
+      <circle cx="256" cy="256" r="256" className="fill-accent-1 hover:fill-accent-2" />
 
+      {/* Question mark/foreground */}
+      <path
+        className="fill-foreground"
+        d="
           M169.8 165.3
           c7.9-22.3 29.1-37.3 52.8-37.3
           h58.3

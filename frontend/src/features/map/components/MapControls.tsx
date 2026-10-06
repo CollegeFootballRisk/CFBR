@@ -94,8 +94,8 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
                 value="heatmap"
                 className="order-3 border-l border-control-border rounded-r-md"
               >
-                <HeatmapIcon />
                 <span className="hidden sm:inline">Heatmap</span>
+                <HeatmapIcon />
               </RadioGroupOption>
             </RadioGroup>
 

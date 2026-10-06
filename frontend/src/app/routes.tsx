@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Bugs from "@/features/bugs/pages/Bug";
 import Help from "@/features/help/pages/Help";
 import Info from "@/features/help/pages/Info";
@@ -10,6 +10,7 @@ import Odds from "@/features/odds/pages/Odds";
 import Settings from "@/features/settings/pages/Settings";
 import AppLayout from "@/shared/layouts/AppLayout";
 import ComingSoon from "@/shared/pages/ComingSoon";
+import NotFound from "@/shared/pages/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -121,23 +122,18 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "/error/:error",
-        element: <ComingSoon title="Error" description="An error occurred." />,
-      },
-
-      {
         path: "/bugs",
         element: <Bugs />,
       },
 
       {
+        path: "/404",
+        element: <NotFound />,
+      },
+
+      {
         path: "*",
-        element: (
-          <ComingSoon
-            title="Page Not Found"
-            description="The page you're looking for doesn't exist."
-          />
-        ),
+        element: <Navigate to="/404" replace />,
       },
     ],
   },

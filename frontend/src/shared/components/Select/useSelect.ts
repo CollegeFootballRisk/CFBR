@@ -1,7 +1,14 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import { type KeyboardEvent, type RefObject, useEffect, useMemo, useRef, useState } from "react";
-
+import {
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   buildSelectItems,
   type SelectItem,
@@ -32,13 +39,20 @@ interface UseSelectReturn<T> {
   selectOptions: SelectOption<T>[];
   renderItems: SelectRenderItem<T>[];
 
-  displayValue: string;
+  displayValue: ReactNode;
   longestOption: string;
 
   handleKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
 }
 
-function getDisplayLabel<T>(option: SelectOption<T>, renderItems: SelectRenderItem<T>[]): string {
+function getSearchLabel<T>(option: SelectOption<T>): string {
+  return option.searchLabel ?? (typeof option.label === "string" ? option.label : "");
+}
+
+function getDisplayLabel<T>(
+  option: SelectOption<T>,
+  renderItems: SelectRenderItem<T>[],
+): ReactNode {
   for (const item of renderItems) {
     if (item.kind !== "group") {
       continue;
@@ -123,11 +137,11 @@ export default function useSelect<T>({
   }, [placeholder, renderItems, selectedOption]);
 
   const longestOption = useMemo(() => {
-    return [
-      placeholder,
-      ...selectOptions.map((option) => getDisplayLabel(option, renderItems)),
-    ].reduce((largest, current) => (current.length > largest.length ? current : largest), "");
-  }, [placeholder, renderItems, selectOptions]);
+    return [placeholder, ...selectOptions.map((option) => getSearchLabel(option))].reduce(
+      (largest, current) => (current.length > largest.length ? current : largest),
+      "",
+    );
+  }, [placeholder, selectOptions]);
 
   function findMatchingOption(search: string, startIndex: number) {
     const normalized = search.toLowerCase();
@@ -138,7 +152,7 @@ export default function useSelect<T>({
 
       if (option.disabled) continue;
 
-      if (option.label.toLowerCase().startsWith(normalized)) {
+      if (getSearchLabel(option).toLowerCase().startsWith(normalized)) {
         return index;
       }
     }

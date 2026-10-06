@@ -51,7 +51,7 @@ export function Textarea({
         aria-describedby={cn(ariaDescribedBy, errorId)}
         {...props}
         className={cn(
-          "field-sizing-content min-h-24 max-h-[50vh] resize-y overflow-auto rounded-md border border-control-border bg-control px-2 py-1 text-foreground transition-colors",
+          "field-sizing-content min-h-24 max-h-[50vh] resize-y overflow-auto rounded-md border border-control-border bg-control px-2 py-1 transition-colors",
           "focus-visible:outline-2 focus-visible:outline-foreground",
           "disabled:cursor-not-allowed disabled:opacity-40",
           error && "border-failure",

@@ -106,6 +106,7 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
               label="Map turn"
               variant="map-control"
               className="order-2"
+              rounded="none"
             />
           </div>
         </div>

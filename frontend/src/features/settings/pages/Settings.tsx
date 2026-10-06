@@ -123,7 +123,7 @@ export default function Settings() {
 
             <div className="flex items-center gap-4 py-4">
               <Select
-                rounded={true}
+                rounded="full"
                 value={settings.pageSize}
                 options={[
                   { label: "5", value: 5 },
@@ -145,7 +145,8 @@ export default function Settings() {
 
             <div className="flex items-center gap-4 py-4">
               <Select<Branding>
-                rounded={true}
+                rounded="full"
+                width="full"
                 value={settings.branding}
                 options={[
                   {

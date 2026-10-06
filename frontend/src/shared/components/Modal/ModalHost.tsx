@@ -2,6 +2,7 @@
 
 import LoginModal from "@/features/auth/components/LoginModal";
 import TutorialModal from "@/features/help/components/TutorialModal";
+import OddsInfoModal from "@/features/odds/components/OddsInfoModal";
 import VersionInformationModal from "@/features/settings/components/VersionInformationModal";
 import { useModal } from "./ModalProvider";
 
@@ -17,6 +18,9 @@ export default function ModalHost() {
 
     case "tutorial":
       return <TutorialModal open onClose={closeModal} />;
+
+    case "odds-info":
+      return <OddsInfoModal open onClose={closeModal} />;
 
     default:
       return null;

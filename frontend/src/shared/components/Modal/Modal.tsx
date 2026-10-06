@@ -159,7 +159,7 @@ export default function Modal({
       className={cn(
         "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
         "border border-control-border",
-        "bg-control text-foreground transition-colors",
+        "bg-control transition-colors",
         "hover:bg-foreground hover:text-background",
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
       )}
@@ -183,7 +183,7 @@ export default function Modal({
         aria-modal="true"
         className={cn(
           "relative m-8 flex max-h-[calc(100vh-4rem)] w-[calc(100vw-2rem)] max-w-240 flex-col",
-          "rounded-sm bg-background text-foreground shadow-2xl",
+          "rounded-sm bg-background shadow-2xl",
           "focus:outline-none",
           className,
         )}

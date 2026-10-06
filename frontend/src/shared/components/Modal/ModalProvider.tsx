@@ -3,7 +3,7 @@
 import { createContext, type ReactNode, useCallback, useContext, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export type ModalType = "version-info" | "login" | "tutorial" | null;
+export type ModalType = "version-info" | "login" | "tutorial" | "odds-info" | null;
 
 interface ModalContextValue {
   modal: ModalType;
@@ -17,12 +17,14 @@ const MODAL_HASHES: Record<Exclude<ModalType, null>, string> = {
   "version-info": "#version-info",
   login: "#login",
   tutorial: "#tutorial",
+  "odds-info": "#odds-info",
 };
 
 const HASH_TO_MODAL: Record<string, Exclude<ModalType, null>> = {
   "#version-info": "version-info",
   "#login": "login",
   "#tutorial": "tutorial",
+  "#odds-info": "odds-info",
 };
 
 export function ModalProvider({ children }: { children: ReactNode }) {

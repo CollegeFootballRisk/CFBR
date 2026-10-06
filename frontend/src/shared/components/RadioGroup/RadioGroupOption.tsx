@@ -32,7 +32,7 @@ export function RadioGroupOption({
       className={[
         "inline-flex cursor-pointer items-center justify-center gap-2 px-3 py-2",
         "text-xl font-medium transition-colors",
-        selected ? "bg-accent-2 text-foreground" : "bg-accent-1 text-foreground",
+        selected ? "bg-accent-2" : "bg-accent-1",
         "hover:bg-accent-2",
         "has-focus-visible:ring-2 has-focus-visible:ring-foreground",
         optionDisabled && "cursor-not-allowed opacity-40",

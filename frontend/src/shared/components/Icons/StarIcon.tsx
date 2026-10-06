@@ -4,16 +4,18 @@ import { cn } from "@/shared/utils/cn";
 
 interface StarIconProps {
   className?: string;
+  decorative?: boolean;
 }
 
-export default function StarIcon({ className }: StarIconProps) {
+export default function StarIcon({ className, decorative = true }: StarIconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="392 331 282 268"
       fill="currentColor"
-      role="img"
-      aria-label="Star"
+      role={decorative ? undefined : "img"}
+      aria-label={decorative ? undefined : "Star"}
+      aria-hidden={decorative ? true : undefined}
       className={cn("inline-block size-10", className)}
     >
       <path

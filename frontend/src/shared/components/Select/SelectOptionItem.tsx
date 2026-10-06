@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import { forwardRef } from "react";
+import { forwardRef, type ReactNode } from "react";
 
 import { cn } from "../../utils/cn";
 
 interface SelectOptionItemProps {
-  label: string;
+  label: ReactNode;
   selected: boolean;
   highlighted: boolean;
   disabled?: boolean;
@@ -35,7 +35,7 @@ export const SelectOptionItem = forwardRef<HTMLDivElement, SelectOptionItemProps
         }}
         className={cn(
           "px-4 py-2",
-          highlighted && "bg-accent-1 text-foreground",
+          highlighted && "bg-accent-1",
           selected && "bg-accent-1 font-medium",
           disabled && "cursor-not-allowed opacity-40",
         )}

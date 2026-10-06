@@ -6,6 +6,7 @@ import Help from "@/features/help/pages/Help";
 import Info from "@/features/help/pages/Info";
 import Policies from "@/features/help/pages/Policies";
 import Home from "@/features/home/pages/Home";
+import Odds from "@/features/odds/pages/Odds";
 import Settings from "@/features/settings/pages/Settings";
 import AppLayout from "@/shared/layouts/AppLayout";
 import ComingSoon from "@/shared/pages/ComingSoon";
@@ -47,6 +48,14 @@ export const router = createBrowserRouter([
       {
         path: "/odds/:season/:day/:team",
         element: <ComingSoon title="Odds" description="Battle odds are being rebuilt." />,
+        handle: {
+          sidebar: true,
+        },
+      },
+
+      {
+        path: "/odds",
+        element: <Odds />,
         handle: {
           sidebar: true,
         },

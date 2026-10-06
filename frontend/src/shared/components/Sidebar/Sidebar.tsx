@@ -34,7 +34,7 @@ export default function Sidebar({ defaultOpen = true }: SidebarProps) {
       className={[
         "fixed left-0 top-16 bottom-0 z-40 w-60",
         "overflow-visible border-r-4",
-        "bg-accent-1 text-foreground",
+        "bg-accent-1",
         "transition-transform duration-500 ease-in-out",
         open ? "translate-x-0" : "-translate-x-full",
       ].join(" ")}
@@ -46,7 +46,7 @@ export default function Sidebar({ defaultOpen = true }: SidebarProps) {
         className={[
           "absolute top-1/2 -translate-y-1/2",
           "flex h-16 w-10 items-center justify-center",
-          "rounded-r-xl border-4 bg-accent-1 text-foreground",
+          "rounded-r-xl border-4 bg-accent-1",
           "hover:bg-foreground hover:text-background",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
           "transition-all duration-500 ease-in-out",

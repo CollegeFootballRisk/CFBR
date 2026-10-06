@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MPL-2.0
 
+import type { ReactNode } from "react";
+
 export interface SelectOption<T = string> {
-  label: string;
+  label: ReactNode;
+  searchLabel?: string;
   value: T;
   disabled?: boolean;
 }

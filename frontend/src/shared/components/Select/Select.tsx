@@ -21,6 +21,8 @@ export interface SelectProps<T = string>
 
   onChange: (value: T | "") => void;
 
+  width?: "auto" | "full";
+
   placeholder?: string;
 
   placeholderAsOption?: boolean;
@@ -35,7 +37,8 @@ export interface SelectProps<T = string>
 }
 
 export default function Select<T = string>({
-  rounded = false,
+  rounded = "md",
+  width = "auto",
   value,
   options,
   onChange,
@@ -63,7 +66,7 @@ export default function Select<T = string>({
   const labelId = useId();
   const selectId = useId();
 
-  const [width, setWidth] = useState<number>();
+  const [measuredWidth, setMeasuredWidth] = useState<number>();
   const [height, setHeight] = useState<number>();
   const [alignTop, setAlignTop] = useState(false);
 
@@ -99,7 +102,7 @@ export default function Select<T = string>({
     if (!measureElement) return;
 
     const updateSize = () => {
-      setWidth(measureElement.offsetWidth);
+      setMeasuredWidth(measureElement.offsetWidth);
       setHeight(measureElement.offsetHeight);
     };
 
@@ -143,7 +146,7 @@ export default function Select<T = string>({
     <div
       ref={rootRef}
       style={{
-        width,
+        width: width === "auto" ? measuredWidth : undefined,
         height,
       }}
       className={cn("relative", className)}

@@ -61,7 +61,7 @@ export function Checkbox({
           <span
             className={[
               "pointer-events-none absolute inset-0 hidden items-center justify-center",
-              "text-foreground peer-checked:flex",
+              "peer-checked:flex",
             ].join(" ")}
           >
             <span className="size-3 translate-y-0.5">

@@ -24,30 +24,36 @@ RUN npm run build
 # ============================================
 # Stage 2: Backend/runtime
 # ============================================
+FROM ghcr.io/astral-sh/uv:latest AS uv
+
 FROM python:3.12-slim
 
 ARG APP_VERSION=0.0.0
 
 ENV APP_VERSION=$APP_VERSION
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
+ENV PATH="/app/backend/.venv/bin:$PATH"
+
+COPY --from=uv /uv /uvx /bin/
 
 WORKDIR /app
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Install backend dependencies
-COPY backend/requirements.txt ./backend/requirements.txt
-
-RUN pip install --no-cache-dir -r ./backend/requirements.txt
-
-# Copy backend
-COPY backend/ ./backend/
-
-# Copy built React application into the location
-# expected by backend/app/main.py
-COPY --from=frontend-build /app/frontend/dist ./backend/dist/
+COPY backend/pyproject.toml backend/uv.lock ./backend/
 
 WORKDIR /app/backend
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked --no-dev --no-install-project
+
+COPY backend/ ./
+
+COPY --from=frontend-build /app/frontend/dist ./dist/
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked --no-dev
 
 EXPOSE 8000
 

@@ -70,7 +70,7 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/openapi.json",
     # FIX 1: Explicitly enable the search explorer filter box
-    swagger_ui_parameters={"filter": True}, 
+    swagger_ui_parameters={"filter": True},
 )
 
 app.include_router(test_router)
@@ -83,9 +83,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/api/health")
 def health() -> str:
     return "Backend is running"
+
 
 # FIX 2: Safeguard the frontend catch-all router
 dist_path = os.path.join(os.path.dirname(__file__), "..", "dist")
@@ -100,6 +102,7 @@ if os.path.exists(dist_path):
         # Prevent the catch-all from breaking FastAPI documentation paths
         if catchall.startswith(("docs", "redoc", "openapi.json", "api")):
             from fastapi.exceptions import HTTPException
+
             raise HTTPException(status_code=404)
 
         file_path = os.path.join(dist_path, catchall)
@@ -111,4 +114,3 @@ if os.path.exists(dist_path):
             return FileResponse(index_file)
 
         return {"detail": "Frontend not built yet"}
-

@@ -1,3 +1,29 @@
+[project]
+name = "cfbr-backend"
+version = "0.1.0"
+description = "College Football Risk backend"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "aiofiles",
+    "azure-appconfiguration-provider",
+    "bcrypt<4",
+    "fastapi",
+    "pandas",
+    "passlib[bcrypt]==1.7.4",
+    "psycopg[binary]",
+    "pydantic-settings",
+    "python-jose[cryptography]",
+    "rapidfuzz",
+    "slowapi",
+    "sqlalchemy>=2.0",
+    "uvicorn[standard]",
+]
+
+[dependency-groups]
+dev = [
+    "ruff",
+]
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"
@@ -8,23 +34,20 @@ select = [
     "F",
     "I",
     "B",
-    "UP"
+    "UP",
 ]
 
 ignore = [
-    "B008"
+    "B008",
 ]
 
 [tool.ruff.format]
 quote-style = "double"
 
-
 [tool.mypy]
 python_version = "3.12"
 ignore_missing_imports = true
-
 check_untyped_defs = true
-
 warn_return_any = true
 warn_unused_ignores = true
 warn_redundant_casts = true

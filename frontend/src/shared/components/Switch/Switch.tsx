@@ -53,7 +53,7 @@ export default function Switch({
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
           "disabled:cursor-not-allowed disabled:opacity-40",
         ],
-        isChecked ? "bg-success" : "bg-control",
+        isChecked ? "bg-accent-3" : "bg-control",
         className,
       )}
       {...props}

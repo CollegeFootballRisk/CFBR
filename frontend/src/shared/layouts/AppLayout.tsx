@@ -2,6 +2,7 @@
 
 import { Outlet, useMatches } from "react-router-dom";
 
+import { TurnProvider } from "@/features/turn/context/TurnContext";
 import HashScroll from "../components/HashScroll";
 import { ModalHost, ModalProvider } from "../components/Modal";
 import { Sidebar } from "../components/Sidebar";
@@ -22,19 +23,21 @@ export default function AppLayout() {
 
   return (
     <ModalProvider>
-      <div className="min-h-screen">
-        <Navbar />
+      <TurnProvider>
+        <div className="min-h-screen">
+          <Navbar />
 
-        {sidebarEnabled && <Sidebar />}
+          {sidebarEnabled && <Sidebar />}
 
-        <HashScroll />
+          <HashScroll />
 
-        <main>
-          <Outlet />
-        </main>
-      </div>
+          <main>
+            <Outlet />
+          </main>
+        </div>
 
-      <ModalHost />
+        <ModalHost />
+      </TurnProvider>
     </ModalProvider>
   );
 }

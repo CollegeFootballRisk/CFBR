@@ -50,7 +50,7 @@ export function Checkbox({
             className={[
               "peer size-4 appearance-none rounded border border-control-border bg-control",
               "focus-visible:outline-2 focus-visible:outline-foreground",
-              "checked:border-success checked:bg-success",
+              "checked:border-accent-3 checked:bg--accent-3",
               error ? "border-failure" : "",
               className,
             ]

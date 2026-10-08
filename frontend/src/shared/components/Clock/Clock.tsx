@@ -43,7 +43,7 @@ export function Clock() {
   return (
     <Link
       href="."
-      className="block text-right text-sm font-medium text-info transition-colors hover:text-foreground hover:underline hover:underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+      className="block max-w-full text-right text-sm font-medium text-info transition-colors hover:text-foreground hover:underline hover:underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
       title="Timer"
     >
       {remaining ? (

@@ -3,14 +3,15 @@
 import LoginModal from "@/features/auth/components/LoginModal";
 import TutorialModal from "@/features/help/components/TutorialModal";
 import { ChangelogModal } from "@/features/home/components/ChangelogModal";
+import LeaderboardModal from "@/features/leaderboard/components/LeaderboardModal";
 import OddsInfoModal from "@/features/odds/components/OddsInfoModal";
 import VersionInformationModal from "@/features/settings/components/VersionInformationModal";
 import { useModal } from "./ModalProvider";
 
 export default function ModalHost() {
-  const { modal, closeModal } = useModal();
+  const { activeModal, modalTurn, closeModal } = useModal();
 
-  switch (modal) {
+  switch (activeModal) {
     case "version-info":
       return <VersionInformationModal open onClose={closeModal} />;
 
@@ -25,6 +26,9 @@ export default function ModalHost() {
 
     case "changelog":
       return <ChangelogModal open onClose={closeModal} />;
+
+    case "leaderboard":
+      return <LeaderboardModal open onClose={closeModal} initialTurn={modalTurn ?? "latest"} />;
 
     default:
       return null;

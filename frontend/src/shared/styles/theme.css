@@ -5,6 +5,7 @@
   --foreground: #fff;
 
   --accent-2: #4060a8;
+  --accent-3: #56c080;
 
   --control: #3a3a41;
   --control-border: #f3f4f6;
@@ -13,6 +14,8 @@
   --success: #56c080;
 
   --info: #8fb8ff;
+
+  --table-stripe: #35353b;
 }
 
 .light {
@@ -25,7 +28,6 @@
   --control-border: #3a3a41;
 
   --failure: #c62828;
-  --success: #16803c;
 
   --info: #245a9c;
 
@@ -39,14 +41,13 @@
   --color-foreground: var(--foreground);
 
   --color-accent-1: #4a78a8;
-
   --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
 
   --color-control: var(--control);
   --color-control-border: var(--control-border);
 
   --color-failure: var(--failure);
-  --color-success: var(--success);
 
   --color-info: var(--info);
 

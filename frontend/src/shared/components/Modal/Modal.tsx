@@ -214,7 +214,10 @@ export default function Modal({
         {/* Scrollable modal body */}
         <div ref={scrollContainerRef} className="min-h-0 overflow-y-auto px-4 pb-4 text-center">
           <div className={cn(headerActions ? "pt-4" : "pt-4")}>
-            <h2 id={titleId} className="text-center text-3xl font-bold leading-tight sm:text-4xl">
+            <h2
+              id={titleId}
+              className="text-balance wrap-break-word px-10 text-center text-4xl font-bold leading-tight sm:px-12"
+            >
               {title}
             </h2>
 

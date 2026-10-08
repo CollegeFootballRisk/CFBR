@@ -8,6 +8,7 @@ import { Link } from "@/shared/components/Link";
 import { useModal } from "@/shared/components/Modal";
 import { Select } from "@/shared/components/Select";
 import { Switch } from "@/shared/components/Switch";
+import { PageSizeSelect } from "@/shared/components/Table";
 import PageContainer from "@/shared/layouts/PageContainer";
 
 export default function Settings() {
@@ -122,23 +123,9 @@ export default function Settings() {
             </div>
 
             <div className="flex items-center gap-4 py-4">
-              <Select
-                rounded="full"
+              <PageSizeSelect
                 value={settings.pageSize}
-                options={[
-                  { label: "5", value: 5 },
-                  { label: "10", value: 10 },
-                  { label: "15", value: 15 },
-                  { label: "20", value: 20 },
-                  { label: "25", value: 25 },
-                  { label: "50", value: 50 },
-                  { label: "100", value: 100 },
-                ]}
-                onChange={(value) => {
-                  if (value !== "") {
-                    updateSetting("pageSize", value);
-                  }
-                }}
+                onChange={(value) => updateSetting("pageSize", value)}
               />
               <span className="text-sm">How many rows to show on tables by default</span>
             </div>

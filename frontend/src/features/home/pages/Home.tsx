@@ -11,13 +11,13 @@ export default function Home() {
     <div className="relative h-[calc(100vh-4rem)] overflow-hidden">
       <MapControls />
 
-      <div className="absolute right-2 top-2 z-10 flex flex-col items-end text-sm">
+      <div className="absolute right-2 top-2 z-10 flex w-20 flex-col items-end text-sm sm:w-auto">
         <Clock />
 
         <Button
           variant="icon"
           onClick={() => openModal("changelog")}
-          className="text-info hover:underline hover:underline-offset-2 transition-colors hover:text-foreground"
+          className="text-info transition-colors hover:text-foreground hover:underline hover:underline-offset-2"
         >
           Changelog
         </Button>

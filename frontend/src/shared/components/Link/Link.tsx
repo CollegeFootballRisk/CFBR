@@ -3,7 +3,7 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { Link as RouterLink, type LinkProps as RouterLinkProps } from "react-router-dom";
 
-type LinkVariant = "default" | "exit" | "nav";
+type LinkVariant = "default" | "exit" | "nav" | "table";
 
 interface BaseLinkProps {
   children: ReactNode;
@@ -29,6 +29,7 @@ const variants: Record<LinkVariant, string> = {
   default: "text-info",
   exit: "text-failure",
   nav: "text-inherit",
+  table: "text-accent-3",
 };
 
 export function Link({

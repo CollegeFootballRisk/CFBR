@@ -16,6 +16,10 @@ export default function Navbar() {
     setMobileOpen(false);
   };
 
+  const openLatestLeaderboard = () => {
+    openModal("leaderboard", { turn: "latest" });
+  };
+
   const logo = BRANDING_IMAGES[settings.branding];
 
   return (
@@ -29,7 +33,7 @@ export default function Navbar() {
         <div className="ml-auto hidden items-end gap-2 md:flex">
           <NavItem onClick={() => openModal("login")}>Login</NavItem>
 
-          <NavItem to="#leaderboard">Leaderboard</NavItem>
+          <NavItem onClick={openLatestLeaderboard}>Leaderboard</NavItem>
 
           <NavItem to="/">Map</NavItem>
 
@@ -70,7 +74,12 @@ export default function Navbar() {
             >
               Login
             </MobileNavItem>
-            <MobileNavItem to="#leaderboard" onClick={closeMobileMenu}>
+            <MobileNavItem
+              onClick={() => {
+                closeMobileMenu();
+                openLatestLeaderboard();
+              }}
+            >
               Leaderboard
             </MobileNavItem>
 

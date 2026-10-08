@@ -12,6 +12,9 @@ export const buttonVariants = cva(
       rounded: {
         true: "rounded-full",
         false: "rounded-md",
+        none: "rounded-none",
+        left: "rounded-l-md",
+        right: "rounded-r-md",
       },
 
       variant: {
@@ -20,6 +23,7 @@ export const buttonVariants = cva(
           "border border-control-border bg-control text-foreground hover:opacity-50 px-4 py-2",
         nav: "text-sm px-4 py-2",
         icon: "border-0 bg-transparent p-0",
+        pagination: "bg-accent-1 px-2 py-1 font-semibold hover:bg-accent-2",
       },
     },
 
@@ -32,8 +36,8 @@ export const buttonVariants = cva(
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: "primary" | "secondary" | "nav" | "icon";
-  rounded?: boolean;
+  variant?: "primary" | "secondary" | "nav" | "icon" | "pagination";
+  rounded?: boolean | "none" | "left" | "right";
 }
 
 export function Button({

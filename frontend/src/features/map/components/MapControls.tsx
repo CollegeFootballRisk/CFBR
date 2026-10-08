@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { useState } from "react";
+import TurnSelect from "@/features/turn/components/TurnSelect";
+import { useTurn } from "@/features/turn/context/TurnContext";
 import { Button } from "@/shared/components/Button";
 import { ChevronIcon } from "@/shared/components/Icons";
+import { useModal } from "@/shared/components/Modal";
 import { RadioGroup, RadioGroupOption } from "@/shared/components/RadioGroup";
-import { Select } from "@/shared/components/Select";
 import {
   BridgesIcon,
   HeatmapIcon,
@@ -17,8 +19,6 @@ import {
 } from "../icons";
 
 type MapMode = "owners" | "heatmap";
-
-type TurnSelection = "latest" | number;
 
 interface MapControlsProps {
   onModeChange?: (mode: MapMode) => void;
@@ -36,20 +36,12 @@ const turns: MapTurn[] = [
   { id: 1232, season: 12, day: 46 },
 ];
 
-const turnOptions: { label: string; value: TurnSelection }[] = [
-  { label: "Latest", value: "latest" },
-  ...turns.map((turn) => ({
-    label: `${turn.season}/${turn.day}`,
-    value: turn.id,
-  })),
-];
-
 export default function MapControls({ onModeChange }: MapControlsProps) {
+  const { openModal } = useModal();
   const [mode, setMode] = useState<MapMode>("owners");
-  const [selectedTurn, setSelectedTurn] = useState<TurnSelection>("latest");
+  const { mapTurn, setMapTurn } = useTurn();
   const [regions, setRegions] = useState(false);
   const [bridges, setBridges] = useState(false);
-  const [leaderboard, setLeaderboard] = useState(false);
   const [controlsOpen, setControlsOpen] = useState(false);
   const changeMode = (value: string) => {
     if (value !== "owners" && value !== "heatmap") {
@@ -60,14 +52,6 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
 
     setMode(nextMode);
     onModeChange?.(nextMode);
-  };
-
-  const handleTurnChange = (value: TurnSelection | "") => {
-    if (value === "") {
-      return;
-    }
-
-    setSelectedTurn(value);
   };
 
   return (
@@ -99,14 +83,13 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
               </RadioGroupOption>
             </RadioGroup>
 
-            <Select<TurnSelection>
-              value={selectedTurn}
-              options={turnOptions}
-              onChange={handleTurnChange}
+            <TurnSelect
+              value={mapTurn}
+              turns={turns}
+              onChange={setMapTurn}
               label="Map turn"
-              variant="map-control"
-              className="order-2"
               rounded="none"
+              className="order-2"
             />
           </div>
         </div>
@@ -174,9 +157,8 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
 
             <Button
               variant="primary"
-              aria-pressed={leaderboard}
               title="Leaderboard"
-              onClick={() => setLeaderboard((current) => !current)}
+              onClick={() => openModal("leaderboard", { turn: mapTurn })}
             >
               <LeaderboardIcon />
               <span>Leaderboard</span>

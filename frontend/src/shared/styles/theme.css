@@ -28,6 +28,8 @@
   --success: #16803c;
 
   --info: #245a9c;
+
+  --table-stripe: #e5e6ea;
 }
 
 /* TODO: Smooth out transitions on hovering */
@@ -47,6 +49,8 @@
   --color-success: var(--success);
 
   --color-info: var(--info);
+
+  --color-table-stripe: var(--table-stripe);
 
   --background-image-rainbow: linear-gradient(
     60deg,

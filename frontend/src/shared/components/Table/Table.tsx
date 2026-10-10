@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { type ReactNode, useEffect, useMemo, useState } from "react";
-
 import { useAppSettings } from "@/app/useAppSettings";
 import { cn } from "@/shared/utils/cn";
 import { Button } from "../Button";
@@ -206,7 +205,7 @@ export function Table<T>({
                       }
                       title={column.tooltip}
                       className={cn(
-                        "sticky top-0 z-20",
+                        "sticky -top-px z-20",
                         "border-b border-control-border border-dotted px-2 py-2 sm:px-3 font-semibold",
                         "border-r border-solid border-control-border last:border-r-0",
                         "bg-accent-1",
@@ -251,9 +250,25 @@ export function Table<T>({
                   <tr
                     key={getRowKey(row, index)}
                     onClick={onRowClick ? () => onRowClick(row) : undefined}
+                    onKeyDown={
+                      onRowClick
+                        ? (event) => {
+                            if (
+                              (event.key === "Enter" || event.key === " ") &&
+                              event.target === event.currentTarget
+                            ) {
+                              event.preventDefault();
+                              onRowClick(row);
+                            }
+                          }
+                        : undefined
+                    }
+                    tabIndex={onRowClick ? 0 : undefined}
+                    aria-label={onRowClick ? "Open row" : undefined}
                     className={cn(
                       "even:bg-table-stripe",
-                      onRowClick && "cursor-pointer hover:bg-control",
+                      onRowClick &&
+                        "cursor-pointer hover:bg-control focus-visible:outline-2 focus-visible:outline-foreground",
                     )}
                   >
                     {columns.map((column) => (
@@ -263,7 +278,8 @@ export function Table<T>({
                           "border-b border-r border-control-border border-dotted px-3 py-2",
                           "last:border-r-0",
                           alignClasses[column.align ?? getDefaultAlign(column, row)],
-                          sortKey === column.key && "bg-accent-1",
+                          sortKey === column.key &&
+                            "bg-accent-1 [&_a]:underline [&_a]:text-foreground [&_a:hover]:text-lg",
                           column.className,
                         )}
                       >

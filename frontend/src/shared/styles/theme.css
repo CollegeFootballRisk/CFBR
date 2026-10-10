@@ -11,11 +11,16 @@
   --control-border: #f3f4f6;
 
   --failure: #ff6b6b;
-  --success: #56c080;
 
   --info: #8fb8ff;
 
   --table-stripe: #35353b;
+
+  --chart-1: #e78ac3;
+  --chart-2: #e69f00;
+  --chart-3: #f0e442;
+  --chart-4: #56b4e9;
+  --chart-5: #20c997;
 }
 
 .light {
@@ -23,6 +28,7 @@
   --foreground: #000;
 
   --accent-2: #6f93c4;
+  --accent-3: #0e782c;
 
   --control: #f3f4f6;
   --control-border: #3a3a41;
@@ -32,6 +38,12 @@
   --info: #245a9c;
 
   --table-stripe: #e5e6ea;
+
+  --chart-1: #9c4678;
+  --chart-2: #b54708;
+  --chart-3: #996515;
+  --chart-4: #0072b2;
+  --chart-5: #1c7f5c;
 }
 
 /* TODO: Smooth out transitions on hovering */
@@ -52,6 +64,12 @@
   --color-info: var(--info);
 
   --color-table-stripe: var(--table-stripe);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 
   --background-image-rainbow: linear-gradient(
     60deg,

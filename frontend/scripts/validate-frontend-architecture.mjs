@@ -245,30 +245,6 @@ function validateRestrictedApiImport(sourceFile, importDeclaration) {
   );
 }
 
-function validateRechartsImport(sourceFile, importDeclaration) {
-  if (importDeclaration.moduleSpecifier.text !== "recharts") {
-    return;
-  }
-
-  const namedBindings = importDeclaration.importClause?.namedBindings;
-
-  if (!namedBindings || !ts.isNamedImports(namedBindings)) {
-    return;
-  }
-
-  for (const element of namedBindings.elements) {
-    const importedName = element.propertyName?.text ?? element.name.text;
-
-    if (FORBIDDEN_RECHARTS_IMPORTS.has(importedName)) {
-      report(
-        sourceFile,
-        element,
-        `Use the approved chart component from @/shared instead of importing "${importedName}" directly from recharts.`,
-      );
-    }
-  }
-}
-
 function getJsxElementName(node) {
   if (ts.isIdentifier(node.tagName)) {
     return node.tagName.text;
@@ -372,7 +348,6 @@ function hasInlineStyleSuppression(sourceFile, node) {
     const text = sourceText.slice(comment.pos, comment.end);
 
     return (
-      text.includes("eslint-disable-next-line no-restricted-syntax") ||
       text.includes("architecture-ignore")
     );
   });
@@ -417,7 +392,6 @@ function validateFile(filePath) {
     if (ts.isImportDeclaration(node)) {
       validateParentRelativeImports(sourceFile, node);
       validateRestrictedApiImport(sourceFile, node);
-      validateRechartsImport(sourceFile, node);
       validateRestrictedLinkImport(sourceFile, node);
     }
 

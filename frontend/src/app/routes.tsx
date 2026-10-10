@@ -1,39 +1,34 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import Bugs from "@/features/bugs/pages/Bug";
-import Help from "@/features/help/pages/Help";
-import Info from "@/features/help/pages/Info";
-import Policies from "@/features/help/pages/Policies";
-import Thanks from "@/features/help/pages/Thanks";
-import Home from "@/features/home/pages/Home";
-import Odds from "@/features/odds/pages/Odds";
-import Settings from "@/features/settings/pages/Settings";
 import AppLayout from "@/shared/layouts/AppLayout";
 import ComingSoon from "@/shared/pages/ComingSoon";
-import NotFound from "@/shared/pages/NotFound";
+
+const loadHome = () => import("@/features/home/pages/Home");
+const loadOdds = () => import("@/features/odds/pages/Odds");
+const loadTeam = () => import("@/features/team/pages/Team");
+const loadSettings = () => import("@/features/settings/pages/Settings");
+const loadInfo = () => import("@/features/help/pages/Info");
+const loadHelp = () => import("@/features/help/pages/Help");
+const loadPolicies = () => import("@/features/help/pages/Policies");
+const loadThanks = () => import("@/features/help/pages/Thanks");
+const loadBugs = () => import("@/features/bugs/pages/Bug");
+const loadNotFound = () => import("@/shared/pages/NotFound");
 
 export const router = createBrowserRouter([
   {
     element: <AppLayout />,
-
     children: [
       {
         path: "/",
-        element: <Home />,
-        handle: {
-          sidebar: true,
-        },
+        lazy: async () => ({ Component: (await loadHome()).default }),
+        handle: { sidebar: true },
       },
-
       {
         path: "/map",
         element: <ComingSoon title="Map" description="The CFBR map is being rebuilt." />,
-        handle: {
-          sidebar: true,
-        },
+        handle: { sidebar: true },
       },
-
       {
         path: "/map/:season/:day",
         element: (
@@ -42,27 +37,18 @@ export const router = createBrowserRouter([
             description="Historical map views are being rebuilt."
           />
         ),
-        handle: {
-          sidebar: true,
-        },
+        handle: { sidebar: true },
       },
-
       {
         path: "/odds/:season/:day/:team",
         element: <ComingSoon title="Odds" description="Battle odds are being rebuilt." />,
-        handle: {
-          sidebar: true,
-        },
+        handle: { sidebar: true },
       },
-
       {
         path: "/odds",
-        element: <Odds />,
-        handle: {
-          sidebar: true,
-        },
+        lazy: async () => ({ Component: (await loadOdds()).default }),
+        handle: { sidebar: true },
       },
-
       {
         path: "/visited/:team/:season",
         element: (
@@ -71,67 +57,49 @@ export const router = createBrowserRouter([
             description="Visited territory history is being rebuilt."
           />
         ),
-        handle: {
-          sidebar: true,
-        },
+        handle: { sidebar: true },
       },
-
       {
         path: "/player/:player",
         element: <ComingSoon title="Player" description="Player profiles are being rebuilt." />,
-        handle: {
-          sidebar: true,
-        },
+        handle: { sidebar: true },
       },
-
       {
         path: "/team/:team",
-        element: <ComingSoon title="Team" description="Team pages are being rebuilt." />,
-        handle: {
-          sidebar: true,
-        },
+        lazy: async () => ({ Component: (await loadTeam()).default }),
       },
-
       {
         path: "/settings",
-        element: <Settings />,
+        lazy: async () => ({ Component: (await loadSettings()).default }),
       },
-
       {
         path: "/info",
-        element: <Info />,
+        lazy: async () => ({ Component: (await loadInfo()).default }),
       },
-
       {
         path: "/about",
-        element: <Info />,
+        lazy: async () => ({ Component: (await loadInfo()).default }),
       },
-
       {
         path: "/help",
-        element: <Help />,
+        lazy: async () => ({ Component: (await loadHelp()).default }),
       },
-
       {
         path: "/policies",
-        element: <Policies />,
+        lazy: async () => ({ Component: (await loadPolicies()).default }),
       },
-
       {
         path: "/thanks",
-        element: <Thanks />,
+        lazy: async () => ({ Component: (await loadThanks()).default }),
       },
-
       {
         path: "/bugs",
-        element: <Bugs />,
+        lazy: async () => ({ Component: (await loadBugs()).default }),
       },
-
       {
         path: "/404",
-        element: <NotFound />,
+        lazy: async () => ({ Component: (await loadNotFound()).default }),
       },
-
       {
         path: "*",
         element: <Navigate to="/404" replace />,

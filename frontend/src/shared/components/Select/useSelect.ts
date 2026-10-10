@@ -1,20 +1,14 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import {
-  type KeyboardEvent,
-  type ReactNode,
-  type RefObject,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from "react";
+
 import {
   buildSelectItems,
   type SelectItem,
   type SelectOption,
   type SelectRenderItem,
 } from "./selectTypes";
+import useSelectKeyboard from "./useSelectKeyboard";
 
 interface UseSelectProps<T> {
   value?: T | "";
@@ -22,7 +16,9 @@ interface UseSelectProps<T> {
   placeholder: string;
   placeholderAsOption: boolean;
   disabled: boolean;
+  searchable: boolean;
   onChange: (value: T | "") => void;
+  dropdownRef: RefObject<HTMLDivElement | null>;
 }
 
 interface UseSelectReturn<T> {
@@ -38,11 +34,16 @@ interface UseSelectReturn<T> {
 
   selectOptions: SelectOption<T>[];
   renderItems: SelectRenderItem<T>[];
+  filteredItems: SelectRenderItem<T>[];
+
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
 
   displayValue: ReactNode;
   longestOption: string;
 
-  handleKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
+  handleKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+  handleSearchKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 function getSearchLabel<T>(option: SelectOption<T>): string {
@@ -70,29 +71,60 @@ function getDisplayLabel<T>(
   return option.label;
 }
 
+function getItemIndexes<T>(items: SelectRenderItem<T>[]): number[] {
+  const indexes: number[] = [];
+
+  for (const item of items) {
+    if (item.kind === "option") {
+      if (!item.option.disabled) {
+        indexes.push(item.index);
+      }
+
+      continue;
+    }
+
+    for (const renderedOption of item.options) {
+      if (!renderedOption.option.disabled) {
+        indexes.push(renderedOption.index);
+      }
+    }
+  }
+
+  return indexes;
+}
+
 export default function useSelect<T>({
   value,
   options,
   placeholder,
   placeholderAsOption,
   disabled,
+  searchable,
   onChange,
+  dropdownRef,
 }: UseSelectProps<T>): UseSelectReturn<T> {
   const [open, setOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const [search, setSearch] = useState("");
 
   const rootRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLButtonElement>(null);
   const optionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const typeaheadRef = useRef("");
-  const typeaheadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
-        setOpen(false);
+      const target = event.target;
+
+      if (!(target instanceof Node)) {
+        return;
       }
+
+      if (rootRef.current?.contains(target) || dropdownRef.current?.contains(target)) {
+        return;
+      }
+
+      setOpen(false);
+      setSearch("");
     }
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -100,28 +132,47 @@ export default function useSelect<T>({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-
-    optionRefs.current[highlightedIndex]?.scrollIntoView({
-      block: "nearest",
-    });
-  }, [highlightedIndex, open]);
-
-  useEffect(() => {
-    return () => {
-      if (typeaheadTimeoutRef.current) {
-        clearTimeout(typeaheadTimeoutRef.current);
-      }
-    };
-  }, []);
+  }, [dropdownRef]);
 
   const { selectOptions, renderItems } = useMemo(
     () => buildSelectItems(options, placeholder, placeholderAsOption, value ?? ""),
     [options, placeholder, placeholderAsOption, value],
   );
+
+  const filteredItems = useMemo<SelectRenderItem<T>[]>(() => {
+    if (!searchable || !search.trim()) {
+      return renderItems;
+    }
+
+    const normalizedSearch = search.trim().toLowerCase();
+    const filtered: SelectRenderItem<T>[] = [];
+
+    for (const item of renderItems) {
+      if (item.kind === "option") {
+        if (getSearchLabel(item.option).toLowerCase().includes(normalizedSearch)) {
+          filtered.push(item);
+        }
+
+        continue;
+      }
+
+      const filteredOptions = item.options.filter(({ option }) =>
+        getSearchLabel(option).toLowerCase().includes(normalizedSearch),
+      );
+
+      if (filteredOptions.length > 0) {
+        filtered.push({
+          kind: "group",
+          label: item.label,
+          options: filteredOptions,
+        });
+      }
+    }
+
+    return filtered;
+  }, [renderItems, search, searchable]);
+
+  const filteredIndexes = useMemo(() => getItemIndexes(filteredItems), [filteredItems]);
 
   const selectedOption = useMemo(
     () => selectOptions.find((option) => Object.is(option.value, value)),
@@ -136,124 +187,47 @@ export default function useSelect<T>({
     return getDisplayLabel(selectedOption, renderItems);
   }, [placeholder, renderItems, selectedOption]);
 
-  const longestOption = useMemo(() => {
-    return [placeholder, ...selectOptions.map((option) => getSearchLabel(option))].reduce(
-      (largest, current) => (current.length > largest.length ? current : largest),
-      "",
-    );
-  }, [placeholder, selectOptions]);
+  const longestOption = useMemo(
+    () =>
+      [placeholder, ...selectOptions.map((option) => getSearchLabel(option))].reduce(
+        (largest, current) => (current.length > largest.length ? current : largest),
+        "",
+      ),
+    [placeholder, selectOptions],
+  );
 
-  function findMatchingOption(search: string, startIndex: number) {
-    const normalized = search.toLowerCase();
-
-    for (let selectOption = 0; selectOption < selectOptions.length; selectOption++) {
-      const index = (startIndex + selectOption) % selectOptions.length;
-      const option = selectOptions[index];
-
-      if (option.disabled) continue;
-
-      if (getSearchLabel(option).toLowerCase().startsWith(normalized)) {
-        return index;
-      }
-    }
-
-    return -1;
-  }
-
-  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
-    if (disabled) return;
-
-    if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey) {
-      event.preventDefault();
-
-      const previous = typeaheadRef.current;
-
-      const nextSearch = previous
-        ?.toLowerCase()
-        .split("")
-        .every((character) => character === event.key.toLowerCase())
-        ? event.key
-        : previous + event.key;
-
-      typeaheadRef.current = nextSearch;
-
-      if (typeaheadTimeoutRef.current) {
-        clearTimeout(typeaheadTimeoutRef.current);
-      }
-
-      typeaheadTimeoutRef.current = setTimeout(() => {
-        typeaheadRef.current = "";
-      }, 750);
-
-      const match = findMatchingOption(nextSearch, highlightedIndex + 1);
-
-      if (match >= 0) {
-        setOpen(true);
-        setHighlightedIndex(match);
-      }
-
+  useEffect(() => {
+    if (!searchable || !open) {
       return;
     }
 
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
+    if (filteredIndexes.length === 0) {
+      setHighlightedIndex(-1);
+      return;
+    }
 
-        setOpen(true);
-
-        setHighlightedIndex((previous) => Math.min(previous + 1, selectOptions.length - 1));
-
-        break;
-
-      case "ArrowUp":
-        event.preventDefault();
-
-        setOpen(true);
-
-        setHighlightedIndex((previous) => Math.max(previous - 1, 0));
-
-        break;
-
-      case "Enter": {
-        event.preventDefault();
-
-        if (!open) {
-          setOpen(true);
-          return;
-        }
-
-        const selected = selectOptions[highlightedIndex];
-
-        if (!selected || selected.disabled) return;
-
-        onChange(selected.value);
-        setOpen(false);
-
-        break;
+    setHighlightedIndex((current) => {
+      if (filteredIndexes.includes(current)) {
+        return current;
       }
 
-      case "Escape":
-        event.preventDefault();
+      return filteredIndexes[0];
+    });
+  }, [filteredIndexes, open, searchable]);
 
-        setOpen(false);
-
-        break;
-
-      case "Home":
-        event.preventDefault();
-
-        setHighlightedIndex(0);
-
-        break;
-
-      case "End":
-        event.preventDefault();
-
-        setHighlightedIndex(Math.max(selectOptions.length - 1, 0));
-
-        break;
-    }
-  }
+  const { handleKeyDown, handleSearchKeyDown } = useSelectKeyboard({
+    disabled,
+    searchable,
+    open,
+    setOpen,
+    highlightedIndex,
+    setHighlightedIndex,
+    search,
+    setSearch,
+    selectOptions,
+    filteredIndexes,
+    onChange,
+  });
 
   return {
     open,
@@ -268,10 +242,15 @@ export default function useSelect<T>({
 
     selectOptions,
     renderItems,
+    filteredItems,
+
+    search,
+    setSearch,
 
     displayValue,
     longestOption,
 
     handleKeyDown,
+    handleSearchKeyDown,
   };
 }

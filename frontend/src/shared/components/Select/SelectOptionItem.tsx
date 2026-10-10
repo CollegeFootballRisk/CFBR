@@ -11,11 +11,20 @@ interface SelectOptionItemProps {
   disabled?: boolean;
   onMouseEnter: () => void;
   onClick: () => void;
+  centeredOptions?: boolean;
 }
 
 export const SelectOptionItem = forwardRef<HTMLDivElement, SelectOptionItemProps>(
   function SelectOptionItem(
-    { label, selected, highlighted, disabled = false, onMouseEnter, onClick },
+    {
+      label,
+      selected,
+      highlighted,
+      disabled = false,
+      centeredOptions = false,
+      onMouseEnter,
+      onClick,
+    },
     ref,
   ) {
     return (
@@ -35,6 +44,7 @@ export const SelectOptionItem = forwardRef<HTMLDivElement, SelectOptionItemProps
         }}
         className={cn(
           "px-4 py-2",
+          centeredOptions && "text-center",
           highlighted && "bg-accent-1",
           selected && "bg-accent-1 font-medium",
           disabled && "cursor-not-allowed opacity-40",

@@ -11,7 +11,6 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { openModal } = useModal();
   const { settings } = useAppSettings();
-
   const closeMobileMenu = () => {
     setMobileOpen(false);
   };
@@ -25,8 +24,13 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 h-16 bg-linear-to-r from-accent-2 to-accent-1 backdrop-blur">
       <nav className="mx-auto flex h-full max-w-screen-2xl items-center px-4">
-        <Link to="/" onClick={closeMobileMenu} className="flex shrink-0 items-center">
-          <img src={logo} alt="College Football Risk" className="h-14 w-14 object-contain" />
+        <Link
+          to="/"
+          onClick={closeMobileMenu}
+          aria-label="College Football Risk home"
+          className="flex shrink-0 items-center"
+        >
+          <img src={logo} alt="" className="h-14 w-14 object-contain" />
         </Link>
 
         {/* Desktop navigation */}
@@ -34,8 +38,6 @@ export default function Navbar() {
           <NavItem onClick={() => openModal("login")}>Login</NavItem>
 
           <NavItem onClick={openLatestLeaderboard}>Leaderboard</NavItem>
-
-          <NavItem to="/">Map</NavItem>
 
           <NavItem to="/odds">Odds</NavItem>
 

@@ -24,6 +24,7 @@ export interface TableColumn<T> {
 }
 
 export interface TableProps<T> {
+  ariaLabel?: string;
   data: T[];
   columns: TableColumn<T>[];
 
@@ -38,7 +39,6 @@ export interface TableProps<T> {
   initialSortDirection?: "asc" | "desc";
 
   className?: string;
-  tableClassName?: string;
   scrollClassName?: string;
 }
 
@@ -104,6 +104,7 @@ function getDefaultAlign<T>(column: TableColumn<T>, row?: T): TableAlign {
 }
 
 export function Table<T>({
+  ariaLabel,
   data,
   columns,
   getRowKey = (_, index) => index,
@@ -114,7 +115,6 @@ export function Table<T>({
   initialSortKey,
   initialSortDirection = "asc",
   className,
-  tableClassName,
   scrollClassName = "max-h-[70dvh]",
 }: TableProps<T>) {
   const { settings, updateSetting } = useAppSettings();
@@ -185,9 +185,9 @@ export function Table<T>({
         </div>
         <div className={cn("w-full overflow-auto", scrollClassName)}>
           <table
+            aria-label={ariaLabel}
             className={cn(
               "mx-auto border-separate border-spacing-0 text-sm outline-1 outline-accent-1",
-              tableClassName,
             )}
           >
             <thead>
@@ -216,6 +216,11 @@ export function Table<T>({
                     >
                       <button
                         type="button"
+                        aria-label={
+                          ariaLabel && typeof column.header === "string"
+                            ? `Sort ${ariaLabel} by ${column.header}`
+                            : undefined
+                        }
                         onClick={() => handleSort(column)}
                         className={cn(
                           "flex w-full cursor-pointer items-center gap-1 font-semibold hover:underline",
@@ -316,7 +321,7 @@ export function Table<T>({
                   type="button"
                   onClick={() => setShowPageSize(true)}
                   className="flex items-center gap-1 hover:bg-control focus-visible:outline-2 focus-visible:outline-foreground"
-                  aria-label="Change rows displayed per page"
+                  aria-label={`Change rows displayed per page${ariaLabel ? ` for ${ariaLabel}` : ""}`}
                   title="Click to change # of rows displayed per page"
                 >
                   <SettingsIcon />

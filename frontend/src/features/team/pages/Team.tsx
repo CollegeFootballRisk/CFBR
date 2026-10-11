@@ -385,6 +385,7 @@ export default function Team() {
             <div className="order-5 lg:col-start-1 lg:row-start-3">
               <TeamSection title="Players">
                 <Table
+                  ariaLabel="Players"
                   data={mockPlayers}
                   columns={playerColumns}
                   getRowKey={(player) => player.id}
@@ -398,6 +399,7 @@ export default function Team() {
             <div className="order-6 lg:col-start-2 lg:row-start-3">
               <TeamSection title="Mercenaries">
                 <Table
+                  ariaLabel="Mercenaries"
                   data={mockMercenaries}
                   columns={mercenaryColumns}
                   getRowKey={(player) => player.id}

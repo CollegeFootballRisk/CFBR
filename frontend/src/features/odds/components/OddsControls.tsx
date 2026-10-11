@@ -171,17 +171,17 @@ export default function OddsControls({
       {/* Bottom controls */}
       <div className="pointer-events-none absolute inset-x-0 bottom-3 z-20 flex justify-center px-3">
         <div className="pointer-events-auto flex items-center gap-1">
-          <Button variant="primary" title="Zoom in" onClick={onZoomIn}>
+          <Button variant="primary" onClick={onZoomIn}>
             <ZoomInIcon />
             <span className="hidden sm:inline">Zoom In</span>
           </Button>
 
-          <Button variant="primary" title="Zoom out" onClick={onZoomOut}>
+          <Button variant="primary" onClick={onZoomOut}>
             <ZoomOutIcon />
             <span className="hidden sm:inline">Zoom Out</span>
           </Button>
 
-          <Button variant="primary" title="Reset map" onClick={onReset}>
+          <Button variant="primary" onClick={onReset}>
             <ResetMapIcon />
             <span className="hidden sm:inline">Reset Map</span>
           </Button>

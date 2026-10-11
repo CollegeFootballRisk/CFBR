@@ -11,6 +11,8 @@ export interface Team {
   id: number;
   name: string;
   logo: string;
+  primaryColor: string;
+  secondaryColor: string;
   stats: TeamStats;
 }
 
@@ -45,18 +47,24 @@ export const teams: Team[] = [
     id: 1,
     name: "Appalachian State",
     logo: "/images/logos/Appalachian State.svg",
+    primaryColor: "#000000",
+    secondaryColor: "#FFCC00",
     stats: { mercs: 5, players: 117, stars: 445, territories: 4 },
   },
   {
     id: 2,
     name: "Ohio State",
     logo: "/images/logos/Ohio State.svg",
+    primaryColor: "#ba0c2f",
+    secondaryColor: "#bab1b7",
     stats: { mercs: 8, players: 104, stars: 392, territories: 12 },
   },
   {
     id: 3,
     name: "Kansas",
     logo: "/images/logos/Kansas.svg",
+    primaryColor: "#0051BA",
+    secondaryColor: "#E8000D",
     stats: { mercs: 3, players: 96, stars: 371, territories: 9 },
   },
 ];

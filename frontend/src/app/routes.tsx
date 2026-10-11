@@ -7,6 +7,7 @@ import ComingSoon from "@/shared/pages/ComingSoon";
 const loadHome = () => import("@/features/home/pages/Home");
 const loadOdds = () => import("@/features/odds/pages/Odds");
 const loadTeam = () => import("@/features/team/pages/Team");
+const loadPlayer = () => import("@/features/player/pages/Player");
 const loadSettings = () => import("@/features/settings/pages/Settings");
 const loadInfo = () => import("@/features/help/pages/Info");
 const loadHelp = () => import("@/features/help/pages/Help");
@@ -22,21 +23,6 @@ export const router = createBrowserRouter([
       {
         path: "/",
         lazy: async () => ({ Component: (await loadHome()).default }),
-        handle: { sidebar: true },
-      },
-      {
-        path: "/map",
-        element: <ComingSoon title="Map" description="The CFBR map is being rebuilt." />,
-        handle: { sidebar: true },
-      },
-      {
-        path: "/map/:season/:day",
-        element: (
-          <ComingSoon
-            title="Historical Map"
-            description="Historical map views are being rebuilt."
-          />
-        ),
         handle: { sidebar: true },
       },
       {
@@ -61,8 +47,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/player/:player",
-        element: <ComingSoon title="Player" description="Player profiles are being rebuilt." />,
-        handle: { sidebar: true },
+        lazy: async () => ({ Component: (await loadPlayer()).default }),
       },
       {
         path: "/team/:team",

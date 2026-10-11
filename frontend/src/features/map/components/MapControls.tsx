@@ -101,7 +101,6 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
           {/* Mobile controls toggle */}
           <Button
             variant="primary"
-            title={controlsOpen ? "Hide controls" : "Show controls"}
             aria-expanded={controlsOpen}
             aria-controls="map-controls"
             className="sm:hidden"
@@ -120,17 +119,17 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
               controlsOpen ? "flex" : "hidden sm:flex",
             ].join(" ")}
           >
-            <Button variant="primary" title="Zoom in">
+            <Button variant="primary">
               <ZoomInIcon />
               <span>Zoom In</span>
             </Button>
 
-            <Button variant="primary" title="Zoom out">
+            <Button variant="primary">
               <ZoomOutIcon />
               <span>Zoom Out</span>
             </Button>
 
-            <Button variant="primary" title="Reset map">
+            <Button variant="primary">
               <ResetMapIcon />
               <span>Reset Map</span>
             </Button>
@@ -138,7 +137,6 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
             <Button
               variant="primary"
               aria-pressed={regions}
-              title="Regions"
               onClick={() => setRegions((current) => !current)}
             >
               <RegionsIcon />
@@ -148,7 +146,6 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
             <Button
               variant="primary"
               aria-pressed={bridges}
-              title="Bridges"
               onClick={() => setBridges((current) => !current)}
             >
               <BridgesIcon />
@@ -157,7 +154,7 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
 
             <Button
               variant="primary"
-              title="Leaderboard"
+              aria-label="Leaderboard for selected map turn"
               onClick={() => openModal("leaderboard", { turn: mapTurn })}
             >
               <LeaderboardIcon />

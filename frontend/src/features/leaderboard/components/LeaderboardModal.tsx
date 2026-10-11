@@ -158,6 +158,7 @@ export default function LeaderboardModal({ open, onClose, initialTurn }: Leaderb
         </div>
 
         <Table
+          ariaLabel="Leaderboard"
           data={teams}
           columns={columns(onClose)}
           getRowKey={(team) => team.id}

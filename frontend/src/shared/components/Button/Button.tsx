@@ -4,9 +4,13 @@ import { cva } from "class-variance-authority";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 export const buttonVariants = cva(
-  "inline-flex cursor-pointer items-center justify-center font-medium transition " +
-    "disabled:cursor-not-allowed disabled:opacity-40 " +
-    "focus-visible:outline-2 focus-visible:outline-foreground",
+  [
+    "inline-flex items-center justify-center",
+    "font-medium",
+    "focus-visible:outline-2 focus-visible:outline-foreground disabled:opacity-40",
+    "transition",
+    "cursor-pointer disabled:cursor-not-allowed",
+  ].join(" "),
   {
     variants: {
       rounded: {
@@ -18,10 +22,10 @@ export const buttonVariants = cva(
       },
 
       variant: {
-        primary: "bg-accent-1 hover:bg-accent-2 aria-pressed:bg-accent-2 text-xl p-2 gap-2",
+        primary: "gap-2 bg-accent-1 p-2 text-xl hover:bg-accent-2 aria-pressed:bg-accent-2",
         secondary:
-          "border border-control-border bg-control text-foreground hover:opacity-50 px-4 py-2",
-        nav: "text-sm px-4 py-2",
+          "border border-control-border bg-control px-4 py-2 text-foreground hover:opacity-50",
+        nav: "px-4 py-2 text-sm",
         icon: "border-0 bg-transparent p-0",
         pagination: "bg-accent-1 px-2 py-1 font-semibold hover:bg-accent-2",
       },
@@ -49,7 +53,7 @@ export function Button({
 }: ButtonProps) {
   const content =
     variant === "nav" ? (
-      <span className="inline-block hover:shadow-accent-glow hover:underline hover:decoration-dashed">
+      <span className="inline-block hover:underline hover:decoration-dashed hover:shadow-accent-glow">
         {children}
       </span>
     ) : (

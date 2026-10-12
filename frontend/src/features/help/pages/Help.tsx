@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { Link } from "@/shared/components/Link";
-import PageContainer from "@/shared/layouts/PageContainer";
+import { PageContainer } from "@/shared/layouts/PageContainer";
 
-export default function Help() {
+export function Help() {
   return (
     <>
-      <h1 className="my-4 text-center text-4xl font-bold">How to Play</h1>
+      <h1 className="my-4 text-center font-bold text-4xl">How to Play</h1>
 
       <PageContainer>
         <p>

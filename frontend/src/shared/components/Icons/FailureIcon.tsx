@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-export default function FailureIcon() {
+export function FailureIcon() {
   return (
     <span className="inline-block h-12 w-12 text-current">
       <svg

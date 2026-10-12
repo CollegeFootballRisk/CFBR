@@ -1,22 +1,17 @@
-// SPDX-License-Identifier: MPL-2.0
+/* SPDX-License-Identifier: MPL-2.0 */
 
 import { useState } from "react";
-import TurnSelect from "@/features/turn/components/TurnSelect";
+
+import { TurnSelect } from "@/features/turn/components/TurnSelect";
 import { useTurn } from "@/features/turn/context/TurnContext";
 import { Button } from "@/shared/components/Button";
 import { ChevronIcon } from "@/shared/components/Icons";
 import { useModal } from "@/shared/components/Modal";
 import { RadioGroup, RadioGroupOption } from "@/shared/components/RadioGroup";
-import {
-  BridgesIcon,
-  HeatmapIcon,
-  LeaderboardIcon,
-  OwnersIcon,
-  RegionsIcon,
-  ResetMapIcon,
-  ZoomInIcon,
-  ZoomOutIcon,
-} from "../icons";
+
+import { BridgesIcon, HeatmapIcon, LeaderboardIcon, OwnersIcon, RegionsIcon } from "../icons";
+import { MapControlPosition } from "./MapControlPosition";
+import { MapNavigationControls } from "./MapNavigationControls";
 
 type MapMode = "owners" | "heatmap";
 
@@ -36,13 +31,14 @@ const turns: MapTurn[] = [
   { id: 1232, season: 12, day: 46 },
 ];
 
-export default function MapControls({ onModeChange }: MapControlsProps) {
+export function MapControls({ onModeChange }: MapControlsProps) {
   const { openModal } = useModal();
   const [mode, setMode] = useState<MapMode>("owners");
   const { mapTurn, setMapTurn } = useTurn();
   const [regions, setRegions] = useState(false);
   const [bridges, setBridges] = useState(false);
   const [controlsOpen, setControlsOpen] = useState(false);
+
   const changeMode = (value: string) => {
     if (value !== "owners" && value !== "heatmap") {
       return;
@@ -57,7 +53,7 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
   return (
     <>
       {/* Top map mode controls */}
-      <div className="pointer-events-none absolute inset-x-0 z-10 flex justify-center px-3">
+      <MapControlPosition placement="top">
         <div className="pointer-events-auto rounded-md shadow-lg">
           <div className="flex">
             <RadioGroup
@@ -68,7 +64,7 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
             >
               <RadioGroupOption
                 value="owners"
-                className="order-1 border-r border-control-border rounded-l-md"
+                className="order-1 rounded-l-md border-control-border border-r"
               >
                 <OwnersIcon />
                 <span className="hidden sm:inline">Owners</span>
@@ -76,7 +72,7 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
 
               <RadioGroupOption
                 value="heatmap"
-                className="order-3 border-l border-control-border rounded-r-md"
+                className="order-3 rounded-r-md border-control-border border-l"
               >
                 <span className="hidden sm:inline">Heatmap</span>
                 <HeatmapIcon />
@@ -93,12 +89,53 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
             />
           </div>
         </div>
-      </div>
+      </MapControlPosition>
 
       {/* Bottom map controls */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center px-3">
-        <div className="pointer-events-auto flex flex-col-reverse items-center gap-1">
-          {/* Mobile controls toggle */}
+      <MapControlPosition placement="bottom" layer="overlay">
+        <div className="pointer-events-auto flex flex-col items-center gap-1">
+          <div
+            id="map-controls"
+            className={[
+              "flex flex-col items-center gap-1",
+              "sm:flex-row sm:flex-wrap sm:justify-center",
+              controlsOpen ? "flex" : "hidden sm:flex",
+            ].join(" ")}
+          >
+            <MapNavigationControls
+              positioned={false}
+              showLabels={controlsOpen}
+              className="flex-col sm:flex-row sm:flex-wrap"
+            >
+              <Button
+                variant="primary"
+                aria-pressed={regions}
+                onClick={() => setRegions((current) => !current)}
+              >
+                <RegionsIcon />
+                <span>Regions</span>
+              </Button>
+
+              <Button
+                variant="primary"
+                aria-pressed={bridges}
+                onClick={() => setBridges((current) => !current)}
+              >
+                <BridgesIcon />
+                <span>Bridges</span>
+              </Button>
+
+              <Button
+                variant="primary"
+                aria-label="Leaderboard for selected map turn"
+                onClick={() => openModal("leaderboard", { turn: mapTurn })}
+              >
+                <LeaderboardIcon />
+                <span>Leaderboard</span>
+              </Button>
+            </MapNavigationControls>
+          </div>
+
           <Button
             variant="primary"
             aria-expanded={controlsOpen}
@@ -109,60 +146,8 @@ export default function MapControls({ onModeChange }: MapControlsProps) {
             <ChevronIcon size="lg" direction={controlsOpen ? "down" : "up"} />
             <span>Controls</span>
           </Button>
-
-          {/* Map controls */}
-          <div
-            id="map-controls"
-            className={[
-              "flex flex-col gap-1",
-              "sm:flex-row sm:flex-wrap sm:justify-center",
-              controlsOpen ? "flex" : "hidden sm:flex",
-            ].join(" ")}
-          >
-            <Button variant="primary">
-              <ZoomInIcon />
-              <span>Zoom In</span>
-            </Button>
-
-            <Button variant="primary">
-              <ZoomOutIcon />
-              <span>Zoom Out</span>
-            </Button>
-
-            <Button variant="primary">
-              <ResetMapIcon />
-              <span>Reset Map</span>
-            </Button>
-
-            <Button
-              variant="primary"
-              aria-pressed={regions}
-              onClick={() => setRegions((current) => !current)}
-            >
-              <RegionsIcon />
-              <span>Regions</span>
-            </Button>
-
-            <Button
-              variant="primary"
-              aria-pressed={bridges}
-              onClick={() => setBridges((current) => !current)}
-            >
-              <BridgesIcon />
-              <span>Bridges</span>
-            </Button>
-
-            <Button
-              variant="primary"
-              aria-label="Leaderboard for selected map turn"
-              onClick={() => openModal("leaderboard", { turn: mapTurn })}
-            >
-              <LeaderboardIcon />
-              <span>Leaderboard</span>
-            </Button>
-          </div>
         </div>
-      </div>
+      </MapControlPosition>
     </>
   );
 }

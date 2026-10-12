@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { useMemo } from "react";
-
-import { ResetMapIcon, ZoomInIcon, ZoomOutIcon } from "@/features/map/icons";
+import { MapControlPosition } from "@/features/map/components/MapControlPosition";
+import { MapNavigationControls } from "@/features/map/components/MapNavigationControls";
 import { Button } from "@/shared/components/Button";
 import { QuestionIcon, StarIcon } from "@/shared/components/Icons";
 import { useModal } from "@/shared/components/Modal";
@@ -68,7 +68,7 @@ const displayOptions: { label: React.ReactNode; value: OddsDisplayMode }[] = [
   { label: "Territory Power", value: "territoryPower" },
 ];
 
-export default function OddsControls({
+export function OddsControls({
   turns,
   teamsByTurn,
   selectedTurn,
@@ -104,7 +104,7 @@ export default function OddsControls({
   return (
     <>
       {/* Top odds controls */}
-      <div className="pointer-events-none absolute inset-x-0 z-10 flex justify-center px-3">
+      <MapControlPosition placement="top">
         <div className="pointer-events-auto flex items-center gap-2">
           {/* Odds selectors */}
           <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-0 sm:shadow-lg">
@@ -116,7 +116,7 @@ export default function OddsControls({
                   onTurnChange(value);
                 }
               }}
-              className="sm:border-b-0 sm:border-r"
+              className="sm:border-r sm:border-b-0"
               label="Odds turn"
               variant="map-control"
               rounded="md-sm-left"
@@ -162,27 +162,9 @@ export default function OddsControls({
             <QuestionIcon />
           </Button>
         </div>
-      </div>
+      </MapControlPosition>
 
-      {/* Bottom controls */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-3 z-20 flex justify-center px-3">
-        <div className="pointer-events-auto flex items-center gap-1">
-          <Button variant="primary" onClick={onZoomIn}>
-            <ZoomInIcon />
-            <span className="hidden sm:inline">Zoom In</span>
-          </Button>
-
-          <Button variant="primary" onClick={onZoomOut}>
-            <ZoomOutIcon />
-            <span className="hidden sm:inline">Zoom Out</span>
-          </Button>
-
-          <Button variant="primary" onClick={onReset}>
-            <ResetMapIcon />
-            <span className="hidden sm:inline">Reset Map</span>
-          </Button>
-        </div>
-      </div>
+      <MapNavigationControls onZoomIn={onZoomIn} onZoomOut={onZoomOut} onReset={onReset} />
     </>
   );
 }

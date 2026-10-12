@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
 
-export { default as CheckIcon } from "./CheckIcon";
-export { default as ChevronIcon } from "./ChevronIcon";
-export { default as DiscordIcon } from "./DiscordIcon";
-export { default as FailureIcon } from "./FailureIcon";
-export { default as GitHubIcon } from "./GithubIcon";
-export { default as QuestionIcon } from "./QuestionIcon";
-export { default as SettingsIcon } from "./SettingsIcon";
-export { default as StarIcon } from "./StarIcon";
-export { default as SuccessIcon } from "./SuccessIcon";
+export { CheckIcon } from "./CheckIcon";
+export { ChevronIcon } from "./ChevronIcon";
+export { DiscordIcon } from "./DiscordIcon";
+export { FailureIcon } from "./FailureIcon";
+export { GitHubIcon } from "./GithubIcon";
+export { QuestionIcon } from "./QuestionIcon";
+export { SettingsIcon } from "./SettingsIcon";
+export { StarIcon } from "./StarIcon";
+export { SuccessIcon } from "./SuccessIcon";

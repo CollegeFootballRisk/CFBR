@@ -16,7 +16,7 @@ interface ChartLegendItem {
   colorClass: string;
 }
 
-function ChartLegend({ items }: { items: ChartLegendItem[] }) {
+export function ChartLegend({ items }: { items: ChartLegendItem[] }) {
   return (
     <div className="mb-3 flex flex-wrap items-center justify-center gap-x-4">
       {items.map((item) => (
@@ -58,5 +58,3 @@ export const starPowerLegendItems: ChartLegendItem[] = [
     label: "Star Power",
   },
 ];
-
-export default ChartLegend;

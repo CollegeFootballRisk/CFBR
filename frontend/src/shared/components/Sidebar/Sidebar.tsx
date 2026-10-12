@@ -8,7 +8,7 @@ interface SidebarProps {
   defaultOpen?: boolean;
 }
 
-export default function Sidebar({ defaultOpen = true }: SidebarProps) {
+export function Sidebar({ defaultOpen = true }: SidebarProps) {
   const [open, setOpen] = useState(defaultOpen);
 
   useEffect(() => {
@@ -32,10 +32,7 @@ export default function Sidebar({ defaultOpen = true }: SidebarProps) {
     <aside
       aria-label="Sidebar"
       className={[
-        "fixed left-0 top-16 bottom-0 z-40 w-60",
-        "overflow-visible border-r-4",
-        "bg-accent-1",
-        "transition-transform duration-500 ease-in-out",
+        "fixed top-16 bottom-0 left-0 z-40 w-60 overflow-visible border-r-4 bg-accent-1 transition-transform duration-500 ease-in-out",
         open ? "translate-x-0" : "-translate-x-full",
       ].join(" ")}
     >
@@ -44,12 +41,7 @@ export default function Sidebar({ defaultOpen = true }: SidebarProps) {
         onClick={() => setOpen((current) => !current)}
         aria-expanded={open}
         className={[
-          "absolute top-1/2 -translate-y-1/2",
-          "flex h-16 w-10 items-center justify-center",
-          "rounded-r-xl border-4 bg-accent-1",
-          "hover:bg-foreground hover:text-background",
-          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
-          "transition-all duration-500 ease-in-out",
+          "absolute top-1/2 flex h-16 w-10 -translate-y-1/2 items-center justify-center rounded-r-xl border-4 bg-accent-1 transition-all duration-500 ease-in-out hover:bg-foreground hover:text-background focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2",
           open ? "left-[calc(100%+8px)]" : "left-[calc(100%+4px)]",
         ].join(" ")}
         aria-label={open ? "Close sidebar" : "Open sidebar"}

@@ -2,9 +2,9 @@
 
 import { useId } from "react";
 
-import MapIcon from "./MapIcon";
+import { MapIcon } from "./MapIcon";
 
-export default function ZoomOutIcon() {
+export function ZoomOutIcon() {
   const maskId = useId();
 
   return (

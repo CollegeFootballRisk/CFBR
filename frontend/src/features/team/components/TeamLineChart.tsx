@@ -56,7 +56,7 @@ function ChartYAxis() {
   );
 }
 
-export default function TeamLineChart<T extends object>({
+export function TeamLineChart<T extends object>({
   data,
   children,
   ariaLabel,

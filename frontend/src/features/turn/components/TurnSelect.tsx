@@ -19,7 +19,7 @@ interface TurnSelectProps {
   className?: string;
 }
 
-export default function TurnSelect({
+export function TurnSelect({
   value,
   turns,
   onChange,

@@ -12,7 +12,7 @@ interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = {
     hasError: false,
   };
@@ -36,7 +36,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
       return (
         <div className="flex min-h-screen items-center justify-center px-4">
           <div className="max-w-lg text-center">
-            <p className="text-sm font-medium uppercase tracking-wider">Something went wrong</p>
+            <p className="font-medium text-sm uppercase tracking-wider">Something went wrong</p>
 
             <h1 className="mt-2 text-3xl tracking-tight">CFBR ran into an unexpected error.</h1>
 
@@ -46,12 +46,12 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="inline-flex rounded-md px-4 py-2 text-sm font-medium"
+                className="inline-flex rounded-md px-4 py-2 font-medium text-sm"
               >
                 Reload
               </button>
 
-              <Link to="/" className="inline-flex rounded-md px-4 py-2 text-sm font-medium">
+              <Link to="/" className="inline-flex rounded-md px-4 py-2 font-medium text-sm">
                 Back to Home
               </Link>
             </div>

@@ -3,10 +3,13 @@
 import { cva } from "class-variance-authority";
 
 export const selectVariants = cva(
-  "flex items-center justify-between border font-sans " +
-    "bg-control border-control-border " +
-    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground " +
-    "disabled:cursor-not-allowed disabled:opacity-40",
+  [
+    "flex items-center justify-between",
+    "font-sans",
+    "border border-control-border bg-control focus-visible:outline-2 focus-visible:outline-foreground",
+    "focus-visible:outline-offset-2 disabled:opacity-40",
+    "disabled:cursor-not-allowed",
+  ].join(" "),
   {
     variants: {
       size: {
@@ -26,14 +29,14 @@ export const selectVariants = cva(
         left: "rounded-l-md",
         right: "rounded-r-md",
 
-        "md-sm-left": "rounded-md sm:rounded-l-md sm:rounded-r-none",
+        "md-sm-left": "rounded-md sm:rounded-r-none sm:rounded-l-md",
         "md-sm-none": "rounded-md sm:rounded-none",
-        "md-sm-right": "rounded-md sm:rounded-l-none sm:rounded-r-md",
+        "md-sm-right": "rounded-md sm:rounded-r-md sm:rounded-l-none",
       },
 
       variant: {
         default: "tracking",
-        "map-control": "border-0 px-3 py-2 text-xl font-medium bg-accent-1 hover:bg-accent-2",
+        "map-control": "border-0 bg-accent-1 px-3 py-2 font-medium text-xl hover:bg-accent-2",
       },
 
       invalid: {

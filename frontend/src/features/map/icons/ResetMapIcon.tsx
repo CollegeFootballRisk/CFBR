@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import MapIcon from "./MapIcon";
+import { MapIcon } from "./MapIcon";
 
-export default function ResetMapIcon() {
+export function ResetMapIcon() {
   return (
     <MapIcon>
       {/* Reset arrow */}

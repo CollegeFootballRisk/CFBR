@@ -10,7 +10,7 @@ interface StatusMessageProps {
   className?: string;
 }
 
-export default function StatusMessage({ status, title, children, className }: StatusMessageProps) {
+export function StatusMessage({ status, title, children, className }: StatusMessageProps) {
   return (
     <div className={cn("rounded-md border p-4", className)}>
       <div className={cn("text-center", status === "success" ? "text-accent-3" : "text-failure")}>

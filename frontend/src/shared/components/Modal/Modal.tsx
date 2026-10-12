@@ -41,7 +41,7 @@ const FOCUSABLE_SELECTOR = [
   "[tabindex]:not([tabindex='-1'])",
 ].join(",");
 
-export default function Modal({
+export function Modal({
   open,
   onClose,
   title,
@@ -157,11 +157,14 @@ export default function Modal({
       onClick={onClose}
       aria-label="Close modal"
       className={cn(
-        "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
-        "border border-control-border",
-        "bg-control transition-colors",
-        "hover:bg-foreground hover:text-background",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
+        [
+          "flex shrink-0 items-center justify-center",
+          "h-9 w-9",
+          "hover:text-background",
+          "rounded-full border border-control-border bg-control hover:bg-foreground focus-visible:outline-2",
+          "focus-visible:outline-foreground focus-visible:outline-offset-2",
+          "transition-colors",
+        ].join(" "),
       )}
     >
       <span aria-hidden="true" className="-mt-0.5 text-2xl leading-none">
@@ -173,7 +176,12 @@ export default function Modal({
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: modal backdrop
     <div
-      className="fixed inset-0 z-60 flex items-center justify-center overflow-hidden bg-background/60 p-4 backdrop-blur-sm"
+      className={[
+        "fixed inset-0 z-60 flex items-center justify-center overflow-hidden",
+        "p-4",
+        "bg-background/60",
+        "backdrop-blur-sm",
+      ].join(" ")}
       role="presentation"
       onMouseDown={handleBackdropClick}
     >
@@ -203,12 +211,12 @@ export default function Modal({
 
         {headerActions ? (
           /* Header: actions get the flexible column, close button gets its own fixed column */
-          <div className="flex shrink-0 items-start gap-4 rounded-t-sm  px-4 pb-2 pt-4">
+          <div className="flex shrink-0 items-start gap-4 rounded-t-sm px-4 pt-4 pb-2">
             <div className="min-w-0 flex-1">{headerActions}</div>
             {closeButton}
           </div>
         ) : (
-          <div className="absolute right-4 top-4 z-30">{closeButton}</div>
+          <div className="absolute top-4 right-4 z-30">{closeButton}</div>
         )}
 
         {/* Scrollable modal body */}
@@ -216,7 +224,7 @@ export default function Modal({
           <div className={cn(headerActions ? "pt-4" : "pt-4")}>
             <h2
               id={titleId}
-              className="text-balance wrap-break-word px-10 text-center text-4xl font-bold leading-tight sm:px-12"
+              className="wrap-break-word text-balance px-10 text-center font-bold text-4xl leading-tight sm:px-12"
             >
               {title}
             </h2>

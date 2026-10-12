@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import { createBrowserRouter, Navigate } from "react-router-dom";
-import AppLayout from "@/shared/layouts/AppLayout";
-import ComingSoon from "@/shared/pages/ComingSoon";
+import { createBrowserRouter } from "react-router-dom";
+import { AppLayout } from "@/shared/layouts/AppLayout";
+import { ErrorPage } from "@/shared/pages/ErrorPage";
 
 const loadHome = () => import("@/features/home/pages/Home");
 const loadOdds = () => import("@/features/odds/pages/Odds");
@@ -15,7 +15,6 @@ const loadHelp = () => import("@/features/help/pages/Help");
 const loadPolicies = () => import("@/features/help/pages/Policies");
 const loadThanks = () => import("@/features/help/pages/Thanks");
 const loadBugs = () => import("@/features/bugs/pages/Bug");
-const loadNotFound = () => import("@/shared/pages/NotFound");
 
 export const router = createBrowserRouter([
   {
@@ -23,71 +22,71 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        lazy: async () => ({ Component: (await loadHome()).default }),
+        lazy: async () => ({ Component: (await loadHome()).Home }),
         handle: { sidebar: true },
       },
       {
         path: "/odds/:season/:day/:team",
-        element: <ComingSoon title="Odds" description="Battle odds are being rebuilt." />,
+        lazy: async () => ({ Component: (await loadOdds()).Odds }),
         handle: { sidebar: true },
       },
       {
         path: "/odds",
-        lazy: async () => ({ Component: (await loadOdds()).default }),
+        lazy: async () => ({ Component: (await loadOdds()).Odds }),
         handle: { sidebar: true },
       },
       {
         path: "/visited/:team/:season",
-        lazy: async () => ({ Component: (await loadVisited()).default }),
+        lazy: async () => ({ Component: (await loadVisited()).Visited }),
       },
       {
         path: "/visited",
-        lazy: async () => ({ Component: (await loadVisited()).default }),
+        lazy: async () => ({ Component: (await loadVisited()).Visited }),
         handle: { sidebar: true },
       },
       {
         path: "/player/:player",
-        lazy: async () => ({ Component: (await loadPlayer()).default }),
+        lazy: async () => ({ Component: (await loadPlayer()).Player }),
       },
       {
         path: "/team/:team",
-        lazy: async () => ({ Component: (await loadTeam()).default }),
+        lazy: async () => ({ Component: (await loadTeam()).Team }),
       },
       {
         path: "/settings",
-        lazy: async () => ({ Component: (await loadSettings()).default }),
+        lazy: async () => ({ Component: (await loadSettings()).Settings }),
       },
       {
         path: "/info",
-        lazy: async () => ({ Component: (await loadInfo()).default }),
+        lazy: async () => ({ Component: (await loadInfo()).Info }),
       },
       {
         path: "/about",
-        lazy: async () => ({ Component: (await loadInfo()).default }),
+        lazy: async () => ({ Component: (await loadInfo()).Info }),
       },
       {
         path: "/help",
-        lazy: async () => ({ Component: (await loadHelp()).default }),
+        lazy: async () => ({ Component: (await loadHelp()).Help }),
       },
       {
         path: "/policies",
-        lazy: async () => ({ Component: (await loadPolicies()).default }),
+        lazy: async () => ({ Component: (await loadPolicies()).Policies }),
       },
       {
         path: "/thanks",
-        lazy: async () => ({ Component: (await loadThanks()).default }),
+        lazy: async () => ({ Component: (await loadThanks()).Thanks }),
       },
       {
         path: "/bugs",
-        lazy: async () => ({ Component: (await loadBugs()).default }),
+        lazy: async () => ({ Component: (await loadBugs()).Bugs }),
       },
       {
-        path: "/404",
-        lazy: async () => ({ Component: (await loadNotFound()).default }),
+        path: "/error",
+        element: <ErrorPage variant="unknown" />,
       },
       {
         path: "*",
-        element: <Navigate to="/404" replace />,
+        element: <ErrorPage variant="not-found" />,
       },
     ],
   },

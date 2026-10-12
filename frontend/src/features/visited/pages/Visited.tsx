@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import VisitedControls from "../components/VisitedControls";
+import { VisitedControls } from "../components/VisitedControls";
 import { getTeamsForSeason, seasons } from "../data/visited";
 
-export default function Visited() {
+export function Visited() {
   const { team: teamParam, season: seasonParam } = useParams<{
     team?: string;
     season?: string;
@@ -62,7 +62,7 @@ export default function Visited() {
       />
       <div className="absolute inset-0 flex items-center justify-center text-center">
         <div className="max-w-lg px-6">
-          <h1 className="text-2xl font-semibold">College Football Risk</h1>
+          <h1 className="font-semibold text-2xl">College Football Risk</h1>
           <p className="mt-2">Visited map coming soon.</p>
           <p className="mt-4 text-sm">
             Season {selectedSeason} · {selectedTeam?.name ?? "No team"}

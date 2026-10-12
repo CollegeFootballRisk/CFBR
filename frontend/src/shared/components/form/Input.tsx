@@ -3,6 +3,7 @@
 import { type InputHTMLAttributes, type ReactNode, useId } from "react";
 
 import { cn } from "@/shared/utils/cn";
+import { FormField } from "./FormField";
 
 type InputProps =
   | ({
@@ -31,18 +32,7 @@ export function Input({
   const errorId = error ? `${inputId}-error` : undefined;
 
   return (
-    <div className="flex flex-col gap-1">
-      {label && (
-        <label htmlFor={inputId} className="font-medium">
-          {label}
-          {required && (
-            <span className="text-info" aria-hidden="true">
-              {" *"}
-            </span>
-          )}
-        </label>
-      )}
-
+    <FormField id={inputId} label={label} required={required} error={error}>
       <input
         id={inputId}
         required={required}
@@ -58,12 +48,6 @@ export function Input({
           className,
         )}
       />
-
-      {error && (
-        <p id={errorId} className="text-sm text-failure">
-          {error}
-        </p>
-      )}
-    </div>
+    </FormField>
   );
 }

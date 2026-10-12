@@ -110,6 +110,57 @@ function getFeatureRoot(filePath) {
   return path.resolve(FRONTEND_SRC, "features", parts[1]);
 }
 
+
+function validateDefaultExport(sourceFile, node) {
+  // export default expression;
+  if (ts.isExportAssignment(node) && !node.isExportEquals) {
+    report(
+      sourceFile,
+      node,
+      "Use a named export instead of export default.",
+    );
+    return;
+  }
+
+  // export default function Foo() {} / export default class Foo {}
+  if (
+    (ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) &&
+    node.modifiers?.some(
+      (modifier) => modifier.kind === ts.SyntaxKind.DefaultKeyword,
+    )
+  ) {
+    report(
+      sourceFile,
+      node,
+      "Use a named export instead of a default export.",
+    );
+    return;
+  }
+
+  // export { default as Foo } from "./Foo";
+  // export { Foo as default } from "./Foo";
+  if (
+    ts.isExportDeclaration(node) &&
+    node.exportClause &&
+    ts.isNamedExports(node.exportClause)
+  ) {
+    for (const element of node.exportClause.elements) {
+      const exportsDefault =
+        element.propertyName?.text === "default" ||
+        element.name.text === "default";
+
+      if (exportsDefault) {
+        report(
+          sourceFile,
+          element,
+          "Do not re-export default exports. Use named exports.",
+        );
+      }
+    }
+  }
+}
+
+
 function validateParentRelativeImports(sourceFile, importDeclaration) {
   const importPath = importDeclaration.moduleSpecifier.text;
 
@@ -389,6 +440,8 @@ function validateFile(filePath) {
   );
 
   function visit(node) {
+    validateDefaultExport(sourceFile, node);
+    
     if (ts.isImportDeclaration(node)) {
       validateParentRelativeImports(sourceFile, node);
       validateRestrictedApiImport(sourceFile, node);

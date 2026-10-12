@@ -8,7 +8,7 @@ import {
   type SelectOption,
   type SelectRenderItem,
 } from "./selectTypes";
-import useSelectKeyboard from "./useSelectKeyboard";
+import { useSelectKeyboard } from "./useSelectKeyboard";
 
 interface UseSelectProps<T> {
   value?: T | "";
@@ -93,7 +93,7 @@ function getItemIndexes<T>(items: SelectRenderItem<T>[]): number[] {
   return indexes;
 }
 
-export default function useSelect<T>({
+export function useSelect<T>({
   value,
   options,
   placeholder,

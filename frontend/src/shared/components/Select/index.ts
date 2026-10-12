@@ -1,3 +1,3 @@
 // SPDX-License-Identifier: MPL-2.0
 
-export { default as Select } from "./Select";
+export { Select } from "./Select";

@@ -4,7 +4,7 @@ import type { VariantProps } from "class-variance-authority";
 import type { RefObject } from "react";
 
 import { cn } from "../../utils/cn";
-import ChevronIcon from "../Icons/ChevronIcon";
+import { ChevronIcon } from "../Icons/ChevronIcon";
 
 import { selectVariants } from "./selectVariants";
 
@@ -19,7 +19,7 @@ interface SelectMeasureProps {
   children: React.ReactNode;
 }
 
-export default function SelectMeasure({
+export function SelectMeasure({
   measureRef,
   className,
   size,
@@ -40,7 +40,7 @@ export default function SelectMeasure({
           rounded,
           variant,
         }),
-        "absolute invisible whitespace-nowrap pointer-events-none",
+        "pointer-events-none invisible absolute whitespace-nowrap",
         className,
       )}
     >

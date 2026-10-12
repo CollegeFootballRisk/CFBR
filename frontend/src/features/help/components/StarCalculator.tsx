@@ -33,7 +33,7 @@ export function StarCalculator() {
         <StarRating value={overallStars} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 @3xl:grid-cols-2 @3xl:gap-6">
+      <div className="grid @3xl:grid-cols-2 grid-cols-1 @3xl:gap-6 gap-4">
         <StarCategory
           category={STAR_CATEGORIES.mvps}
           value={starValues.mvps}

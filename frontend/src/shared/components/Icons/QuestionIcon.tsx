@@ -6,7 +6,7 @@ interface OddsInfoIconProps {
   className?: string;
 }
 
-export default function QuestionIcon({ className }: OddsInfoIconProps) {
+export function QuestionIcon({ className }: OddsInfoIconProps) {
   return (
     <svg
       aria-hidden="true"

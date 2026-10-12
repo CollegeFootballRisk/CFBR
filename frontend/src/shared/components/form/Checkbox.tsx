@@ -60,8 +60,8 @@ export function Checkbox({
 
           <span
             className={[
-              "pointer-events-none absolute inset-0 hidden items-center justify-center",
-              "peer-checked:flex",
+              "absolute inset-0 hidden items-center justify-center peer-checked:flex",
+              "pointer-events-none",
             ].join(" ")}
           >
             <span className="size-3 translate-y-0.5">
@@ -74,7 +74,7 @@ export function Checkbox({
       </label>
 
       {error && (
-        <p id={errorId} className="text-sm text-failure">
+        <p id={errorId} className="text-failure text-sm">
           {error}
         </p>
       )}

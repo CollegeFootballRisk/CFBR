@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-export default function CheckIcon() {
+export function CheckIcon() {
   return (
     <svg
       viewBox="0 0 16 16"

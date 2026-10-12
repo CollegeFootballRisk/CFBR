@@ -12,7 +12,7 @@ export interface SwitchProps
   onCheckedChange?: (checked: boolean) => void;
 }
 
-export default function Switch({
+export function Switch({
   className,
   checked,
   defaultChecked = false,
@@ -48,10 +48,11 @@ export default function Switch({
       onClick={handleClick}
       className={cn(
         [
-          "relative inline-flex h-8 w-15 shrink-0 cursor-pointer items-center px-0.5",
-          "rounded-full border border-control-border",
-          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
-          "disabled:cursor-not-allowed disabled:opacity-40",
+          [
+            "relative inline-flex h-8 w-15 shrink-0 cursor-pointer items-center rounded-full border",
+            "border-control-border px-0.5 focus-visible:outline-2 focus-visible:outline-foreground",
+            "focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-40",
+          ].join(" "),
         ],
         isChecked ? "bg-accent-3" : "bg-control",
         className,

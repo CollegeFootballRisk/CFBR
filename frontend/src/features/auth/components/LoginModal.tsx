@@ -7,7 +7,7 @@ interface LoginModalProps {
   onClose: () => void;
 }
 
-export default function LoginModal({ open, onClose }: LoginModalProps) {
+export function LoginModal({ open, onClose }: LoginModalProps) {
   return (
     <Modal open={open} onClose={onClose} title="Login">
       <div className="space-y-4 text-center">

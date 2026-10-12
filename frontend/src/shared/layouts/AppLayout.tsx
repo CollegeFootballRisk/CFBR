@@ -3,16 +3,16 @@
 import { Outlet, useMatches } from "react-router-dom";
 
 import { TurnProvider } from "@/features/turn/context/TurnContext";
-import HashScroll from "../components/HashScroll";
+import { HashScroll } from "../components/HashScroll";
 import { ModalHost, ModalProvider } from "../components/Modal";
 import { Sidebar } from "../components/Sidebar";
-import Navbar from "./Navbar";
+import { Navbar } from "./Navbar";
 
 interface RouteHandle {
   sidebar?: boolean;
 }
 
-export default function AppLayout() {
+export function AppLayout() {
   const matches = useMatches();
 
   const sidebarEnabled = matches.some((match) => {

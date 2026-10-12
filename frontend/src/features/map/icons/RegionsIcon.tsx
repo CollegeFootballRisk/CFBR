@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import MapIcon from "./MapIcon";
+import { MapIcon } from "./MapIcon";
 
-export default function RegionsIcon() {
+export function RegionsIcon() {
   return (
     <MapIcon>
       <path d="M5 21V3" />

@@ -4,13 +4,13 @@ import type { VariantProps } from "class-variance-authority";
 import { type HTMLAttributes, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 
 import { cn } from "../../utils/cn";
-import ChevronIcon from "../Icons/ChevronIcon";
+import { ChevronIcon } from "../Icons/ChevronIcon";
 
-import SelectDropdown, { type DropdownPosition } from "./SelectDropdown";
-import SelectMeasure from "./SelectMeasure";
+import { type DropdownPosition, SelectDropdown } from "./SelectDropdown";
+import { SelectMeasure } from "./SelectMeasure";
 import type { SelectItem } from "./selectTypes";
 import { selectVariants } from "./selectVariants";
-import useSelect from "./useSelect";
+import { useSelect } from "./useSelect";
 
 export interface SelectProps<T = string>
   extends Omit<HTMLAttributes<HTMLDivElement>, "onChange">,
@@ -34,7 +34,7 @@ const MAX_DROPDOWN_HEIGHT = 256;
 const VIEWPORT_PADDING = 8;
 const DROPDOWN_GAP = 8;
 
-export default function Select<T = string>({
+export function Select<T = string>({
   rounded = "md",
   width = "auto",
   value,
@@ -258,7 +258,7 @@ export default function Select<T = string>({
       </button>
 
       {error && (
-        <p id={`${selectId}-error`} className="mt-1 text-sm text-accent-1">
+        <p id={`${selectId}-error`} className="mt-1 text-accent-1 text-sm">
           {error}
         </p>
       )}

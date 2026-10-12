@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import { useEffect } from "react";
+import { type ReactNode, useEffect, useId } from "react";
 import { useLocation } from "react-router-dom";
 import type { Branding } from "@/app/settings";
 import { useAppSettings } from "@/app/useAppSettings";
@@ -9,9 +9,42 @@ import { useModal } from "@/shared/components/Modal";
 import { Select } from "@/shared/components/Select";
 import { Switch } from "@/shared/components/Switch";
 import { PageSizeSelect } from "@/shared/components/Table";
-import PageContainer from "@/shared/layouts/PageContainer";
+import { PageContainer } from "@/shared/layouts/PageContainer";
 
-export default function Settings() {
+interface SettingsRowProps {
+  label: string;
+  children: ReactNode;
+}
+
+function SettingsRow({ label, children }: SettingsRowProps) {
+  return (
+    <div className="flex items-center gap-4 py-4">
+      {children}
+      <span className="text-sm">{label}</span>
+    </div>
+  );
+}
+
+interface SettingsToggleRowProps {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}
+
+function SettingsToggleRow({ label, checked, onChange }: SettingsToggleRowProps) {
+  const id = useId();
+
+  return (
+    <div className="flex items-center gap-4 py-4">
+      <Switch id={id} aria-label={label} checked={checked} onCheckedChange={onChange} />
+      <label htmlFor={id} className="text-sm">
+        {label}
+      </label>
+    </div>
+  );
+}
+
+export function Settings() {
   const { settings, updateSetting } = useAppSettings();
   const location = useLocation();
   const { openModal } = useModal();
@@ -24,113 +57,79 @@ export default function Settings() {
 
   return (
     <>
-      <h1 className="text-4xl font-bold text-center my-4">Settings</h1>
+      <h1 className="my-4 text-center font-bold text-4xl">Settings</h1>
+
       <PageContainer>
         <div className="mt-8">
           <div className="divide-y">
-            <div className="flex items-center gap-4 py-4">
-              <Switch
-                aria-label="Show Background Images"
-                checked={settings.showBackgroundImages}
-                onCheckedChange={(value) => updateSetting("showBackgroundImages", value)}
-              />
-              <span className="text-sm">Background Images</span>
-            </div>
+            <SettingsToggleRow
+              label="Background Images"
+              checked={settings.showBackgroundImages}
+              onChange={(value) => updateSetting("showBackgroundImages", value)}
+            />
 
-            <div className="flex items-center gap-4 py-4">
-              <Switch
-                aria-label="Enable Light Mode"
-                checked={settings.theme === "light"}
-                onCheckedChange={(checked) => updateSetting("theme", checked ? "light" : "dark")}
-              />
-              <span className="text-sm">Light Mode</span>
-            </div>
+            <SettingsToggleRow
+              label="Light Mode"
+              checked={settings.theme === "light"}
+              onChange={(checked) => updateSetting("theme", checked ? "light" : "dark")}
+            />
 
-            <div className="flex items-center gap-4 py-4">
-              <Switch
-                aria-label="Show move prompting"
-                checked={settings.showPromptMove}
-                onCheckedChange={(value) => updateSetting("showPromptMove", value)}
-              />
-              <span className="text-sm">Prompt me to make a move if I haven't</span>
-            </div>
+            <SettingsToggleRow
+              label="Prompt me to make a move if I haven't"
+              checked={settings.showPromptMove}
+              onChange={(value) => updateSetting("showPromptMove", value)}
+            />
 
-            <div className="flex items-center gap-4 py-4">
-              <Switch
-                aria-label="Show territory pin"
-                checked={settings.showTerritoryPin}
-                onCheckedChange={(value) => updateSetting("showTerritoryPin", value)}
-              />
-              <span className="text-sm">Place a pin over the territory on which I am moving</span>
-            </div>
+            <SettingsToggleRow
+              label="Place a pin over the territory on which I am moving"
+              checked={settings.showTerritoryPin}
+              onChange={(value) => updateSetting("showTerritoryPin", value)}
+            />
 
-            <div className="flex items-center gap-4 py-4">
-              <Switch
-                aria-label="Show territory fade/pulse"
-                checked={settings.showPulseTerritory}
-                onCheckedChange={(value) => updateSetting("showPulseTerritory", value)}
-              />
-              <span className="text-sm">
-                Fade/pulse the territory in and out on which I am moving
-              </span>
-            </div>
+            <SettingsToggleRow
+              label="Fade/pulse the territory in and out on which I am moving"
+              checked={settings.showPulseTerritory}
+              onChange={(value) => updateSetting("showPulseTerritory", value)}
+            />
 
-            <div className="flex items-center gap-4 py-4">
-              <Switch
-                aria-label="Show bridges"
-                checked={settings.showBridges}
-                onCheckedChange={(value) => updateSetting("showBridges", value)}
-              />
-              <span className="text-sm">Show bridges when the map first loads</span>
-            </div>
+            <SettingsToggleRow
+              label="Show bridges when the map first loads"
+              checked={settings.showBridges}
+              onChange={(value) => updateSetting("showBridges", value)}
+            />
 
-            <div className="flex items-center gap-4 py-4">
-              <Switch
-                aria-label="Show regions"
-                checked={settings.showRegions}
-                onCheckedChange={(value) => updateSetting("showRegions", value)}
-              />
-              <span className="text-sm">Show regions when the map first loads</span>
-            </div>
+            <SettingsToggleRow
+              label="Show regions when the map first loads"
+              checked={settings.showRegions}
+              onChange={(value) => updateSetting("showRegions", value)}
+            />
 
-            <div className="flex items-center gap-4 py-4">
-              <Switch
-                aria-label="Opt-in for experiments"
-                checked={settings.showExperiments}
-                onCheckedChange={(value) => updateSetting("showExperiments", value)}
-              />
-              <span className="text-sm">Opt-in to temporary experiments (e.g. bug fixes)</span>
-            </div>
+            <SettingsToggleRow
+              label="Opt-in to temporary experiments (e.g. bug fixes)"
+              checked={settings.showExperiments}
+              onChange={(value) => updateSetting("showExperiments", value)}
+            />
 
-            <div className="flex items-center gap-4 py-4">
-              <Switch
-                aria-label="Show labels"
-                checked={settings.showMapLabels}
-                onCheckedChange={(value) => updateSetting("showMapLabels", value)}
-              />
-              <span className="text-sm">Show labels on map buttons</span>
-            </div>
+            <SettingsToggleRow
+              label="Show labels on map buttons"
+              checked={settings.showMapLabels}
+              onChange={(value) => updateSetting("showMapLabels", value)}
+            />
 
-            <div className="flex items-center gap-4 py-4">
-              <Switch
-                aria-label="Add extra space for scrolling"
-                checked={settings.addBottomSpace}
-                onCheckedChange={(value) => updateSetting("addBottomSpace", value)}
-              />
-              <span className="text-sm">
-                Add extra space to the bottom of some prompts (for scrolling)
-              </span>
-            </div>
+            <SettingsToggleRow
+              label="Add extra space to the bottom of some prompts (for scrolling)"
+              checked={settings.addBottomSpace}
+              onChange={(value) => updateSetting("addBottomSpace", value)}
+            />
 
-            <div className="flex items-center gap-4 py-4">
+            <SettingsRow label="How many rows to show on tables by default">
               <PageSizeSelect
                 value={settings.pageSize}
                 onChange={(value) => updateSetting("pageSize", value)}
               />
-              <span className="text-sm">How many rows to show on tables by default</span>
-            </div>
+            </SettingsRow>
 
-            <div className="flex items-center gap-4 py-4">
+            <SettingsRow label="Which branding to use">
               <Select<Branding>
                 rounded="full"
                 width="full"
@@ -146,7 +145,7 @@ export default function Settings() {
                   },
                   {
                     type: "group",
-                    label: "Classic",
+                    label: "Risk 3.0",
                     options: [
                       { label: "Rainbow", value: "classic-rainbow" },
                       { label: "White", value: "classic-white" },
@@ -154,7 +153,7 @@ export default function Settings() {
                   },
                   {
                     type: "group",
-                    label: "Original",
+                    label: "Risk 2.0",
                     options: [{ label: "White", value: "original" }],
                   },
                   {
@@ -172,10 +171,10 @@ export default function Settings() {
                   }
                 }}
               />
-              <span className="text-sm">Which branding to use</span>
-            </div>
+            </SettingsRow>
           </div>
         </div>
+
         <Link to="/settings#info">Version Information</Link>
         <br />
         <Link to="/settings#logout" variant="exit">

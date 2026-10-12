@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-export default function HashScroll() {
+export function HashScroll() {
   const { hash } = useLocation();
 
   useEffect(() => {

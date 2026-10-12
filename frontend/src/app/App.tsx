@@ -2,10 +2,10 @@
 
 import { RouterProvider } from "react-router-dom";
 import { ErrorBoundary } from "@/shared/components/ErrorBoundary";
-import AppSettingsProvider from "./AppSettingsProvider";
+import { AppSettingsProvider } from "./AppSettingsProvider";
 import { router } from "./routes";
 
-export default function App() {
+export function App() {
   return (
     <ErrorBoundary>
       <AppSettingsProvider>

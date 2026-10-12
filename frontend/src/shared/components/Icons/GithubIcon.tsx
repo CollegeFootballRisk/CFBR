@@ -6,7 +6,7 @@ interface GitHubIconProps {
   className?: string;
 }
 
-export default function GitHubIcon({ className }: GitHubIconProps) {
+export function GitHubIcon({ className }: GitHubIconProps) {
   return (
     <span className={cn("inline-block h-12 w-12 overflow-hidden", className)}>
       <svg

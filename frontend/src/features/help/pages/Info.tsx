@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Link } from "@/shared/components/Link";
-import PageContainer from "@/shared/layouts/PageContainer";
+import { PageContainer } from "@/shared/layouts/PageContainer";
 import { StarCalculator } from "../components/StarCalculator";
 
 interface InfoSectionProps {
@@ -83,7 +83,7 @@ const gameDifferences: GameDifference[] = [
 function InfoSection({ title, children }: InfoSectionProps) {
   return (
     <section className="mb-6">
-      <h3 className="mb-2 text-xl font-bold">{title}</h3>
+      <h3 className="mb-2 font-bold text-xl">{title}</h3>
       {children}
     </section>
   );
@@ -250,12 +250,12 @@ function SurvivalGuide() {
   );
 }
 
-export default function Info() {
+export function Info() {
   return (
     <>
-      <h1 className="my-4 text-center text-4xl font-bold">Information</h1>
+      <h1 className="my-4 text-center font-bold text-4xl">Information</h1>
 
-      <h2 className="my-4 text-center text-2xl font-bold">Playing College Football Risk</h2>
+      <h2 className="my-4 text-center font-bold text-2xl">Playing College Football Risk</h2>
 
       <PageContainer>
         <GameOverview />

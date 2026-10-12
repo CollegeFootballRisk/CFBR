@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { Link } from "@/shared/components/Link";
-import PageContainer from "@/shared/layouts/PageContainer";
+import { PageContainer } from "@/shared/layouts/PageContainer";
 
-export default function Thanks() {
+export function Thanks() {
   return (
     <PageContainer>
-      <h1 className="my-4 text-4xl font-bold">Thank You</h1>
-      <h2 className="my-4 text-2xl font-bold">A letter from lead developer u/shen3340</h2>
+      <h1 className="my-4 font-bold text-4xl">Thank You</h1>
+      <h2 className="my-4 font-bold text-2xl">A letter from lead developer u/shen3340</h2>
 
       <div className="ml-8">
         <p>
@@ -75,7 +75,7 @@ export default function Thanks() {
         </p>
       </div>
 
-      <h2 className="my-4 text-2xl font-bold">Donations</h2>
+      <h2 className="my-4 font-bold text-2xl">Donations</h2>
       <p>
         CFBR is hosted and maintained by members of the community. If you would like to help offset
         the costs of hosting and maintaining the game, donations are always appreciated.{" "}

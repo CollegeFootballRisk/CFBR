@@ -6,7 +6,7 @@ interface DiscordIconProps {
   className?: string;
 }
 
-export default function DiscordIcon({ className }: DiscordIconProps) {
+export function DiscordIcon({ className }: DiscordIconProps) {
   return (
     <span className={cn("inline-block h-12 w-12 overflow-hidden", className)}>
       <svg

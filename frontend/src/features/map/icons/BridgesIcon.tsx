@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import MapIcon from "./MapIcon";
+import { MapIcon } from "./MapIcon";
 
-export default function BridgesIcon() {
+export function BridgesIcon() {
   return (
     <MapIcon>
       <g transform="translate(-1.2 -1.2) scale(1.1)">

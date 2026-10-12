@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import PageContainer from "@/shared/layouts/PageContainer";
+import { PageContainer } from "@/shared/layouts/PageContainer";
 
-export default function Policies() {
+export function Policies() {
   return (
     <>
-      <h1 className="my-4 text-center text-4xl font-bold">Code of Conduct</h1>
+      <h1 className="my-4 text-center font-bold text-4xl">Code of Conduct</h1>
 
       <PageContainer>
         <ol className="list-decimal space-y-4 pl-6">
@@ -59,7 +59,7 @@ export default function Policies() {
           </li>
         </ol>
 
-        <h2 id="test-game-policy" className="my-4 text-center text-4xl font-bold">
+        <h2 id="test-game-policy" className="my-4 text-center font-bold text-4xl">
           Test Game Policy
         </h2>
 

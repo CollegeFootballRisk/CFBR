@@ -29,10 +29,10 @@ export function ChangelogModal({ open, onClose }: ChangelogModalProps) {
         {CHANGELOG.map((entry) => (
           <section key={`${entry.turn}-${entry.title}`} className="space-y-3">
             <div>
-              <h2 className="text-2xl font-bold italic">Turn {entry.turn}</h2>
+              <h2 className="font-bold text-2xl italic">Turn {entry.turn}</h2>
               <br />
 
-              <h3 className="text-xl font-bold">{entry.title}</h3>
+              <h3 className="font-bold text-xl">{entry.title}</h3>
             </div>
 
             <div>{entry.content}</div>

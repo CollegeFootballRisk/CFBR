@@ -5,7 +5,7 @@ interface SettingsIconProps {
   size?: number;
 }
 
-export default function SettingsIcon({ className, size = 20 }: SettingsIconProps) {
+export function SettingsIcon({ className, size = 20 }: SettingsIconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

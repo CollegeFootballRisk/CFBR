@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { useState } from "react";
-import TurnSelect, { type Turn, type TurnSelection } from "@/features/turn/components/TurnSelect";
+import { type Turn, TurnSelect, type TurnSelection } from "@/features/turn/components/TurnSelect";
 import { Link } from "@/shared/components/Link";
 import { Modal } from "@/shared/components/Modal";
 import { Table, type TableColumn } from "@/shared/components/Table";
@@ -137,7 +137,7 @@ const turns: Turn[] = [
   { id: 1232, season: 12, day: 46 },
 ];
 
-export default function LeaderboardModal({ open, onClose, initialTurn }: LeaderboardModalProps) {
+export function LeaderboardModal({ open, onClose, initialTurn }: LeaderboardModalProps) {
   const [selectedTurn, setSelectedTurn] = useState<TurnSelection>(initialTurn);
 
   return (

@@ -7,9 +7,9 @@ import { StarIcon } from "@/shared/components/Icons";
 import { Link } from "@/shared/components/Link";
 import { Select } from "@/shared/components/Select";
 import { Table, type TableColumn } from "@/shared/components/Table";
-import PageContainer from "@/shared/layouts/PageContainer";
-import ChartLegend, { starLegendItems, starPowerLegendItems } from "../components/ChartLegend";
-import TeamLineChart, { chartTooltipClassName } from "../components/TeamLineChart";
+import { PageContainer } from "@/shared/layouts/PageContainer";
+import { ChartLegend, starLegendItems, starPowerLegendItems } from "../components/ChartLegend";
+import { chartTooltipClassName, TeamLineChart } from "../components/TeamLineChart";
 import {
   MOCK_LATEST_SEASON,
   mockMercenaries,
@@ -110,7 +110,7 @@ function formatChartValue(value: number): string {
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="text-center text-2xl">
-      <dt className="italic text-info">{label}:</dt>
+      <dt className="text-info italic">{label}:</dt>
       <dd className="font-semibold">{value}</dd>
     </div>
   );
@@ -119,7 +119,7 @@ function StatCard({ label, value }: { label: string; value: number }) {
 function TeamSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="min-w-0 text-center">
-      <h2 className="mb-4 text-4xl font-bold">{title}:</h2>
+      <h2 className="mb-4 font-bold text-4xl">{title}:</h2>
       {children}
     </section>
   );
@@ -283,7 +283,7 @@ function StarPowerChart({ data }: { data: StarPowerPoint[] }) {
   );
 }
 
-export default function Team() {
+export function Team() {
   const navigate = useNavigate();
   const { team: teamParam } = useParams();
 

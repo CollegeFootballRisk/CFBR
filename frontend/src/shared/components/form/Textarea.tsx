@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { type ReactNode, type TextareaHTMLAttributes, useId } from "react";
-
 import { cn } from "@/shared/utils/cn";
+import { FormField } from "./FormField";
 
 type TextareaProps =
   | ({
@@ -31,18 +31,7 @@ export function Textarea({
   const errorId = error ? `${textareaId}-error` : undefined;
 
   return (
-    <div className="flex flex-col gap-1">
-      {label && (
-        <label htmlFor={textareaId} className="font-medium">
-          {label}
-          {required && (
-            <span className="text-info" aria-hidden="true">
-              {" *"}
-            </span>
-          )}
-        </label>
-      )}
-
+    <FormField id={textareaId} label={label} required={required} error={error}>
       <textarea
         id={textareaId}
         required={required}
@@ -51,19 +40,20 @@ export function Textarea({
         aria-describedby={cn(ariaDescribedBy, errorId)}
         {...props}
         className={cn(
-          "field-sizing-content min-h-24 max-h-[50vh] resize-y overflow-auto rounded-md border border-control-border bg-control px-2 py-1 transition-colors",
-          "focus-visible:outline-2 focus-visible:outline-foreground",
-          "disabled:cursor-not-allowed disabled:opacity-40",
+          [
+            "overflow-auto",
+            "px-2 py-1",
+            "max-h-[50vh] min-h-24",
+            "rounded-md border border-control-border bg-control focus-visible:outline-2",
+            "focus-visible:outline-foreground disabled:opacity-40",
+            "transition-colors",
+            "resize-y disabled:cursor-not-allowed",
+            "field-sizing-content",
+          ].join(" "),
           error && "border-failure",
           className,
         )}
       />
-
-      {error && (
-        <p id={errorId} className="text-sm text-failure">
-          {error}
-        </p>
-      )}
-    </div>
+    </FormField>
   );
 }

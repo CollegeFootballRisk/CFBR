@@ -7,7 +7,7 @@ import { Link, NavLink } from "@/shared/components/Link";
 import { useModal } from "@/shared/components/Modal";
 import { Button } from "../components/Button";
 
-export default function Navbar() {
+export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { openModal } = useModal();
   const { settings } = useAppSettings();
@@ -66,7 +66,12 @@ export default function Navbar() {
 
       {/* Mobile navigation */}
       {mobileOpen && (
-        <div className="absolute inset-x-0 top-16 border-t border-foreground bg-linear-to-r from-accent-2 to-accent-1 md:hidden">
+        <div
+          className={[
+            "absolute inset-x-0 top-16 md:hidden",
+            "border-foreground border-t bg-linear-to-r from-accent-2 to-accent-1",
+          ].join(" ")}
+        >
           <div className="divide-y divide-foreground">
             <MobileNavItem
               onClick={() => {
@@ -83,10 +88,6 @@ export default function Navbar() {
               }}
             >
               Leaderboard
-            </MobileNavItem>
-
-            <MobileNavItem to="/" onClick={closeMobileMenu}>
-              Map
             </MobileNavItem>
 
             <MobileNavItem to="/odds" onClick={closeMobileMenu}>
@@ -149,9 +150,9 @@ function NavItem({ children, ...props }: NavItemProps) {
     <NavLink
       to={props.to}
       end={props.to === "/"}
-      className="rounded-md px-4 py-2 text-sm font-medium"
+      className="rounded-md px-4 py-2 font-medium text-sm"
     >
-      <span className="inline-block hover:shadow-accent-glow hover:underline hover:decoration-dashed">
+      <span className="inline-block hover:underline hover:decoration-dashed hover:shadow-accent-glow">
         {children}
       </span>
     </NavLink>
@@ -160,8 +161,8 @@ function NavItem({ children, ...props }: NavItemProps) {
 
 function ExternalNavItem({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} variant="nav" className="rounded-md px-4 py-2 text-sm font-medium">
-      <span className="inline-block hover:shadow-accent-glow hover:underline hover:decoration-dashed">
+    <Link href={href} variant="nav" className="rounded-md px-4 py-2 font-medium text-sm">
+      <span className="inline-block hover:underline hover:decoration-dashed hover:shadow-accent-glow">
         {children}
       </span>
     </Link>
@@ -182,7 +183,7 @@ function MobileNavItem({
       <Button
         variant="nav"
         onClick={onClick}
-        className="w-full justify-center rounded-none py-3 text-sm text-center"
+        className="w-full justify-center rounded-none py-3 text-center text-sm"
       >
         {children}
       </Button>
@@ -194,7 +195,7 @@ function MobileNavItem({
       to={to}
       end={to === "/"}
       onClick={onClick}
-      className="block w-full rounded-none py-3 text-center text-sm font-medium"
+      className="block w-full rounded-none py-3 text-center font-medium text-sm"
     >
       {children}
     </NavLink>
@@ -215,7 +216,7 @@ function ExternalMobileNavItem({
       href={href}
       variant="nav"
       onClick={onClick}
-      className="block w-full rounded-none py-3 text-center text-sm font-medium"
+      className="block w-full rounded-none py-3 text-center font-medium text-sm"
     >
       {children}
     </Link>

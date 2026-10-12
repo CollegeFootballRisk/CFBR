@@ -7,6 +7,6 @@ interface PageContainerProps {
   className?: string;
 }
 
-export default function PageContainer({ children, className = "" }: PageContainerProps) {
-  return <div className={`mx-auto h-full w-[90%] pb-8 overflow-auto ${className}`}>{children}</div>;
+export function PageContainer({ children, className = "" }: PageContainerProps) {
+  return <div className={`mx-auto h-full w-[90%] overflow-auto pb-8 ${className}`}>{children}</div>;
 }

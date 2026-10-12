@@ -7,7 +7,7 @@ interface VersionInformationModalProps {
   onClose: () => void;
 }
 
-export default function VersionInformationModal({ open, onClose }: VersionInformationModalProps) {
+export function VersionInformationModal({ open, onClose }: VersionInformationModalProps) {
   return (
     <Modal open={open} onClose={onClose} title="Version Information">
       <div className="text-left">

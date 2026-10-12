@@ -58,7 +58,7 @@ const displayTypes = [
   },
 ];
 
-export default function OddsInfoModal({ open, onClose }: OddsInfoModalProps) {
+export function OddsInfoModal({ open, onClose }: OddsInfoModalProps) {
   const starIds = ["one", "two", "three", "four", "five"] as const;
   return (
     <Modal open={open} onClose={onClose} title="Odds Information">

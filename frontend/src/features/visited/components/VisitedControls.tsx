@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { useMemo } from "react";
-import { ResetMapIcon, ZoomInIcon, ZoomOutIcon } from "@/features/map/icons";
-import { Button } from "@/shared/components/Button";
+import { MapControlPosition } from "@/features/map/components/MapControlPosition";
+import { MapNavigationControls } from "@/features/map/components/MapNavigationControls";
 import { Select } from "@/shared/components/Select";
 import type { VisitedTeam } from "../data/visited";
 
@@ -15,7 +15,7 @@ interface VisitedControlsProps {
   onTeamChange: (teamId: number) => void;
 }
 
-export default function VisitedControls({
+export function VisitedControls({
   seasons,
   teams,
   selectedSeason,
@@ -34,7 +34,7 @@ export default function VisitedControls({
 
   return (
     <>
-      <div className="pointer-events-none absolute inset-x-0 z-10 flex justify-center px-3">
+      <MapControlPosition placement="top">
         <div className="pointer-events-auto flex flex-col items-center gap-2 sm:flex-row sm:gap-0 sm:shadow-lg">
           <Select<number>
             value={selectedSeason}
@@ -43,7 +43,7 @@ export default function VisitedControls({
               if (value !== "") onSeasonChange(value);
             }}
             width="full"
-            className="sm:border-b-0 sm:border-r"
+            className="sm:border-r sm:border-b-0"
             label="Visited season"
             variant="map-control"
             rounded="md-sm-left"
@@ -59,24 +59,9 @@ export default function VisitedControls({
             rounded="md-sm-right"
           />
         </div>
-      </div>
+      </MapControlPosition>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-3 z-20 flex justify-center px-3">
-        <div className="pointer-events-auto flex items-center gap-1">
-          <Button variant="primary" aria-label="Zoom In" title="Map coming soon">
-            <ZoomInIcon />
-            <span className="hidden sm:inline">Zoom In</span>
-          </Button>
-          <Button variant="primary" aria-label="Zoom Out" title="Map coming soon">
-            <ZoomOutIcon />
-            <span className="hidden sm:inline">Zoom Out</span>
-          </Button>
-          <Button variant="primary" aria-label="Reset Map" title="Map coming soon">
-            <ResetMapIcon />
-            <span className="hidden sm:inline">Reset Map</span>
-          </Button>
-        </div>
-      </div>
+      <MapNavigationControls />
     </>
   );
 }

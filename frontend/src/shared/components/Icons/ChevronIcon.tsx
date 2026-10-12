@@ -8,11 +8,7 @@ interface ChevronIconProps {
   className?: string;
 }
 
-export default function ChevronIcon({
-  direction = "down",
-  size = "default",
-  className,
-}: ChevronIconProps) {
+export function ChevronIcon({ direction = "down", size = "default", className }: ChevronIconProps) {
   return (
     <svg
       aria-hidden="true"

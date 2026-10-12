@@ -43,7 +43,14 @@ export function Clock() {
   return (
     <Link
       href="."
-      className="block max-w-full text-right text-sm font-medium text-info transition-colors hover:text-foreground hover:underline hover:underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+      className={[
+        "block",
+        "max-w-full",
+        "text-right font-medium text-info text-sm hover:text-foreground hover:underline",
+        "hover:underline-offset-2",
+        "focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2",
+        "transition-colors",
+      ].join(" ")}
       title="Timer"
     >
       {remaining ? (

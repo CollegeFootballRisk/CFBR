@@ -27,7 +27,7 @@ const sections = [
 
 type TutorialSection = (typeof sections)[number];
 
-export default function TutorialModal({ open, onClose }: TutorialModalProps) {
+export function TutorialModal({ open, onClose }: TutorialModalProps) {
   const [sectionIndex, setSectionIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 

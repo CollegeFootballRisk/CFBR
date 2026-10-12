@@ -18,7 +18,7 @@ interface UseSelectKeyboardProps<T> {
   onChange: (value: T | "") => void;
 }
 
-export default function useSelectKeyboard<T>({
+export function useSelectKeyboard<T>({
   disabled,
   searchable,
   open,

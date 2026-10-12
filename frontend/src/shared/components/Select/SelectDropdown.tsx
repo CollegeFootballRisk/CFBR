@@ -36,7 +36,7 @@ interface SelectDropdownProps<T> {
 
 const MAX_DROPDOWN_HEIGHT = 256;
 
-export default function SelectDropdown<T>({
+export function SelectDropdown<T>({
   position,
   dropdownRef,
   listboxRef,
@@ -63,7 +63,10 @@ export default function SelectDropdown<T>({
   return createPortal(
     <div
       ref={dropdownRef}
-      className="fixed z-9999 flex flex-col overflow-hidden rounded-md border border-control-border bg-control shadow-xl"
+      className={[
+        "fixed z-9999 flex flex-col overflow-hidden",
+        "rounded-md border border-control-border bg-control shadow-xl",
+      ].join(" ")}
       style={{
         top: position.top,
         left: position.left,
@@ -73,7 +76,7 @@ export default function SelectDropdown<T>({
       }}
     >
       {searchable && (
-        <div className="shrink-0 border-b border-control-border bg-control p-2">
+        <div className="shrink-0 border-control-border border-b bg-control p-2">
           <input
             ref={searchInputRef}
             type="text"
@@ -82,7 +85,13 @@ export default function SelectDropdown<T>({
             onKeyDown={handleSearchKeyDown}
             placeholder="Search..."
             aria-label={`Search ${label ?? "options"}`}
-            className="w-full rounded-md border border-control-border bg-control px-3 py-2 placeholder:text-foreground outline-none focus-visible:outline-2 focus-visible:outline-foreground"
+            className={[
+              "px-3 py-2",
+              "w-full",
+              "placeholder:text-foreground",
+              "rounded-md border border-control-border bg-control outline-none focus-visible:outline-2",
+              "focus-visible:outline-foreground",
+            ].join(" ")}
           />
         </div>
       )}
@@ -92,10 +101,10 @@ export default function SelectDropdown<T>({
         id={`${selectId}-listbox`}
         role="listbox"
         aria-labelledby={label ? labelId : undefined}
-        className="flex flex-col min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain"
+        className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-contain"
       >
         {filteredItems.length === 0 ? (
-          <div className="flex flex-1 justify-center items-center px-4 py-3 text-center text-foreground">
+          <div className="flex flex-1 items-center justify-center px-4 py-3 text-center text-foreground">
             No options found
           </div>
         ) : (
@@ -104,7 +113,7 @@ export default function SelectDropdown<T>({
               return (
                 // biome-ignore lint/a11y/useSemanticElements: the listbox doesn't need a group key
                 <div key={`group-${item.label}`} role="group" aria-label={item.label}>
-                  <div className="mx-3 mt-2 border-b border-control-border px-1 pb-1 text-xs font-semibold uppercase tracking-wider">
+                  <div className="mx-3 mt-2 border-control-border border-b px-1 pb-1 font-semibold text-xs uppercase tracking-wider">
                     {item.label}
                   </div>
 

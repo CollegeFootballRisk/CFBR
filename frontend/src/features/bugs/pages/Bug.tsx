@@ -3,13 +3,11 @@
 import { useState } from "react";
 
 import { Button } from "@/shared/components/Button";
-import { Checkbox } from "@/shared/components/Checkbox";
-import { Input } from "@/shared/components/Input";
+import { Checkbox, Input, Textarea } from "@/shared/components/form";
 import { Link } from "@/shared/components/Link";
 import { Select } from "@/shared/components/Select";
 import { StatusMessage } from "@/shared/components/StatusMessage";
-import { Textarea } from "@/shared/components/Textarea";
-import PageContainer from "@/shared/layouts/PageContainer";
+import { PageContainer } from "@/shared/layouts/PageContainer";
 
 const categories = [
   "Map",
@@ -47,7 +45,7 @@ const initialForm: BugFormState = {
   reproducible: false,
 };
 
-export default function Bugs() {
+export function Bugs() {
   const [form, setForm] = useState(initialForm);
   const [submitted, setSubmitted] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -78,7 +76,7 @@ export default function Bugs() {
   if (success) {
     return (
       <>
-        <h1 className="my-4 text-center text-4xl font-bold">Report a Bug</h1>
+        <h1 className="my-4 text-center font-bold text-4xl">Report a Bug</h1>
 
         <PageContainer>
           <StatusMessage status="success" title="Bug Report Submitted">
@@ -102,9 +100,9 @@ export default function Bugs() {
 
   return (
     <PageContainer>
-      <h1 className="my-4 text-center text-4xl font-bold">Report a Bug</h1>
+      <h1 className="my-4 text-center font-bold text-4xl">Report a Bug</h1>
 
-      <p className="mb-6 text-center text-muted">
+      <p className="mb-6 text-center">
         Found something that isn't working correctly? Tell us what happened and we'll take a look.
       </p>
 
@@ -138,7 +136,7 @@ export default function Bugs() {
           error={submitted && !form.title.trim() ? "Bug title is required" : undefined}
         />
 
-        <div className="grid gap-6 md:grid-cols-2 pb-4">
+        <div className="grid gap-6 pb-4 md:grid-cols-2">
           <Select
             label="Category"
             required
@@ -204,8 +202,8 @@ export default function Bugs() {
           onChange={(event) => updateField("reproducible", event.target.checked)}
         />
 
-        <div className="border-t border-control-border pt-4">
-          <p className="mb-4 text-muted">
+        <div className="border-control-border border-t pt-4">
+          <p className="mb-4">
             <b>Note:</b> Your browser information and username (if logged in) will be included
             automatically in the bug report.
           </p>

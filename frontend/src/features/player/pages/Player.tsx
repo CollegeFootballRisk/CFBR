@@ -7,7 +7,7 @@ import { StarIcon } from "@/shared/components/Icons";
 import { Link } from "@/shared/components/Link";
 import { Select } from "@/shared/components/Select";
 import { Table, type TableColumn } from "@/shared/components/Table";
-import PageContainer from "@/shared/layouts/PageContainer";
+import { PageContainer } from "@/shared/layouts/PageContainer";
 import { type PlayerTurn, players, playerTurnHistory } from "../data/players";
 
 const turnColumns: TableColumn<PlayerTurn>[] = [
@@ -82,7 +82,7 @@ const turnColumns: TableColumn<PlayerTurn>[] = [
   },
 ];
 
-export default function Player() {
+export function Player() {
   const navigate = useNavigate();
   const { player: playerParam } = useParams();
 
@@ -147,7 +147,7 @@ export default function Player() {
         <div className="mx-auto w-full max-w-7xl px-4">
           {selectedPlayer ? (
             <>
-              <h1 className="text-center text-3xl font-bold text-info">{selectedPlayer.name}</h1>
+              <h1 className="text-center font-bold text-3xl text-info">{selectedPlayer.name}</h1>
 
               <p className="mt-2 text-center text-lg">
                 <Link to={`/team/${encodeURIComponent(selectedPlayer.team)}`}>
@@ -161,14 +161,14 @@ export default function Player() {
                   {renderStars(selectedPlayer.ratings.totalTurns)}
 
                   <dl className="mt-2 text-2xl">
-                    <dt className="italic text-info">Total turns:</dt>
+                    <dt className="text-info italic">Total turns:</dt>
                     <dd className="font-semibold">{selectedPlayer.stats.totalTurns}</dd>
                   </dl>
 
                   <div className="mt-6">{renderStars(selectedPlayer.ratings.gameTurns)}</div>
 
                   <dl className="mt-2 text-2xl">
-                    <dt className="italic text-info">Round turns:</dt>
+                    <dt className="text-info italic">Round turns:</dt>
                     <dd className="font-semibold">{selectedPlayer.stats.gameTurns}</dd>
                   </dl>
                 </div>
@@ -178,14 +178,14 @@ export default function Player() {
                   {renderStars(selectedPlayer.ratings.streak)}
 
                   <dl className="mt-2 text-2xl">
-                    <dt className="italic text-info">Streak:</dt>
+                    <dt className="text-info italic">Streak:</dt>
                     <dd className="font-semibold">{selectedPlayer.stats.streak}</dd>
                   </dl>
 
                   <div className="mt-6">{renderStars(selectedPlayer.ratings.mvps)}</div>
 
                   <dl className="mt-2 text-2xl">
-                    <dt className="italic text-info">Total MVPs:</dt>
+                    <dt className="text-info italic">Total MVPs:</dt>
                     <dd className="font-semibold">{selectedPlayer.stats.mvps}</dd>
                   </dl>
                 </div>
@@ -193,7 +193,7 @@ export default function Player() {
 
               {/* Turn history */}
               <section className="mt-12 min-w-0">
-                <h2 className="mb-4 text-center text-3xl font-bold">Turn History</h2>
+                <h2 className="mb-4 text-center font-bold text-3xl">Turn History</h2>
 
                 <Table
                   ariaLabel="Turns"
@@ -208,7 +208,7 @@ export default function Player() {
               </section>
             </>
           ) : (
-            <p className="text-center text-3xl font-bold text-info">Player not found.</p>
+            <p className="text-center font-bold text-3xl text-info">Player not found.</p>
           )}
         </div>
       </PageContainer>

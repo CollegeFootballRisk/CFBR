@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import LoginModal from "@/features/auth/components/LoginModal";
-import TutorialModal from "@/features/help/components/TutorialModal";
+import { LoginModal } from "@/features/auth/components/LoginModal";
+import { TutorialModal } from "@/features/help/components/TutorialModal";
 import { ChangelogModal } from "@/features/home/components/ChangelogModal";
-import LeaderboardModal from "@/features/leaderboard/components/LeaderboardModal";
-import OddsInfoModal from "@/features/odds/components/OddsInfoModal";
-import VersionInformationModal from "@/features/settings/components/VersionInformationModal";
+import { LeaderboardModal } from "@/features/leaderboard/components/LeaderboardModal";
+import { OddsInfoModal } from "@/features/odds/components/OddsInfoModal";
+import { VersionInformationModal } from "@/features/settings/components/VersionInformationModal";
 import { useModal } from "./ModalProvider";
 
-export default function ModalHost() {
+export function ModalHost() {
   const { activeModal, modalTurn, closeModal } = useModal();
 
   switch (activeModal) {

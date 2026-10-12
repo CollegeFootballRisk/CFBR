@@ -33,6 +33,14 @@
       "tailwind": "all"
     },
     "rules": {
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "options": {
+            "functions": ["clsx", "cn", "cva", "twMerge"]
+          }
+        }
+      },
       "style": {
         "noExcessiveLinesPerFile": {
           "level": "error",

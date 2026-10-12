@@ -174,10 +174,10 @@ export function Table<T>({
 
   return (
     <div className={cn("w-full space-y-3", className)}>
-      <div className="w-full rounded-md border-2 border-dotted border-accent-2 p-2 sm:p-3">
+      <div className="w-full rounded-md border-2 border-accent-2 border-dotted p-2 sm:p-3">
         <div className="sticky left-0 w-full pb-3 text-left">
           {sortKey && (
-            <span className="text-sm italic text-info">
+            <span className="text-info text-sm italic">
               Sorted by: {columns.find((column) => column.key === sortKey)?.header ?? sortKey} (
               {sortDirection === "asc" ? "ascending" : "descending"})
             </span>
@@ -205,10 +205,12 @@ export function Table<T>({
                       }
                       title={column.tooltip}
                       className={cn(
-                        "sticky -top-px z-20",
-                        "border-b border-control-border border-dotted px-2 py-2 sm:px-3 font-semibold",
-                        "border-r border-solid border-control-border last:border-r-0",
-                        "bg-accent-1",
+                        [
+                          "sticky -top-px z-20",
+                          "px-2 py-2 sm:px-3",
+                          "font-semibold",
+                          "border-control-border border-r border-b border-solid bg-accent-1 last:border-r-0",
+                        ].join(" "),
                         alignClasses[alignment],
                         isSorted && "bg-accent-2",
                         column.headerClassName,
@@ -280,11 +282,10 @@ export function Table<T>({
                       <td
                         key={column.key}
                         className={cn(
-                          "border-b border-r border-control-border border-dotted px-3 py-2",
-                          "last:border-r-0",
+                          "border-control-border border-r border-b border-dotted px-3 py-2 last:border-r-0",
                           alignClasses[column.align ?? getDefaultAlign(column, row)],
                           sortKey === column.key &&
-                            "bg-accent-1 [&_a]:underline [&_a]:text-foreground [&_a:hover]:text-lg",
+                            "bg-accent-1 [&_a:hover]:text-lg [&_a]:text-foreground [&_a]:underline",
                           column.className,
                         )}
                       >
@@ -326,7 +327,7 @@ export function Table<T>({
                 >
                   <SettingsIcon />
 
-                  <span className="text-info font-bold">
+                  <span className="font-bold text-info">
                     {startItem}-{endItem}/{sortedData.length}
                   </span>
                 </button>
@@ -346,7 +347,7 @@ export function Table<T>({
                   <Button
                     variant="pagination"
                     rounded="none"
-                    className="border-l border-accent-2"
+                    className="border-accent-2 border-l"
                     onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
                     disabled={currentPage === 1}
                     aria-label="Previous page"
@@ -358,7 +359,7 @@ export function Table<T>({
                   <Button
                     variant="pagination"
                     rounded="none"
-                    className="border-l border-accent-2"
+                    className="border-accent-2 border-l"
                     onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
                     disabled={currentPage === totalPages}
                     aria-label="Next page"
@@ -370,7 +371,7 @@ export function Table<T>({
                   <Button
                     variant="pagination"
                     rounded="right"
-                    className="border-l border-accent-2"
+                    className="border-accent-2 border-l"
                     onClick={() => setCurrentPage(totalPages)}
                     disabled={currentPage === totalPages}
                     aria-label="Last page"

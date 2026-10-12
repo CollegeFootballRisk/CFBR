@@ -409,6 +409,13 @@ export default function Team() {
               </TeamSection>
             </div>
           </div>
+          <div className="mt-10 flex justify-center">
+            <div className="mt-10 flex justify-center">
+              <Link to={`/visited/${encodeURIComponent(selectedTeam.name)}/5`}>
+                View {selectedTeam.name}'s visited territories for season 5.
+              </Link>
+            </div>
+          </div>
         </div>
       </PageContainer>
     </>

@@ -116,8 +116,7 @@ export default function OddsControls({
                   onTurnChange(value);
                 }
               }}
-              width="full"
-              className="w-32 sm:border-b-0 sm:border-r"
+              className="sm:border-b-0 sm:border-r"
               label="Odds turn"
               variant="map-control"
               rounded="md-sm-left"
@@ -132,11 +131,9 @@ export default function OddsControls({
                 }
               }}
               label="Odds team"
-              width="full"
               variant="map-control"
               disabled={teamOptions.length === 0}
               rounded="md-sm-none"
-              className="w-32"
             />
 
             <Select<OddsDisplayMode>
@@ -147,7 +144,6 @@ export default function OddsControls({
                   onDisplayModeChange(value);
                 }
               }}
-              width="full"
               className="w-32 sm:border-t-0 sm:border-l"
               label="Odds display"
               variant="map-control"

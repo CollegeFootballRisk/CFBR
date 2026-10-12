@@ -6,6 +6,7 @@ import ComingSoon from "@/shared/pages/ComingSoon";
 
 const loadHome = () => import("@/features/home/pages/Home");
 const loadOdds = () => import("@/features/odds/pages/Odds");
+const loadVisited = () => import("@/features/visited/pages/Visited");
 const loadTeam = () => import("@/features/team/pages/Team");
 const loadPlayer = () => import("@/features/player/pages/Player");
 const loadSettings = () => import("@/features/settings/pages/Settings");
@@ -37,12 +38,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/visited/:team/:season",
-        element: (
-          <ComingSoon
-            title="Visited Territories"
-            description="Visited territory history is being rebuilt."
-          />
-        ),
+        lazy: async () => ({ Component: (await loadVisited()).default }),
+      },
+      {
+        path: "/visited",
+        lazy: async () => ({ Component: (await loadVisited()).default }),
         handle: { sidebar: true },
       },
       {

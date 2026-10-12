@@ -16,7 +16,7 @@ const turns: OddsTurn[] = [
 const teams: OddsTeam[] = [
   { id: 1, name: "Alabama" },
   { id: 2, name: "Georgia" },
-  { id: 3, name: "Michigan" },
+  { id: 3, name: "Appalachian State" },
   { id: 4, name: "Ohio State" },
 ];
 

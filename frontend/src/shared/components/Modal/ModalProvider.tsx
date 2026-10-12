@@ -11,6 +11,7 @@ export type ModalType =
   | "odds-info"
   | "changelog"
   | "leaderboard"
+  | "join-team"
   | null;
 
 type NonNullModalType = Exclude<ModalType, null>;
@@ -46,6 +47,9 @@ const MODAL_CONFIG = {
   },
   leaderboard: {
     hash: "#leaderboard",
+  },
+  "join-team": {
+    hash: "#join-team",
   },
 } satisfies Record<NonNullModalType, { hash: string }>;
 

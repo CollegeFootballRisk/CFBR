@@ -6,6 +6,7 @@ import { ChangelogModal } from "@/features/home/components/ChangelogModal";
 import { LeaderboardModal } from "@/features/leaderboard/components/LeaderboardModal";
 import { OddsInfoModal } from "@/features/odds/components/OddsInfoModal";
 import { VersionInformationModal } from "@/features/settings/components/VersionInformationModal";
+import { JoinTeamModal } from "@/features/team/components/JoinTeamModal";
 import { useModal } from "./ModalProvider";
 
 export function ModalHost() {
@@ -29,6 +30,9 @@ export function ModalHost() {
 
     case "leaderboard":
       return <LeaderboardModal open onClose={closeModal} initialTurn={modalTurn ?? "latest"} />;
+
+    case "join-team":
+      return <JoinTeamModal open onClose={closeModal} />;
 
     default:
       return null;

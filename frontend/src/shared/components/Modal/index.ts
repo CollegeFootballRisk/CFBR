@@ -2,4 +2,5 @@
 
 export { Modal } from "./Modal";
 export { ModalHost } from "./ModalHost";
-export { ModalProvider, useModal } from "./ModalProvider";
+export { ModalProvider } from "./ModalProvider";
+export { useModal } from "./useModal";

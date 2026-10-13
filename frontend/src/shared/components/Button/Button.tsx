@@ -28,6 +28,8 @@ export const buttonVariants = cva(
         nav: "px-4 py-2 text-sm",
         icon: "border-0 bg-transparent p-0",
         pagination: "bg-accent-1 px-2 py-1 font-semibold hover:bg-accent-2",
+        success: "gap-2 bg-accent-3 p-2 text-background text-xl hover:outline-2",
+        failure: "gap-2 bg-failure p-2 text-background text-xl hover:outline-2",
       },
     },
 
@@ -40,7 +42,7 @@ export const buttonVariants = cva(
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: "primary" | "secondary" | "nav" | "icon" | "pagination";
+  variant?: "primary" | "secondary" | "nav" | "icon" | "pagination" | "success" | "failure";
   rounded?: boolean | "none" | "left" | "right";
 }
 

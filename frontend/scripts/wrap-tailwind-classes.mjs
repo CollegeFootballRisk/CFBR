@@ -509,7 +509,7 @@ return edits.length;
 // #region Main
 
 function main() {
-  const files = ROOTS.flatMap((root) => getFiles(root));
+  const files = getFiles(ROOT);
 
   let changedFiles = 0;
   let wrappedStrings = 0;

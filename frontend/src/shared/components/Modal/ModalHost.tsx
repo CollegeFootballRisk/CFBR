@@ -9,9 +9,9 @@ import { TutorialModal } from "@/features/help/components/TutorialModal";
 import { ChangelogModal } from "@/features/home/components/ChangelogModal";
 import { LeaderboardModal } from "@/features/leaderboard/components/LeaderboardModal";
 import { OddsInfoModal } from "@/features/odds/components/OddsInfoModal";
+import { MyMoveModal } from "@/features/player/components/MyMoveModal";
 import { VersionInformationModal } from "@/features/settings/components/VersionInformationModal";
 import { JoinTeamModal } from "@/features/team/components/JoinTeamModal";
-
 import type { TurnSelection } from "@/features/turn/components/TurnSelect";
 
 export interface ModalRenderContext {
@@ -62,6 +62,27 @@ export const MODAL_DEFINITIONS = {
   "alt-prompt": {
     hash: "#alt-prompt",
     render: ({ closeModal }) => <AltPromptModal open onClose={closeModal} />,
+  },
+  "my-move": {
+    hash: "#my-move",
+    render: ({ closeModal }) => (
+      <MyMoveModal
+        open
+        onClose={closeModal}
+        data={{
+          currentMove: null,
+          defendable: [
+            { id: 1, name: "Columbus" },
+            { id: 2, name: "Cleveland" },
+          ],
+          attackable: [
+            { id: 3, name: "Ann Arbor" },
+            { id: 4, name: "South Bend" },
+            { id: 5, name: "State College" },
+          ],
+        }}
+      />
+    ),
   },
 } satisfies Record<string, ModalDefinition>;
 

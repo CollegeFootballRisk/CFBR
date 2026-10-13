@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { createBrowserRouter } from "react-router-dom";
+import { RouteErrorBoundary } from "@/shared/components/ErrorBoundary";
+import { Loader } from "@/shared/components/Loader";
 import { AppLayout } from "@/shared/layouts/AppLayout";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
 
@@ -19,6 +21,8 @@ const loadBugs = () => import("@/features/bugs/pages/Bug");
 export const router = createBrowserRouter([
   {
     element: <AppLayout />,
+    errorElement: <RouteErrorBoundary />,
+    HydrateFallback: Loader,
     children: [
       {
         path: "/",

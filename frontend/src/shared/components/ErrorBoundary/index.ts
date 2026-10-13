@@ -1,3 +1,4 @@
 // SPDX-License-Identifier: MPL-2.0
 
 export { ErrorBoundary } from "./ErrorBoundary";
+export { RouteErrorBoundary } from "./RouteErrorBoundary";

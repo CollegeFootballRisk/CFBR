@@ -1,22 +1,13 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { TurnSelection } from "@/features/turn/components/TurnSelect";
-import { MODAL_DEFINITIONS, type ModalType, type NonNullModalType } from "./ModalHost";
-
+import { ModalContext } from "./ModalContext";
+import { MODAL_DEFINITIONS, type NonNullModalType } from "./ModalHost";
 export interface OpenModalOptions {
   turn?: TurnSelection;
 }
-
-interface ModalContextValue {
-  activeModal: ModalType;
-  modalTurn: TurnSelection | null;
-  openModal: (modal: NonNullModalType, options?: OpenModalOptions) => void;
-  closeModal: () => void;
-}
-
-const ModalContext = createContext<ModalContextValue | null>(null);
 
 const HASH_TO_MODAL = Object.fromEntries(
   Object.entries(MODAL_DEFINITIONS).map(([modal, definition]) => [definition.hash, modal]),
@@ -70,14 +61,4 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   );
 
   return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;
-}
-
-export function useModal() {
-  const context = useContext(ModalContext);
-
-  if (!context) {
-    throw new Error("useModal must be used within ModalProvider");
-  }
-
-  return context;
 }

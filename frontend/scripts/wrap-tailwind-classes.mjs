@@ -10,13 +10,9 @@ import ts from "typescript";
 
 const ROOT = path.resolve("src");
 
-const args = process.argv.slice(2);
-
 const MAX_LENGTH = 100;
 
-if (!Number.isInteger(MAX_LENGTH) || MAX_LENGTH < 20) {
-  throw new Error("--max-length must be an integer >= 20");
-}
+const CHECK_MODE = process.argv.includes("--check");
 
 const EXTENSIONS = new Set([".ts", ".tsx", ".js", ".jsx"]);
 
@@ -495,13 +491,17 @@ function visit(node) {
       output.slice(edit.end);
   }
 
-fs.writeFileSync(filePath, output);
+const relativePath = path.relative(process.cwd(), filePath);
 
-  const relativePath = path.relative(process.cwd(), filePath);
+if (!CHECK_MODE) {
+  fs.writeFileSync(filePath, output);
+}
 
-  console.log(`${relativePath}: ${edits.length} wrapped`);
+const action = CHECK_MODE ? "needs wrapping" : "wrapped";
 
-  return edits.length;
+console.log(`${relativePath}: ${edits.length} ${action}`);
+
+return edits.length;
 }
 
 // #endregion
@@ -509,7 +509,7 @@ fs.writeFileSync(filePath, output);
 // #region Main
 
 function main() {
-  const files = getFiles(ROOT);
+  const files = ROOTS.flatMap((root) => getFiles(root));
 
   let changedFiles = 0;
   let wrappedStrings = 0;
@@ -525,8 +525,18 @@ function main() {
 
   console.log("");
   console.log(`Files scanned: ${files.length}`);
-  console.log(`Files changed: ${changedFiles}`);
-  console.log(`Strings wrapped: ${wrappedStrings}`);
+  console.log(`Files ${CHECK_MODE ? "requiring changes" : "changed"}: ${changedFiles}`);
+  console.log(`Strings ${CHECK_MODE ? "requiring wrapping" : "wrapped"}: ${wrappedStrings}`);
+
+  if (CHECK_MODE && changedFiles > 0) {
+    console.error("\nTailwind check failed. Run npm run tailwind:wrap.");
+    process.exitCode = 1;
+    return;
+  }
+
+  if (CHECK_MODE) {
+    console.log("\nTailwind check passed.");
+  }
 }
 
 main();

@@ -3,18 +3,7 @@
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { TurnSelection } from "@/features/turn/components/TurnSelect";
-
-export type ModalType =
-  | "version-info"
-  | "login"
-  | "tutorial"
-  | "odds-info"
-  | "changelog"
-  | "leaderboard"
-  | "join-team"
-  | null;
-
-type NonNullModalType = Exclude<ModalType, null>;
+import { MODAL_DEFINITIONS, type ModalType, type NonNullModalType } from "./ModalHost";
 
 export interface OpenModalOptions {
   turn?: TurnSelection;
@@ -29,32 +18,8 @@ interface ModalContextValue {
 
 const ModalContext = createContext<ModalContextValue | null>(null);
 
-const MODAL_CONFIG = {
-  "version-info": {
-    hash: "#version-info",
-  },
-  login: {
-    hash: "#login",
-  },
-  tutorial: {
-    hash: "#tutorial",
-  },
-  "odds-info": {
-    hash: "#odds-info",
-  },
-  changelog: {
-    hash: "#changelog",
-  },
-  leaderboard: {
-    hash: "#leaderboard",
-  },
-  "join-team": {
-    hash: "#join-team",
-  },
-} satisfies Record<NonNullModalType, { hash: string }>;
-
 const HASH_TO_MODAL = Object.fromEntries(
-  Object.entries(MODAL_CONFIG).map(([modal, config]) => [config.hash, modal]),
+  Object.entries(MODAL_DEFINITIONS).map(([modal, definition]) => [definition.hash, modal]),
 ) as Record<string, NonNullModalType>;
 
 export function ModalProvider({ children }: { children: ReactNode }) {
@@ -73,7 +38,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
         {
           pathname: location.pathname,
           search: location.search,
-          hash: MODAL_CONFIG[nextModal].hash,
+          hash: MODAL_DEFINITIONS[nextModal].hash,
         },
         { replace: false },
       );

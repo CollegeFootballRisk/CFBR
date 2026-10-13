@@ -12,11 +12,12 @@
     "architecture": "node scripts/validate-frontend-architecture.mjs",
     "svgo": "node scripts/optimize-svgs.mjs",
     "tailwind:wrap": "node scripts/wrap-tailwind-classes.mjs",
+    "tailwind:check": "node scripts/wrap-tailwind-classes.mjs --check",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "typecheck:ci": "tsc --noEmit --pretty false",
     "review": "npm run biome && npm run architecture && npm run svgo && npm run tailwind:wrap && npm run typecheck && npm run knip && npm run build",
-    "review:ci": "npm run biome:check && npm run architecture && npm run typecheck:ci && npm run knip && npm run build"
+    "review:ci": "npm run biome:check && npm run architecture && npm run tailwind:check && npm run typecheck:ci && npm run knip && npm run build"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

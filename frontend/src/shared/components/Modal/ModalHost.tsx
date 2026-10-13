@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
+import type { ReactNode } from "react";
+
+import { AltPromptModal } from "@/features/auth/components/AltPromptModal";
+import { CaptchaModal } from "@/features/auth/components/CaptchaModal";
 import { LoginModal } from "@/features/auth/components/LoginModal";
 import { TutorialModal } from "@/features/help/components/TutorialModal";
 import { ChangelogModal } from "@/features/home/components/ChangelogModal";
@@ -7,34 +11,76 @@ import { LeaderboardModal } from "@/features/leaderboard/components/LeaderboardM
 import { OddsInfoModal } from "@/features/odds/components/OddsInfoModal";
 import { VersionInformationModal } from "@/features/settings/components/VersionInformationModal";
 import { JoinTeamModal } from "@/features/team/components/JoinTeamModal";
-import { useModal } from "./ModalProvider";
 
-export function ModalHost() {
-  const { activeModal, modalTurn, closeModal } = useModal();
+import type { TurnSelection } from "@/features/turn/components/TurnSelect";
 
-  switch (activeModal) {
-    case "version-info":
-      return <VersionInformationModal open onClose={closeModal} />;
+export interface ModalRenderContext {
+  closeModal: () => void;
+  modalTurn: TurnSelection | null;
+}
 
-    case "login":
-      return <LoginModal open onClose={closeModal} />;
+interface ModalDefinition {
+  hash: string;
+  render: (context: ModalRenderContext) => ReactNode;
+}
 
-    case "tutorial":
-      return <TutorialModal open onClose={closeModal} />;
+export const MODAL_DEFINITIONS = {
+  "version-info": {
+    hash: "#version-info",
+    render: ({ closeModal }) => <VersionInformationModal open onClose={closeModal} />,
+  },
+  login: {
+    hash: "#login",
+    render: ({ closeModal }) => <LoginModal open onClose={closeModal} />,
+  },
+  tutorial: {
+    hash: "#tutorial",
+    render: ({ closeModal }) => <TutorialModal open onClose={closeModal} />,
+  },
+  "odds-info": {
+    hash: "#odds-info",
+    render: ({ closeModal }) => <OddsInfoModal open onClose={closeModal} />,
+  },
+  changelog: {
+    hash: "#changelog",
+    render: ({ closeModal }) => <ChangelogModal open onClose={closeModal} />,
+  },
+  leaderboard: {
+    hash: "#leaderboard",
+    render: ({ closeModal, modalTurn }) => (
+      <LeaderboardModal open onClose={closeModal} initialTurn={modalTurn ?? "latest"} />
+    ),
+  },
+  "join-team": {
+    hash: "#join-team",
+    render: ({ closeModal }) => <JoinTeamModal open onClose={closeModal} />,
+  },
+  captcha: {
+    hash: "#captcha",
+    render: ({ closeModal }) => <CaptchaModal open onClose={closeModal} />,
+  },
+  "alt-prompt": {
+    hash: "#alt-prompt",
+    render: ({ closeModal }) => <AltPromptModal open onClose={closeModal} />,
+  },
+} satisfies Record<string, ModalDefinition>;
 
-    case "odds-info":
-      return <OddsInfoModal open onClose={closeModal} />;
+export type NonNullModalType = keyof typeof MODAL_DEFINITIONS;
+export type ModalType = NonNullModalType | null;
 
-    case "changelog":
-      return <ChangelogModal open onClose={closeModal} />;
+interface ModalHostProps {
+  activeModal: ModalType;
+  modalTurn: TurnSelection | null;
+  closeModal: () => void;
+}
 
-    case "leaderboard":
-      return <LeaderboardModal open onClose={closeModal} initialTurn={modalTurn ?? "latest"} />;
-
-    case "join-team":
-      return <JoinTeamModal open onClose={closeModal} />;
-
-    default:
-      return null;
+export function ModalHost({ activeModal, modalTurn, closeModal }: ModalHostProps) {
+  if (!activeModal) {
+    return null;
   }
+
+  return MODAL_DEFINITIONS[activeModal].render({
+    closeModal,
+    modalTurn,
+  });
 }

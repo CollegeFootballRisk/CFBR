@@ -4,7 +4,7 @@ import { Outlet, useMatches } from "react-router-dom";
 
 import { TurnProvider } from "@/features/turn/context/TurnContext";
 import { HashScroll } from "../components/HashScroll";
-import { ModalHost, ModalProvider } from "../components/Modal";
+import { ModalHost, ModalProvider, useModal } from "../components/Modal";
 import { Sidebar } from "../components/Sidebar";
 import { Navbar } from "./Navbar";
 
@@ -24,20 +24,30 @@ export function AppLayout() {
   return (
     <ModalProvider>
       <TurnProvider>
-        <div className="min-h-screen">
-          <Navbar />
-
-          {sidebarEnabled && <Sidebar />}
-
-          <HashScroll />
-
-          <main>
-            <Outlet />
-          </main>
-        </div>
-
-        <ModalHost />
+        <AppLayoutContent sidebarEnabled={sidebarEnabled} />
       </TurnProvider>
     </ModalProvider>
+  );
+}
+
+function AppLayoutContent({ sidebarEnabled }: { sidebarEnabled: boolean }) {
+  const { activeModal, modalTurn, closeModal } = useModal();
+
+  return (
+    <>
+      <div className="min-h-screen">
+        <Navbar />
+
+        {sidebarEnabled && <Sidebar />}
+
+        <HashScroll />
+
+        <main>
+          <Outlet />
+        </main>
+      </div>
+
+      <ModalHost activeModal={activeModal} modalTurn={modalTurn} closeModal={closeModal} />
+    </>
   );
 }

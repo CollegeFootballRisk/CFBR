@@ -1,3 +1,4 @@
+
 services:
   cfbr-app:
     image: ghcr.io/collegefootballrisk/cfbr:main
@@ -9,6 +10,54 @@ services:
 
     ports:
       - "127.0.0.1:8010:8000"
+
+    depends_on:
+      cfbr-postgres:
+        condition: service_healthy
+
+    networks:
+      - internal
+
+  cfbr-postgres:
+    image: postgres:18
+    container_name: cfbr-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: cfbr
+      POSTGRES_USER: cfbr
+      POSTGRES_PASSWORD: ${CFBR_DATABASE_PASSWORD}
+
+    volumes:
+      - /volume1/databases/cfbr-postgres:/var/lib/postgresql
+
+    ports:
+      - "5434:5432"
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cfbr -d cfbr"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    networks:
+      - internal
+
+  cfbr-pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: cfbr-pgadmin
+    restart: unless-stopped
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${CFBR_PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${CFBR_PGADMIN_PASSWORD}
+
+    volumes:
+      - /volume1/docker/cfbr-pgadmin:/var/lib/pgadmin
+
+    ports:
+      - "127.0.0.1:5050:80"
 
     networks:
       - internal

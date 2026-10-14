@@ -1,6 +1,6 @@
 # CFBR Smart Commits
 
-CFBR uses a lightweight commit syntax to synchronize GitHub Issues, Project #6, and releases.
+CFBR uses a lightweight commit syntax to synchronize GitHub Issues and releases.
 
 ## Status syntax
 
@@ -18,7 +18,7 @@ The status labels are mutually exclusive:
 - `continued-development`
 - `done`
 
-They map directly to Project #6:
+They map directly to the CFBR Project:
 
 - `backlog` → `Backlog`
 - `in-progress` → `In Progress`
@@ -72,26 +72,6 @@ increments the major number and resets minor and bugfix to zero.
 The older `#version:1.2.0` syntax is also accepted.
 
 The requested version must always be strictly greater than the latest `vX.Y.Z` tag.
-
-## VS Code
-
-Install **GitHub Pull Requests and Issues**.
-
-The extension provides `#` issue completion directly in the Source Control commit message box. The workspace settings restrict suggestions to open CFBR issues.
-
-Status/version tokens remain normal text in the built-in SCM input.
-
-## Required secret
-
-Add this repository secret:
-
-```text
-CFBR_PROJECT_TOKEN
-```
-
-It is used only for Project #6 GraphQL operations.
-
-The normal GitHub Actions token handles repository contents, issue labels/state, tags, and releases.
 
 ## Workflow behavior
 

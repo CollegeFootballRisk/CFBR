@@ -73,8 +73,6 @@ export function AppSettingsProvider({ children }: AppSettingsProviderProps) {
   const [settings, setSettings] = useState<AppSettings>(getStoredSettings);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("light", settings.theme === "light");
-
     document.documentElement.style.colorScheme = settings.theme;
 
     try {

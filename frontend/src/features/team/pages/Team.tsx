@@ -86,19 +86,19 @@ const playerColumns = createPlayerColumns();
 const mercenaryColumns = createPlayerColumns(true);
 
 const starSeries = [
-  { key: "ones", label: 1, color: "var(--chart-1)" },
-  { key: "twos", label: 2, color: "var(--chart-2)" },
-  { key: "threes", label: 3, color: "var(--chart-3)" },
-  { key: "fours", label: 4, color: "var(--chart-4)" },
-  { key: "fives", label: 5, color: "var(--chart-5)" },
+  { key: "ones", label: 1, color: "var(--color-chart-1)" },
+  { key: "twos", label: 2, color: "var(--color-chart-2)" },
+  { key: "threes", label: 3, color: "var(--color-chart-3)" },
+  { key: "fours", label: 4, color: "var(--color-chart-4)" },
+  { key: "fives", label: 5, color: "var(--color-chart-5)" },
 ] as const;
 
 const chartColorClasses = {
-  1: "border-[var(--chart-1)] text-[var(--chart-1)]",
-  2: "border-[var(--chart-2)] text-[var(--chart-2)]",
-  3: "border-[var(--chart-3)] text-[var(--chart-3)]",
-  4: "border-[var(--chart-4)] text-[var(--chart-4)]",
-  5: "border-[var(--chart-5)] text-[var(--chart-5)]",
+  1: "border-[var(--color-chart-1)] text-[var(--color-chart-1)]",
+  2: "border-[var(--color-chart-2)] text-[var(--color-chart-2)]",
+  3: "border-[var(--color-chart-3)] text-[var(--color-chart-3)]",
+  4: "border-[var(--color-chart-4)] text-[var(--color-chart-4)]",
+  5: "border-[var(--color-chart-5)] text-[var(--color-chart-5)]",
 } as const;
 
 function formatChartValue(value: number): string {
@@ -207,7 +207,7 @@ function PlayerStarsChart({ data }: { data: PlayerStarsPoint[] }) {
                     cx={dotProps.cx}
                     cy={dotProps.cy}
                     r={1.5}
-                    fill="var(--foreground)"
+                    fill="var(--color-foreground)"
                     stroke="none"
                     pointerEvents="none"
                   />
@@ -252,7 +252,7 @@ function StarPowerChart({ data }: { data: StarPowerPoint[] }) {
           type="monotone"
           dataKey="starPower"
           name="Star Power"
-          stroke="var(--chart-1)"
+          stroke="var(--color-chart-1)"
           strokeWidth={2.5}
           dot={(dotProps) => (
             <g>
@@ -261,14 +261,14 @@ function StarPowerChart({ data }: { data: StarPowerPoint[] }) {
                 cy={dotProps.cy}
                 r={5}
                 fill="transparent"
-                stroke="var(--chart-1)"
+                stroke="var(--color-chart-1)"
                 strokeWidth={2}
               />
               <circle
                 cx={dotProps.cx}
                 cy={dotProps.cy}
                 r={1.5}
-                fill="var(--foreground)"
+                fill="var(--color-foreground)"
                 stroke="none"
                 pointerEvents="none"
               />

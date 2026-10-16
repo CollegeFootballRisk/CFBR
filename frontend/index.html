@@ -11,6 +11,16 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      try {
+        const stored = JSON.parse(localStorage.getItem("cfbr-settings") ?? "{}");
+
+        document.documentElement.style.colorScheme =
+          stored.theme === "light" ? "light" : "dark";
+      } catch {
+        document.documentElement.style.colorScheme = "dark";
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -5,10 +5,6 @@ html {
   scrollbar-gutter: stable;
 }
 
-html.light {
-  color-scheme: light;
-}
-
 body {
   @apply bg-background text-foreground;
 }

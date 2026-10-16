@@ -3,11 +3,11 @@
 import { StarIcon } from "@/shared/components/Icons";
 
 const chartColorClasses = {
-  1: "border-[var(--chart-1)] text-[var(--chart-1)]",
-  2: "border-[var(--chart-2)] text-[var(--chart-2)]",
-  3: "border-[var(--chart-3)] text-[var(--chart-3)]",
-  4: "border-[var(--chart-4)] text-[var(--chart-4)]",
-  5: "border-[var(--chart-5)] text-[var(--chart-5)]",
+  1: "border-[var(--color-chart-1)] text-[var(--color-chart-1)]",
+  2: "border-[var(--color-chart-2)] text-[var(--color-chart-2)]",
+  3: "border-[var(--color-chart-3)] text-[var(--color-chart-3)]",
+  4: "border-[var(--color-chart-4)] text-[var(--color-chart-4)]",
+  5: "border-[var(--color-chart-5)] text-[var(--color-chart-5)]",
 } as const;
 
 interface ChartLegendItem {
@@ -54,7 +54,7 @@ export const starLegendItems: ChartLegendItem[] = starSeries.map((series) => ({
 export const starPowerLegendItems: ChartLegendItem[] = [
   {
     key: "starPower",
-    colorClass: "border-[var(--chart-1)]",
+    colorClass: "border-[var(--color-chart-1)]",
     label: "Star Power",
   },
 ];

@@ -17,11 +17,16 @@ interface TeamLineChartProps<T extends object> {
 }
 
 export const chartTooltipClassName =
-  "rounded-lg border border-[var(--control-border)] bg-[var(--control)] text-sm text-[var(--foreground)]";
+  "rounded-lg border border-[var(--color-control-border)] bg-[var(--color-control)] text-sm text-[var(--color-foreground)]";
 
 function ChartGrid() {
   return (
-    <CartesianGrid stroke="var(--foreground)" strokeOpacity={0.15} strokeDasharray="3 3" vertical />
+    <CartesianGrid
+      stroke="var(--color-foreground)"
+      strokeOpacity={0.15}
+      strokeDasharray="3 3"
+      vertical
+    />
   );
 }
 
@@ -32,7 +37,7 @@ function ChartXAxis() {
       type="number"
       domain={["dataMin", "dataMax"]}
       ticks={Array.from({ length: 14 }, (_, index) => index * 2 + 1)}
-      tick={{ fill: "var(--foreground)", fontSize: 12 }}
+      tick={{ fill: "var(--color-foreground)", fontSize: 12 }}
       tickLine={false}
       axisLine={false}
       minTickGap={0}
@@ -46,7 +51,7 @@ function ChartYAxis() {
   return (
     <YAxis
       width={52}
-      tick={{ fill: "var(--foreground)", fontSize: 12 }}
+      tick={{ fill: "var(--color-foreground)", fontSize: 12 }}
       tickLine={false}
       axisLine={false}
       tickFormatter={(value: number) => value.toLocaleString("en-US", { maximumFractionDigits: 2 })}

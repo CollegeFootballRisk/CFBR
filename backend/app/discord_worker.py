@@ -246,28 +246,53 @@ class BugStatusSelect(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction) -> None:
         if not _is_game_dev(interaction):
             await interaction.response.send_message(
-                "Only Game Devs can change ticket status.", ephemeral=True
+                "Only Game Devs can change ticket status.",
+                ephemeral=True,
             )
             return
+
         bug_id = _bug_id_from_channel(interaction.channel)
+
         if bug_id is None:
             await interaction.response.send_message(
-                "This channel is not a CFBR bug ticket.", ephemeral=True
+                "This channel is not a CFBR bug ticket.",
+                ephemeral=True,
             )
             return
+
         await interaction.response.defer(ephemeral=True)
+
         status = BugStatus(self.values[0])
-        changed = await asyncio.to_thread(_set_bug_status, self.client.factory, bug_id, status)
+
+        changed = await asyncio.to_thread(
+            _set_bug_status,
+            self.client.factory,
+            bug_id,
+            status,
+        )
+
         if not changed:
-            await interaction.followup.send("Ticket not found or already closed.", ephemeral=True)
+            await interaction.followup.send(
+                "Ticket not found or already closed.",
+                ephemeral=True,
+            )
             return
+
         try:
             await self.client.refresh_ticket_embed(bug_id)
         except Exception:
-            logger.exception("Could not refresh ticket embed for bug %s", bug_id)
-        await interaction.followup.send(
-            f"Bug #{bug_id} marked **{status.value.replace('_', ' ').title()}**.", ephemeral=True
-        )
+            logger.exception(
+                "Could not refresh ticket embed for bug %s",
+                bug_id,
+            )
+
+        status_label = status.value.replace("_", " ").title()
+
+        if interaction.channel is not None:
+            await interaction.channel.send(
+                f"**Bug #{bug_id}** status changed to "
+                f"**{status_label}** by {interaction.user.mention}."
+            )
 
 
 class BugStatusView(discord.ui.View):
@@ -604,12 +629,67 @@ class BugTicketClient(discord.Client):
     async def _lock_ticket(self, channel: discord.TextChannel) -> None:
         role_id = settings.discord_game_dev_role_id
         role = channel.guild.get_role(role_id) if role_id else None
+
         if role is None:
             raise RuntimeError("Game Dev role unavailable; cannot lock ticket")
+
+        bot_member = channel.guild.me
+
+        if bot_member is None:
+            bot_member = await channel.guild.fetch_member(self.user.id)
+
+        permissions = channel.permissions_for(bot_member)
+        guild_permissions = bot_member.guild_permissions
+
+        logger.info(
+            "Ticket lock permissions: channel=%s bot=%s "
+            "guild_manage_channels=%s channel_manage_channels=%s "
+            "administrator=%s view_channel=%s "
+            "send_messages=%s read_message_history=%s "
+            "role_id=%s",
+            channel.id,
+            bot_member.id,
+            guild_permissions.manage_channels,
+            permissions.manage_channels,
+            permissions.administrator,
+            permissions.view_channel,
+            permissions.send_messages,
+            permissions.read_message_history,
+            role.id,
+        )
+
+        logger.info(
+            "Bot roles: %s",
+            [(r.name, r.id, r.position) for r in bot_member.roles],
+        )
+
+        logger.info(
+            "Target role: name=%s id=%s position=%s",
+            role.name,
+            role.id,
+            role.position,
+        )
+
+        logger.info(
+            "Channel overwrites: %s",
+            [
+                (str(target), target.id, str(overwrite))
+                for target, overwrite in channel.overwrites.items()
+            ],
+        )
+
+        if not permissions.manage_channels:
+            raise RuntimeError(f"Bot lacks Manage Channels permission in channel {channel.id}")
+
         overwrite = channel.overwrites_for(role)
         overwrite.send_messages = False
         overwrite.add_reactions = False
-        await channel.set_permissions(role, overwrite=overwrite, reason="CFBR ticket closed")
+
+        await channel.set_permissions(
+            role,
+            overwrite=overwrite,
+            reason="CFBR ticket closed",
+        )
 
 
 async def _run() -> None:

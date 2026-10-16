@@ -58,6 +58,10 @@ class Bugs(Base):
         CheckConstraint("length(TRIM(BOTH FROM git_commit)) > 0", name="bugs_git_commit_not_blank"),
         CheckConstraint("length(TRIM(BOTH FROM title)) > 0", name="bugs_title_not_blank"),
         CheckConstraint(
+            "transcript_status::text = ANY (ARRAY['pending'::character varying, 'generating'::character varying, 'published'::character varying, 'failed'::character varying]::text[])",
+            name="bugs_transcript_status_valid",
+        ),
+        CheckConstraint(
             "viewport_height IS NULL OR viewport_height >= 0",
             name="bugs_viewport_height_nonnegative",
         ),
@@ -120,6 +124,9 @@ class Bugs(Base):
     updated_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(True), nullable=False, server_default=text("CURRENT_TIMESTAMP")
     )
+    transcript_status: Mapped[str] = mapped_column(
+        String(20), nullable=False, server_default=text("'pending'::character varying")
+    )
     username: Mapped[str | None] = mapped_column(Text)
     reproduction_steps: Mapped[str | None] = mapped_column(Text)
     expected_behavior: Mapped[str | None] = mapped_column(Text)
@@ -135,3 +142,6 @@ class Bugs(Base):
     discord_thread_id: Mapped[str | None] = mapped_column(String(30))
     resolved_at: Mapped[datetime.datetime | None] = mapped_column(DateTime(True))
     closed_at: Mapped[datetime.datetime | None] = mapped_column(DateTime(True))
+    discord_message_id: Mapped[str | None] = mapped_column(String(30))
+    discord_transcript_message_id: Mapped[str | None] = mapped_column(String(30))
+    closed_by_discord_id: Mapped[str | None] = mapped_column(String(30))

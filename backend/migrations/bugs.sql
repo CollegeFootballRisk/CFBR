@@ -59,6 +59,10 @@ CREATE TABLE bugs (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     resolved_at TIMESTAMPTZ,
     closed_at TIMESTAMPTZ,
+    discord_message_id VARCHAR(30),
+    transcript_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    discord_transcript_message_id VARCHAR(30),
+    closed_by_discord_id VARCHAR(30),
 
     CONSTRAINT bugs_viewport_width_nonnegative
         CHECK (viewport_width IS NULL OR viewport_width >= 0),
@@ -71,7 +75,9 @@ CREATE TABLE bugs (
     CONSTRAINT bugs_title_not_blank
         CHECK (length(trim(title)) > 0),
     CONSTRAINT bugs_description_not_blank
-        CHECK (length(trim(description)) > 0)
+        CHECK (length(trim(description)) > 0),
+    CONSTRAINT bugs_transcript_status_valid
+        CHECK (transcript_status IN ('pending', 'generating', 'published', 'failed'));
 );
 
 -- Maintain updated_at for updates from the API or direct SQL.

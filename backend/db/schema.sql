@@ -118,10 +118,15 @@ CREATE TABLE public.bugs (
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     resolved_at timestamp with time zone,
     closed_at timestamp with time zone,
+    discord_message_id character varying(30),
+    transcript_status character varying(20) DEFAULT 'pending'::character varying NOT NULL,
+    discord_transcript_message_id character varying(30),
+    closed_by_discord_id character varying(30),
     CONSTRAINT bugs_app_version_not_blank CHECK ((length(TRIM(BOTH FROM app_version)) > 0)),
     CONSTRAINT bugs_description_not_blank CHECK ((length(TRIM(BOTH FROM description)) > 0)),
     CONSTRAINT bugs_git_commit_not_blank CHECK ((length(TRIM(BOTH FROM git_commit)) > 0)),
     CONSTRAINT bugs_title_not_blank CHECK ((length(TRIM(BOTH FROM title)) > 0)),
+    CONSTRAINT bugs_transcript_status_valid CHECK (((transcript_status)::text = ANY ((ARRAY['pending'::character varying, 'generating'::character varying, 'published'::character varying, 'failed'::character varying])::text[]))),
     CONSTRAINT bugs_viewport_height_nonnegative CHECK (((viewport_height IS NULL) OR (viewport_height >= 0))),
     CONSTRAINT bugs_viewport_width_nonnegative CHECK (((viewport_width IS NULL) OR (viewport_width >= 0)))
 );

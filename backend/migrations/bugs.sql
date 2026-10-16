@@ -40,6 +40,7 @@ CREATE TABLE bugs (
     can_produce_consistently BOOLEAN NOT NULL DEFAULT FALSE,
 
     -- Browser/client context. Treat client-provided values as untrusted.
+    ip_address INET,    
     user_agent TEXT,
     page_url TEXT,
     viewport_width INTEGER,

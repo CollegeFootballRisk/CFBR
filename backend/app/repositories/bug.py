@@ -4,9 +4,17 @@ from app.models.generated import Bugs
 from app.schemas.bug import BugCreate
 
 
-def create_bug(db: Session, payload: BugCreate) -> Bugs:
+def create_bug(
+    db: Session,
+    payload: BugCreate,
+    ip_address: str | None = None,
+) -> Bugs:
     """Add a bug report to the current transaction."""
-    bug = Bugs(**payload.model_dump(), discord_ticket_status="pending")
+    bug = Bugs(
+        **payload.model_dump(),
+        ip_address=ip_address,
+        discord_ticket_status="pending",
+    )
     db.add(bug)
     db.flush()
     return bug

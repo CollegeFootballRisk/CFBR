@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -25,11 +25,13 @@ router = APIRouter(
 )
 def create_bug(
     payload: BugCreate,
+    request: Request,
     db: Session = Depends(get_session),
 ) -> ApiResponse[None]:
     """Submit a new bug report."""
     try:
-        bug_service.create_bug(db, payload)
+        ip_address = request.headers.get("cf-connecting-ip")
+        bug_service.create_bug(db, payload, ip_address=ip_address)
     except SQLAlchemyError as exc:
         logger.exception("Database error while creating a bug report")
         raise HTTPException(

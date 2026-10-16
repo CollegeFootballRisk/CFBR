@@ -15,6 +15,7 @@ from sqlalchemy import (
     UniqueConstraint,
     text,
 )
+from sqlalchemy.dialects.postgresql import INET
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -123,6 +124,7 @@ class Bugs(Base):
     reproduction_steps: Mapped[str | None] = mapped_column(Text)
     expected_behavior: Mapped[str | None] = mapped_column(Text)
     actual_behavior: Mapped[str | None] = mapped_column(Text)
+    ip_address: Mapped[object | None] = mapped_column(INET)
     user_agent: Mapped[str | None] = mapped_column(Text)
     page_url: Mapped[str | None] = mapped_column(Text)
     viewport_width: Mapped[int | None] = mapped_column(Integer)

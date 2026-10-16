@@ -16,9 +16,14 @@ class BugValidationError(ValueError):
 def create_bug(
     db: Session,
     payload: BugCreate,
+    ip_address: str | None = None,
 ) -> Bugs:
     """Create a bug report."""
-    return bug_repository.create_bug(db, payload)
+    return bug_repository.create_bug(
+        db,
+        payload,
+        ip_address=ip_address,
+    )
 
 
 @transactional

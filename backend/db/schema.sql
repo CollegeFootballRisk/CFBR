@@ -102,6 +102,7 @@ CREATE TABLE public.bugs (
     expected_behavior text,
     actual_behavior text,
     can_produce_consistently boolean DEFAULT false NOT NULL,
+    ip_address inet,
     user_agent text,
     page_url text,
     viewport_width integer,
@@ -154,13 +155,6 @@ ALTER TABLE ONLY public.bugs
 
 ALTER TABLE ONLY public.bugs
     ADD CONSTRAINT bugs_pkey PRIMARY KEY (id);
-
-
---
--- Name: bugs trg_bugs_set_timestamps; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER trg_bugs_set_timestamps BEFORE UPDATE ON public.bugs FOR EACH ROW EXECUTE FUNCTION public.bugs_set_timestamps();
 
 
 --

@@ -56,6 +56,7 @@ def _claim_next_bug(factory: sessionmaker[Session]) -> dict[str, Any] | None:
             "git_commit": bug.git_commit,
             "username": bug.username,
             "page_url": bug.page_url,
+            "ip_address": str(bug.ip_address) if bug.ip_address else None,
             "user_agent": bug.user_agent,
             "viewport_width": bug.viewport_width,
             "viewport_height": bug.viewport_height,
@@ -125,6 +126,7 @@ def _build_embed(bug: dict[str, Any]) -> discord.Embed:
         f"Consistent reproduction: {'Yes' if bug.get('can_produce_consistently') else 'No'}",
         f"App version: {_value(bug.get('app_version'), 200)}",
         f"Git commit: {_value(bug.get('git_commit'), 200)}",
+        f"IP address: {_value(bug.get('ip_address'), 100)}",
         f"Page: {_value(bug.get('page_url'), 500)}",
         f"Viewport: {bug.get('viewport_width') or '?'} × {bug.get('viewport_height') or '?'}",
         f"Locale / timezone: {_value(bug.get('locale'), 100)} / {_value(bug.get('timezone'), 100)}",
@@ -177,21 +179,23 @@ class BugTicketClient(discord.Client):
         guild_id = settings.discord_guild_id
         category_id = settings.discord_ticket_category_id
         moderator_role_id = settings.discord_moderator_role_id
+
         if not all((guild_id, category_id, moderator_role_id)):
             raise RuntimeError("Discord guild, category, and moderator role IDs must be configured")
 
         guild = self.get_guild(guild_id)
         if guild is None:
             raise RuntimeError(f"Bot is not connected to configured Discord guild {guild_id}")
+
         category = guild.get_channel(category_id)
         if not isinstance(category, discord.CategoryChannel):
             raise RuntimeError(f"Configured Discord category {category_id} was not found")
+
         moderator_role = guild.get_role(moderator_role_id)
         if moderator_role is None:
-            raise RuntimeError(f"Configured moderator role {moderator_role_id} was not found")
-        bot_member = guild.me
-        if bot_member is None:
-            raise RuntimeError("Could not resolve the bot's guild member")
+            raise RuntimeError(
+                f"Configured Discord moderator role {moderator_role_id} was not found"
+            )
 
         marker = f"{TOPIC_MARKER} {bug_id}"
         channel = next(
@@ -200,8 +204,14 @@ class BugTicketClient(discord.Client):
         )
 
         if channel is None:
-            overwrites: dict[discord.Role | discord.Member, discord.PermissionOverwrite] = {
-                guild.default_role: discord.PermissionOverwrite(view_channel=False),
+            bot_member = guild.me
+            if bot_member is None:
+                raise RuntimeError("Could not resolve bot member in Discord guild")
+
+            overwrites = {
+                guild.default_role: discord.PermissionOverwrite(
+                    view_channel=False,
+                ),
                 moderator_role: discord.PermissionOverwrite(
                     view_channel=True,
                     send_messages=True,
@@ -214,33 +224,41 @@ class BugTicketClient(discord.Client):
                     send_messages=True,
                     read_message_history=True,
                     embed_links=True,
+                    attach_files=True,
                     manage_channels=True,
                 ),
             }
+
             channel = await guild.create_text_channel(
                 name=_channel_name(bug_id, str(bug["title"])),
                 category=category,
-                topic=f"{marker} | Created automatically by CFBR",
                 overwrites=overwrites,
+                topic=f"{marker} | Created automatically by CFBR",
                 reason=f"CFBR bug report #{bug_id}",
             )
-
-        # If a process stopped after channel creation but before the DB update, the
-        # topic marker lets a retry find the existing channel instead of creating another.
+        # If a process stopped after channel creation but before the DB update,
+        # the topic marker lets a retry find the existing channel.
         await channel.send(
             content=f"New CFBR bug report submitted. <@&{moderator_role_id}>",
             embed=_build_embed(bug),
             allowed_mentions=discord.AllowedMentions(roles=True, users=False, everyone=False),
         )
+
         await asyncio.to_thread(_set_status, self.factory, bug_id, "created", str(channel.id))
-        logger.info("Created/reconciled Discord ticket channel %s for bug %s", channel.id, bug_id)
+        logger.info(
+            "Created/reconciled Discord ticket channel %s for bug %s",
+            channel.id,
+            bug_id,
+        )
 
 
 async def _run() -> None:
     if not settings.discord_bot_token:
         raise RuntimeError("DISCORD_BOT_TOKEN is required to run the Discord worker")
+
     factory = _session_factory()
     await asyncio.to_thread(_reset_abandoned_claims, factory)
+
     client = BugTicketClient(factory)
     await client.start(settings.discord_bot_token)
 

@@ -18,7 +18,7 @@
     "typecheck": "tsc --noEmit",
     "typecheck:ci": "tsc --noEmit --pretty false",
     "review": "npm run biome && npm run architecture && npm run svgo && npm run tailwind:wrap && npm run typecheck && npm run knip && npm run build",
-    "review:ci": "npm run biome:check && npm run architecture && npm run tailwind:check && npm run typecheck:ci && npm run knip && npm run build"
+    "review:ci": "npm run biome:ci && npm run architecture && npm run tailwind:check && npm run typecheck:ci && npm run knip && npm run build"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.2",

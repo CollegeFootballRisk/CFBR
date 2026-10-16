@@ -77,7 +77,7 @@ CREATE TABLE bugs (
     CONSTRAINT bugs_description_not_blank
         CHECK (length(trim(description)) > 0),
     CONSTRAINT bugs_transcript_status_valid
-        CHECK (transcript_status IN ('pending', 'generating', 'published', 'failed'));
+        CHECK (transcript_status IN ('pending', 'generating', 'published', 'failed'))
 );
 
 -- Maintain updated_at for updates from the API or direct SQL.

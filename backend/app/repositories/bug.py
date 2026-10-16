@@ -6,7 +6,7 @@ from app.schemas.bug import BugCreate
 
 def create_bug(db: Session, payload: BugCreate) -> Bugs:
     """Add a bug report to the current transaction."""
-    bug = Bugs(**payload.model_dump())
+    bug = Bugs(**payload.model_dump(), discord_ticket_status="pending")
     db.add(bug)
     db.flush()
     return bug

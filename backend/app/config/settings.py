@@ -9,6 +9,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     # Database
     database_url: str = Field(alias="DATABASE_URL")
+    # Discord bug-ticket worker
+    discord_bot_token: str | None = Field(default=None, alias="DISCORD_BOT_TOKEN")
+    discord_guild_id: int | None = Field(default=None, alias="DISCORD_GUILD_ID")
+    discord_ticket_category_id: int | None = Field(default=None, alias="DISCORD_TICKET_CATEGORY_ID")
+    discord_moderator_role_id: int | None = Field(default=None, alias="DISCORD_MODERATOR_ROLE_ID")
 
     model_config = SettingsConfigDict(
         env_file=".env",

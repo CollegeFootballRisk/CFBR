@@ -1,40 +1,24 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import { useState } from "react";
-
+import { useRef, useState } from "react";
 import { Button } from "@/shared/components/Button";
 import { Checkbox, Input, Textarea } from "@/shared/components/form";
 import { Link } from "@/shared/components/Link";
+import { Loader } from "@/shared/components/Loader";
 import { Select } from "@/shared/components/Select";
 import { StatusMessage } from "@/shared/components/StatusMessage";
 import { PageContainer } from "@/shared/layouts/PageContainer";
+import {
+  type BugForm,
+  bugCategoryOptions,
+  bugSeverityOptions,
+  type Category,
+  createBugPayload,
+  type Severity,
+} from "../api/bug";
+import { useCreateBug } from "../hooks/useBug";
 
-const categories = [
-  "Map",
-  "Login / Account",
-  "Gameplay",
-  "UI / Design",
-  "Performance",
-  "Other",
-] as const;
-
-const severities = ["Low", "Medium", "High", "Critical"] as const;
-
-type Category = (typeof categories)[number];
-type Severity = (typeof severities)[number];
-
-interface BugFormState {
-  title: string;
-  category: Category | "";
-  severity: Severity | "";
-  description: string;
-  steps: string;
-  expected: string;
-  actual: string;
-  reproducible: boolean;
-}
-
-const initialForm: BugFormState = {
+const initialForm: BugForm = {
   title: "",
   category: "",
   severity: "",
@@ -48,53 +32,63 @@ const initialForm: BugFormState = {
 export function Bugs() {
   const [form, setForm] = useState(initialForm);
   const [submitted, setSubmitted] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  const updateField = <K extends keyof BugFormState>(field: K, value: BugFormState[K]) => {
-    setSubmitted(false);
-
-    setForm((current) => ({
-      ...current,
-      [field]: value,
-    }));
+  const createBugMutation = useCreateBug();
+  const formRef = useRef<HTMLFormElement>(null);
+  const updateField = <K extends keyof typeof form>(field: K, value: (typeof form)[K]) => {
+    setForm((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     setSubmitted(true);
 
-    const title = form.title.trim();
-    const description = form.description.trim();
+    const { category, severity } = form;
 
-    if (!form.category || !form.severity || !title || !description) {
+    if (!category || !severity || !form.title.trim() || !form.description.trim()) {
+      requestAnimationFrame(() => {
+        const firstInvalid = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+
+        firstInvalid?.focus({ preventScroll: true });
+        firstInvalid?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      });
+
       return;
     }
 
-    setSuccess(true);
+    createBugMutation.mutate(createBugPayload({ ...form, category, severity }));
   };
 
-  if (success) {
+  if (createBugMutation.isSuccess) {
     return (
-      <>
+      <PageContainer>
         <h1 className="my-4 text-center font-bold text-4xl">Report a Bug</h1>
+        <StatusMessage status="success" title="Bug Report Submitted">
+          <p className="mb-4">{createBugMutation.data.message}</p>
 
-        <PageContainer>
-          <StatusMessage status="success" title="Bug Report Submitted">
-            <p className="mb-4">Thanks for helping improve College Football Risk.</p>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setForm(initialForm);
+              setSubmitted(false);
+              createBugMutation.reset();
+            }}
+          >
+            Report Another Bug
+          </Button>
+        </StatusMessage>
+      </PageContainer>
+    );
+  }
 
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setForm(initialForm);
-                setSubmitted(false);
-                setSuccess(false);
-              }}
-            >
-              Report Another Bug
-            </Button>
-          </StatusMessage>
-        </PageContainer>
-      </>
+  if (createBugMutation.isPending) {
+    return (
+      <PageContainer>
+        <h1 className="my-4 text-center font-bold text-4xl">Report a Bug</h1>
+        <Loader label="Submitting your bug report..." size="lg" fullHeight />
+      </PageContainer>
     );
   }
 
@@ -125,6 +119,8 @@ export function Bugs() {
       </p>
 
       <form
+        ref={formRef}
+        noValidate
         className="space-y-6 rounded-lg border border-control-border bg-control p-5 shadow-lg"
         onSubmit={handleSubmit}
       >
@@ -136,34 +132,32 @@ export function Bugs() {
           error={submitted && !form.title.trim() ? "Bug title is required" : undefined}
         />
 
-        <div className="grid gap-6 pb-4 md:grid-cols-2">
-          <Select
-            label="Category"
-            required
-            hideLabel={false}
-            value={form.category}
-            options={categories.map((category) => ({
-              label: category,
-              value: category,
-            }))}
-            placeholder="Select a category"
-            error={submitted && !form.category ? "Category is required" : undefined}
-            onChange={(value) => updateField("category", value as Category | "")}
-          />
+        <div className="grid gap-x-6 gap-y-8 md:grid-cols-2">
+          <div className="min-w-0">
+            <Select
+              label="Category"
+              required
+              value={form.category}
+              hideLabel={false}
+              options={bugCategoryOptions}
+              placeholder="Select a category"
+              error={submitted && !form.category ? "Category is required" : undefined}
+              onChange={(value) => updateField("category", value as Category | "")}
+            />
+          </div>
 
-          <Select
-            label="Severity"
-            required
-            hideLabel={false}
-            value={form.severity}
-            options={severities.map((severity) => ({
-              label: severity,
-              value: severity,
-            }))}
-            placeholder="Select a severity"
-            error={submitted && !form.severity ? "Severity is required" : undefined}
-            onChange={(value) => updateField("severity", value as Severity | "")}
-          />
+          <div className="min-w-0">
+            <Select
+              label="Severity"
+              required
+              value={form.severity}
+              hideLabel={false}
+              options={bugSeverityOptions}
+              placeholder="Select a severity"
+              error={submitted && !form.severity ? "Severity is required" : undefined}
+              onChange={(value) => updateField("severity", value as Severity | "")}
+            />
+          </div>
         </div>
 
         <Textarea
@@ -208,9 +202,17 @@ export function Bugs() {
             automatically in the bug report.
           </p>
 
+          {createBugMutation.isError && (
+            <div className="mb-4">
+              <StatusMessage status="failure" title="Unable to Submit Bug Report">
+                <p>{createBugMutation.error.message}</p>
+              </StatusMessage>
+            </div>
+          )}
+
           <div className="flex justify-end">
-            <Button type="submit" variant="primary">
-              Submit Bug Report
+            <Button type="submit" variant="primary" disabled={createBugMutation.isPending}>
+              {createBugMutation.isPending ? "Submitting..." : "Submit Bug Report"}
             </Button>
           </div>
         </div>

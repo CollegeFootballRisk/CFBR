@@ -143,6 +143,7 @@ function TutorialNavigation({
       </Button>
 
       <div className="order-3 col-span-2 min-w-0 sm:order-2 sm:w-auto">
+        {/* TODO:Making moves is missing chevron */}
         <Select
           value={section}
           options={options}

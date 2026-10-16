@@ -40,7 +40,7 @@ export const selectVariants = cva(
       },
 
       invalid: {
-        true: "border-accent-1 focus-visible:outline-accent-1",
+        true: "border-failure focus-visible:outline-failure",
         false: "",
       },
     },

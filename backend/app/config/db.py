@@ -30,7 +30,7 @@ def get_engine() -> Engine:
     _SessionLocal = sessionmaker(
         bind=_ENGINE,
         autoflush=False,
-        autocommit=False,
+        expire_on_commit=False,
     )
 
     return _ENGINE

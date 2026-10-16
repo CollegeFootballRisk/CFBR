@@ -1,20 +1,26 @@
 # SPDX-License-Identifier: MPL-2.0
-
 import logging
 import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.config import settings
 from app.config.db import get_engine
-from app.routers.test import router as test_router
+from app.routers.bug import router as bugs_router
+from app.schemas.api import (
+    ApiError,
+    ApiErrorResponse,
+    ApiValidationError,
+)
 
 load_dotenv()
 
@@ -73,7 +79,93 @@ app = FastAPI(
     swagger_ui_parameters={"filter": True},
 )
 
-app.include_router(test_router)
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(
+    request: Request,
+    exc: StarletteHTTPException,
+) -> JSONResponse:
+    codes = {
+        400: "BAD_REQUEST",
+        401: "UNAUTHORIZED",
+        403: "FORBIDDEN",
+        404: "NOT_FOUND",
+        409: "CONFLICT",
+        422: "VALIDATION_ERROR",
+        429: "RATE_LIMITED",
+    }
+
+    message = exc.detail if isinstance(exc.detail, str) else "Request failed"
+
+    response = ApiErrorResponse(
+        status=exc.status_code,
+        message=message,
+        error=ApiError(
+            code=codes.get(exc.status_code, "HTTP_ERROR"),
+            message=message,
+        ),
+    )
+
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=response.model_dump(),
+        headers=exc.headers,
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+    request: Request,
+    exc: RequestValidationError,
+) -> JSONResponse:
+    errors = [
+        ApiValidationError(
+            code="VALIDATION_ERROR",
+            message=str(error["msg"]),
+            field=".".join(str(part) for part in error["loc"]),
+        )
+        for error in exc.errors()
+    ]
+
+    response = ApiErrorResponse(
+        status=422,
+        message="Request validation failed",
+        error=ApiError(
+            code="VALIDATION_ERROR",
+            message="Request validation failed",
+            errors=errors,
+        ),
+    )
+
+    return JSONResponse(
+        status_code=422,
+        content=response.model_dump(exclude_none=True),
+    )
+
+
+@app.exception_handler(Exception)
+async def unexpected_exception_handler(
+    request: Request,
+    exc: Exception,
+) -> JSONResponse:
+    logger.exception("Unhandled API exception")
+
+    response = ApiErrorResponse(
+        status=500,
+        message="Internal server error",
+        error=ApiError(
+            code="INTERNAL_ERROR",
+            message="An unexpected error occurred",
+        ),
+    )
+
+    return JSONResponse(
+        status_code=500,
+        content=response.model_dump(),
+    )
+
+
+app.include_router(bugs_router)
 
 app.add_middleware(
     CORSMiddleware,

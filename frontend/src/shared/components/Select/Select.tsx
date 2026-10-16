@@ -4,8 +4,8 @@ import type { VariantProps } from "class-variance-authority";
 import { type HTMLAttributes, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 
 import { cn } from "../../utils/cn";
+import { FormField } from "../form/FormField";
 import { ChevronIcon } from "../Icons/ChevronIcon";
-
 import { type DropdownPosition, SelectDropdown } from "./SelectDropdown";
 import { SelectMeasure } from "./SelectMeasure";
 import type { SelectItem } from "./selectTypes";
@@ -166,7 +166,6 @@ export function Select<T = string>({
     };
   }, [open, rootRef]);
 
-  // Keep keyboard-highlighted options visible without scrolling page ancestors.
   useLayoutEffect(() => {
     if (!open) return;
 
@@ -186,6 +185,8 @@ export function Select<T = string>({
   }, [highlightedIndex, open, optionRefs]);
 
   function handleOpen() {
+    if (disabled) return;
+
     const nextOpen = !open;
     setOpen(nextOpen);
 
@@ -202,23 +203,15 @@ export function Select<T = string>({
     setOpen(false);
   }
 
-  return (
+  const selectContent = (
     <div
       ref={rootRef}
       style={{
         width: width === "auto" ? measuredWidth : undefined,
         height,
       }}
-      className={cn("relative", className)}
-      {...props}
+      className="relative max-w-full"
     >
-      {label && (
-        <label id={labelId} htmlFor={selectId} className={cn(hideLabel && "sr-only")}>
-          {label}
-          {required && <span className="ml-1 text-info">*</span>}
-        </label>
-      )}
-
       <SelectMeasure
         measureRef={measureRef}
         size={size}
@@ -231,8 +224,9 @@ export function Select<T = string>({
       </SelectMeasure>
 
       <button
-        id={selectId}
         type="button"
+        id={selectId}
+        aria-label={!label ? placeholder : undefined}
         aria-labelledby={label ? labelId : undefined}
         aria-describedby={error ? `${selectId}-error` : undefined}
         aria-controls={open ? `${selectId}-listbox` : undefined}
@@ -257,12 +251,6 @@ export function Select<T = string>({
         {chevron && <ChevronIcon className={cn(open && "rotate-180")} />}
       </button>
 
-      {error && (
-        <p id={`${selectId}-error`} className="mt-1 text-accent-1 text-sm">
-          {error}
-        </p>
-      )}
-
       <SelectDropdown
         position={open ? dropdownPosition : null}
         dropdownRef={dropdownRef}
@@ -283,6 +271,36 @@ export function Select<T = string>({
         centeredOptions={centeredOptions}
         handleOptionSelect={handleOptionSelect}
       />
+    </div>
+  );
+
+  return (
+    <div className={cn("min-w-0", className)} {...props}>
+      {required ? (
+        <FormField
+          id={selectId}
+          label={
+            label ? (
+              <span id={labelId} className={cn(hideLabel && "sr-only")}>
+                {label}
+              </span>
+            ) : undefined
+          }
+          required
+          error={error}
+        >
+          {selectContent}
+        </FormField>
+      ) : (
+        <>
+          {label && (
+            <span id={labelId} className="sr-only">
+              {label}
+            </span>
+          )}
+          {selectContent}
+        </>
+      )}
     </div>
   );
 }

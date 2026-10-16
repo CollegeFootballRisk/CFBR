@@ -14,12 +14,14 @@
     "tailwind:wrap": "node scripts/wrap-tailwind-classes.mjs",
     "tailwind:check": "node scripts/wrap-tailwind-classes.mjs --check",
     "preview": "vite preview",
+    "generate:api-types": "node scripts/generate-api-types.mjs",
     "typecheck": "tsc --noEmit",
     "typecheck:ci": "tsc --noEmit --pretty false",
     "review": "npm run biome && npm run architecture && npm run svgo && npm run tailwind:wrap && npm run typecheck && npm run knip && npm run build",
     "review:ci": "npm run biome:check && npm run architecture && npm run tailwind:check && npm run typecheck:ci && npm run knip && npm run build"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.104.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "react": "^19.2.0",
@@ -37,6 +39,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "knip": "^6.29.0",
+    "openapi-typescript": "^7.13.0",
     "svgo": "^4.1.0",
     "typescript": "~5.9.3",
     "vite": "^7.2.4"

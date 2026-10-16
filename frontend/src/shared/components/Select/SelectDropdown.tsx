@@ -71,8 +71,7 @@ export function SelectDropdown<T>({
         top: position.top,
         left: position.left,
         width: position.width,
-        height: position.height,
-        maxHeight: MAX_DROPDOWN_HEIGHT,
+        maxHeight: Math.min(position.height, MAX_DROPDOWN_HEIGHT),
       }}
     >
       {searchable && (
@@ -101,7 +100,7 @@ export function SelectDropdown<T>({
         id={`${selectId}-listbox`}
         role="listbox"
         aria-labelledby={label ? labelId : undefined}
-        className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-contain"
+        className="flex min-h-0 flex-col overflow-y-auto overflow-x-hidden overscroll-contain"
       >
         {filteredItems.length === 0 ? (
           <div className="flex flex-1 items-center justify-center px-4 py-3 text-center text-foreground">

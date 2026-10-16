@@ -4,17 +4,12 @@ version = "0.1.0"
 description = "College Football Risk backend"
 requires-python = ">=3.12,<3.13"
 dependencies = [
-    "aiofiles",
-    "azure-appconfiguration-provider",
-    "bcrypt<4",
     "fastapi",
     "pandas",
-    "passlib[bcrypt]==1.7.4",
     "psycopg[binary]",
     "pydantic-settings",
-    "python-jose[cryptography]",
-    "rapidfuzz",
     "slowapi",
+    "sqlacodegen[citext]>=4.0.4",
     "sqlalchemy>=2.0",
     "uvicorn[standard]",
 ]

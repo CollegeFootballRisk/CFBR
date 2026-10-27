@@ -1,10 +1,12 @@
-// SPDX-License-Identifier: MPL-2.0
+/* SPDX-License-Identifier: MPL-2.0 */
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/shared/components/Button";
 import { Modal } from "@/shared/components/Modal";
-import { Select } from "@/shared/components/Select";
-import { teams } from "../data/teams";
+import { getJoinableTeams } from "../api/team";
+import { TeamSelect } from "../components/TeamSelect";
+import { useTeams } from "../hooks/useTeams";
+import { getTeamLogo } from "../utils/getTeamLogo";
 
 export type JoinTeamReason = "new" | "eliminated";
 
@@ -15,19 +17,30 @@ interface JoinTeamModalProps {
 }
 
 export function JoinTeamModal({ open, onClose, reason = "new" }: JoinTeamModalProps) {
+  const { data: apiTeams = [], isPending, isError } = useTeams();
+
   const joinableTeams = useMemo(
-    () => teams.filter((team) => team.id > 0).sort((a, b) => a.name.localeCompare(b.name)),
-    [],
+    () => getJoinableTeams(apiTeams).sort((a, b) => a.name.localeCompare(b.name)),
+    [apiTeams],
   );
-  const [selectedTeamId, setSelectedTeamId] = useState(
-    joinableTeams[0] ? String(joinableTeams[0].id) : "",
-  );
+
+  const [selectedTeamId, setSelectedTeamId] = useState("");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (
+      joinableTeams.length > 0 &&
+      !joinableTeams.some((team) => String(team.id) === selectedTeamId)
+    ) {
+      setSelectedTeamId(String(joinableTeams[0].id));
+    }
+  }, [joinableTeams, selectedTeamId]);
 
   const selectedTeam = joinableTeams.find((team) => String(team.id) === selectedTeamId);
 
-  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (!selectedTeam) return;
 
     setMessage(
@@ -48,25 +61,40 @@ export function JoinTeamModal({ open, onClose, reason = "new" }: JoinTeamModalPr
         )}
 
         <div className="flex justify-center">
-          <Select
-            searchable
-            centeredOptions
-            label="Team"
-            value={selectedTeamId}
-            options={joinableTeams.map((team) => ({
-              label: team.name,
-              value: String(team.id),
-            }))}
-            onChange={(value) => {
-              setSelectedTeamId(value ?? "");
+          <TeamSelect
+            teams={joinableTeams}
+            value={selectedTeam?.name ?? ""}
+            disabled={isPending || isError || joinableTeams.length === 0}
+            onChange={(name) => {
+              const team = joinableTeams.find((item) => item.name === name);
+
+              setSelectedTeamId(team ? String(team.id) : "");
               setMessage("");
             }}
           />
         </div>
 
+        {isPending && (
+          <p className="text-center text-info text-sm" role="status">
+            Loading teams…
+          </p>
+        )}
+
+        {isError && (
+          <p className="text-center text-danger text-sm" role="alert">
+            Unable to load teams. Please try again later.
+          </p>
+        )}
+
+        {!isPending && !isError && joinableTeams.length === 0 && (
+          <p className="text-center text-info text-sm" role="status">
+            No teams are currently available to join.
+          </p>
+        )}
+
         {selectedTeam && (
           <div className="flex items-center justify-center gap-3 rounded-md border border-control-border p-4">
-            <img src={selectedTeam.logo} alt="" className="size-14 object-contain" />
+            <img src={getTeamLogo(selectedTeam.logo)} alt="" className="size-14 object-contain" />
             <div className="text-left">
               <p className="font-semibold">{selectedTeam.name}</p>
               <p className="text-info text-sm">Selected team</p>
@@ -81,7 +109,7 @@ export function JoinTeamModal({ open, onClose, reason = "new" }: JoinTeamModalPr
         )}
 
         <div className="flex flex-wrap justify-center gap-3">
-          <Button type="submit" variant="primary" disabled={!selectedTeam}>
+          <Button type="submit" variant="primary" disabled={!selectedTeam || isPending || isError}>
             Join Team
           </Button>
           <Button onClick={onClose}>Cancel</Button>

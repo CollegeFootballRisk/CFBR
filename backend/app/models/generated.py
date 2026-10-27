@@ -15,7 +15,7 @@ from sqlalchemy import (
     UniqueConstraint,
     text,
 )
-from sqlalchemy.dialects.postgresql import INET
+from sqlalchemy.dialects.postgresql import ARRAY, CITEXT, INET
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -145,3 +145,35 @@ class Bugs(Base):
     discord_message_id: Mapped[str | None] = mapped_column(String(30))
     discord_transcript_message_id: Mapped[str | None] = mapped_column(String(30))
     closed_by_discord_id: Mapped[str | None] = mapped_column(String(30))
+
+
+class Teams(Base):
+    __tablename__ = "teams"
+    __table_args__ = (
+        CheckConstraint("length(TRIM(BOTH FROM logo)) > 0", name="teams_logo_not_blank"),
+        CheckConstraint("length(TRIM(BOTH FROM name::text)) > 0", name="teams_name_not_blank"),
+        CheckConstraint(
+            "primary_color ~ '^#[0-9A-Fa-f]{6}$'::text", name="teams_primary_color_valid"
+        ),
+        CheckConstraint(
+            "secondary_color ~ '^#[0-9A-Fa-f]{6}$'::text", name="teams_secondary_color_valid"
+        ),
+        PrimaryKeyConstraint("id", name="teams_pkey"),
+        UniqueConstraint("legacy_team_id", name="teams_legacy_team_id_key"),
+        UniqueConstraint("name", name="teams_name_key"),
+        {"schema": "public"},
+    )
+    id: Mapped[int] = mapped_column(
+        Integer,
+        Identity(start=1, increment=1, minvalue=1, maxvalue=2147483647, cycle=False, cache=1),
+        primary_key=True,
+        autoincrement=True,
+    )
+    name: Mapped[str] = mapped_column(CITEXT, nullable=False)
+    primary_color: Mapped[str] = mapped_column(Text, nullable=False)
+    secondary_color: Mapped[str] = mapped_column(Text, nullable=False)
+    logo: Mapped[str] = mapped_column(Text, nullable=False)
+    seasons: Mapped[list[int]] = mapped_column(
+        ARRAY(Integer()), nullable=False, server_default=text("'{}'::integer[]")
+    )
+    legacy_team_id: Mapped[int | None] = mapped_column(Integer)

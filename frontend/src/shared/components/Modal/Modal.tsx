@@ -123,9 +123,14 @@ export function Modal({
     const handleFocusIn = (event: FocusEvent) => {
       const target = event.target;
 
-      if (target instanceof Node && !modal.contains(target)) {
-        focusFirstElement();
+      if (!(target instanceof Node)) return;
+      if (modal.contains(target)) return;
+
+      if (target instanceof Element && target.closest("[data-modal-portal]")) {
+        return;
       }
+
+      focusFirstElement();
     };
 
     const originalOverflow = document.body.style.overflow;

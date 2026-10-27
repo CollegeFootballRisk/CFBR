@@ -63,6 +63,7 @@ export function SelectDropdown<T>({
   return createPortal(
     <div
       ref={dropdownRef}
+      data-modal-portal
       className={[
         "fixed z-9999 flex flex-col overflow-hidden",
         "rounded-md border border-control-border bg-control shadow-xl",

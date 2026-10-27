@@ -39,6 +39,26 @@ export interface paths {
         patch: operations["update_bug_api_bugs__bug_id__patch"];
         trace?: never;
     };
+    "/api/teams": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Teams
+         * @description Lists all teams, including those from past seasons.
+         */
+        get: operations["get_teams_api_teams_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -68,6 +88,15 @@ export interface components {
             message: string;
             /** Data */
             data: null;
+        };
+        /** ApiResponse[list[TeamResponse]] */
+        ApiResponse_list_TeamResponse__: {
+            /** Status */
+            status: number;
+            /** Message */
+            message: string;
+            /** Data */
+            data: components["schemas"]["TeamResponse"][];
         };
         /**
          * BugCategory
@@ -140,6 +169,24 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /**
+         * TeamResponse
+         * @description Public team metadata returned by GET /api/teams.
+         */
+        TeamResponse: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Primarycolor */
+            primaryColor: string;
+            /** Secondarycolor */
+            secondaryColor: string;
+            /** Logo */
+            logo: string;
+            /** Seasons */
+            seasons: number[];
         };
         /** ValidationError */
         ValidationError: {
@@ -227,6 +274,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_teams_api_teams_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponse_list_TeamResponse__"];
                 };
             };
         };

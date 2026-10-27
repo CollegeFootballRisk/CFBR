@@ -5,22 +5,24 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Line, Tooltip } from "recharts";
 import { StarIcon } from "@/shared/components/Icons";
 import { Link } from "@/shared/components/Link";
-import { Select } from "@/shared/components/Select";
 import { Table, type TableColumn } from "@/shared/components/Table";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { ChartLegend, starLegendItems, starPowerLegendItems } from "../components/ChartLegend";
 import { chartTooltipClassName, TeamLineChart } from "../components/TeamLineChart";
+import { TeamSelect } from "../components/TeamSelect";
 import {
   MOCK_LATEST_SEASON,
   mockMercenaries,
   mockPlayerStarsHistory,
   mockPlayers,
   mockStarPowerHistory,
+  teams as mockTeams,
   type PlayerStarsPoint,
   type StarPowerPoint,
   type TeamPlayer,
-  teams,
 } from "../data/teams";
+import { useTeams } from "../hooks/useTeams";
+import { getTeamLogo } from "../utils/getTeamLogo";
 
 const statLabels = {
   mercs: "Mercs",
@@ -287,19 +289,39 @@ export function Team() {
   const navigate = useNavigate();
   const { team: teamParam } = useParams();
 
-  const selectedTeam = useMemo(() => {
-    if (!teamParam) {
-      return teams[0];
+  const { data: apiTeams = [], isPending, isError, error } = useTeams();
+
+  const selectedApiTeam = useMemo(() => {
+    if (apiTeams.length === 0) {
+      return undefined;
     }
 
-    let decodedTeam = teamParam;
+    let decodedTeam = teamParam ?? "";
 
     try {
-      decodedTeam = decodeURIComponent(teamParam);
+      decodedTeam = decodeURIComponent(decodedTeam);
     } catch {}
 
-    return teams.find((team) => team.name.toLowerCase() === decodedTeam.toLowerCase()) ?? teams[0];
-  }, [teamParam]);
+    return (
+      apiTeams.find((team) => team.name.toLowerCase() === decodedTeam.toLowerCase()) ?? apiTeams[0]
+    );
+  }, [apiTeams, teamParam]);
+
+  const selectedMockTeam = mockTeams.find(
+    (team) => team.name.toLowerCase() === selectedApiTeam?.name.toLowerCase(),
+  );
+
+  const selectedTeam = selectedApiTeam
+    ? {
+        ...selectedApiTeam,
+        stats: selectedMockTeam?.stats ?? {
+          mercs: 0,
+          players: 0,
+          stars: 0,
+          territories: 0,
+        },
+      }
+    : undefined;
 
   const playerStarsData = mockPlayerStarsHistory
     .filter((point) => point.season === MOCK_LATEST_SEASON)
@@ -308,22 +330,38 @@ export function Team() {
   const starPowerData = mockStarPowerHistory
     .filter((point) => point.season === MOCK_LATEST_SEASON)
     .sort((a, b) => a.sequence - b.sequence);
+
   const leftStats: StatKey[] = ["mercs", "stars"];
   const rightStats: StatKey[] = ["players", "territories"];
+
+  if (isPending) {
+    return (
+      <PageContainer>
+        <div className="p-8 text-center" role="status">
+          Loading teams…
+        </div>
+      </PageContainer>
+    );
+  }
+
+  if (isError || !selectedTeam) {
+    return (
+      <PageContainer>
+        <div className="p-8 text-center" role="alert">
+          {isError
+            ? `Unable to load teams: ${error.message}`
+            : "No teams were returned by the API."}
+        </div>
+      </PageContainer>
+    );
+  }
 
   return (
     <>
       <div className="mb-6 flex justify-center">
-        <Select
-          searchable
-          centeredOptions
-          variant="map-control"
-          label="Team"
+        <TeamSelect
+          teams={apiTeams}
           value={selectedTeam.name}
-          options={teams.map((team) => ({
-            label: team.name,
-            value: team.name,
-          }))}
           onChange={(value) => {
             if (value) {
               navigate(`/team/${encodeURIComponent(value)}`);
@@ -339,7 +377,7 @@ export function Team() {
           {/* Team logo */}
           <div className="flex justify-center">
             <img
-              src={selectedTeam.logo}
+              src={getTeamLogo(selectedTeam.logo)}
               alt={`${selectedTeam.name} logo`}
               className="size-32 object-contain"
             />

@@ -1,7 +1,9 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 
 import { useEffect, useMemo, useState } from "react";
+import { Alert } from "@/shared/components/Alert";
 import { Button } from "@/shared/components/Button";
+import { Loader } from "@/shared/components/Loader";
 import { Modal } from "@/shared/components/Modal";
 import { getJoinableTeams } from "../api/team";
 import { TeamSelect } from "../components/TeamSelect";
@@ -74,22 +76,18 @@ export function JoinTeamModal({ open, onClose, reason = "new" }: JoinTeamModalPr
           />
         </div>
 
-        {isPending && (
-          <p className="text-center text-info text-sm" role="status">
-            Loading teams…
-          </p>
-        )}
+        {isPending && <Loader label="Loading teams..." className="py-4" />}
 
         {isError && (
-          <p className="text-center text-danger text-sm" role="alert">
-            Unable to load teams. Please try again later.
-          </p>
+          <Alert variant="error" title="Unable to load teams">
+            Please try again later.
+          </Alert>
         )}
 
         {!isPending && !isError && joinableTeams.length === 0 && (
-          <p className="text-center text-info text-sm" role="status">
+          <Alert variant="info" className="text-center">
             No teams are currently available to join.
-          </p>
+          </Alert>
         )}
 
         {selectedTeam && (
@@ -103,9 +101,9 @@ export function JoinTeamModal({ open, onClose, reason = "new" }: JoinTeamModalPr
         )}
 
         {message && (
-          <p role="status" className="rounded-md border border-control-border p-3 text-sm">
+          <Alert variant="info" title="Team selection ready">
             {message}
-          </p>
+          </Alert>
         )}
 
         <div className="flex flex-wrap justify-center gap-3">

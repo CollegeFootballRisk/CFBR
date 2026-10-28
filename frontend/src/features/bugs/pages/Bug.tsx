@@ -87,7 +87,7 @@ export function Bugs() {
     return (
       <PageContainer>
         <h1 className="my-4 text-center font-bold text-4xl">Report a Bug</h1>
-        <Loader label="Submitting your bug report..." size="lg" fullHeight />
+        <Loader label="Submitting your bug report..." fullHeight />
       </PageContainer>
     );
   }

@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { useEffect, useState } from "react";
-
+import { Alert } from "@/shared/components/Alert";
 import { Button } from "@/shared/components/Button";
 import { Link } from "@/shared/components/Link";
+import { Loader } from "@/shared/components/Loader";
 import { Modal } from "@/shared/components/Modal/Modal";
 
 export interface MoveTerritory {
@@ -47,17 +48,11 @@ export function MyMoveModal({ open, onClose, data, status = "ready" }: MyMoveMod
     <Modal open={open} onClose={onClose} title="My Move">
       <div className="mx-auto max-w-2xl space-y-6">
         {status === "loading" ? (
-          <div role="status" className="flex min-h-32 items-center justify-center gap-3">
-            <span
-              aria-hidden="true"
-              className="size-6 animate-spin rounded-full border-2 border-foreground border-t-foreground"
-            />
-            <span>Loading your move...</span>
-          </div>
+          <Loader label="Loading your move..." className="min-h-32" />
         ) : status === "error" ? (
-          <p role="alert" className="font-semibold text-failure">
-            Error fetching your move.
-          </p>
+          <Alert variant="error" title="Unable to load your move">
+            Error fetching your move. Please try again later.
+          </Alert>
         ) : !data ? (
           <p>Move information will be available once gameplay data is connected.</p>
         ) : (
@@ -117,23 +112,27 @@ export function MyMoveModal({ open, onClose, data, status = "ready" }: MyMoveMod
               )}
 
               {defendable.length === 0 && attackable.length === 0 && (
-                <p className="text-center text-info">
+                <Alert variant="info" className="text-center">
                   No available territories to attack or defend.
-                </p>
+                </Alert>
               )}
             </div>
 
             {selectedTerritory && (
-              <div role="status" className="space-y-3 rounded-md border border-control-border p-4">
-                <p>
-                  Selected territory: <strong>{selectedTerritory.name}</strong>
-                </p>
-                <p className="text-info text-sm">
-                  Move submission will be enabled when the gameplay API is connected. No move has
-                  been submitted.
-                </p>
-                <Button onClick={() => setSelectedTerritory(null)}>Clear Selection</Button>
-              </div>
+              <Alert variant="info" title="Territory selected">
+                <div className="space-y-3">
+                  <p>
+                    Selected territory: <strong>{selectedTerritory.name}</strong>
+                  </p>
+
+                  <p>
+                    Move submission will be enabled when the gameplay API is connected. No move has
+                    been submitted.
+                  </p>
+
+                  <Button onClick={() => setSelectedTerritory(null)}>Clear Selection</Button>
+                </div>
+              </Alert>
             )}
           </>
         )}

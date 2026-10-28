@@ -2,7 +2,7 @@
 
 import { cn } from "@/shared/utils/cn";
 
-export type LoaderSize = "sm" | "md" | "lg";
+export type LoaderSize = "sm" | "lg";
 
 interface LoaderProps {
   label?: string;
@@ -13,7 +13,6 @@ interface LoaderProps {
 
 const spinnerSizes: Record<LoaderSize, string> = {
   sm: "size-4 border-2",
-  md: "size-6 border-2",
   lg: "size-12 border-4",
 };
 

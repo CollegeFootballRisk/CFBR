@@ -5,5 +5,5 @@ export function getTeamLogo(logo: string): string {
     return logo;
   }
 
-  return `/images/logos/${encodeURIComponent(logo)}`;
+  return `/images/logos/${encodeURIComponent(logo).replace(/%26/gi, "&")}`;
 }

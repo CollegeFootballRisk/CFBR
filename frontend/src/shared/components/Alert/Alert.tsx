@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
 
-export type AlertVariant = "info" | "success" | "warning" | "error";
+export type AlertVariant = "info" | "error";
 
 interface AlertProps {
   variant?: AlertVariant;
@@ -12,11 +12,8 @@ interface AlertProps {
   className?: string;
 }
 
-// TODO: info and error used
 const variantStyles: Record<AlertVariant, string> = {
   info: "border-control bg-control text-foreground",
-  success: "border-accent-3 bg-accent-3 text-background",
-  warning: "border-failure bg-failure text-foreground",
   error: "border-failure bg-failure text-foreground",
 };
 

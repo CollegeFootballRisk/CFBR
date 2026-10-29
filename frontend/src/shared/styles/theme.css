@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 
 /* TODO: Smooth out transitions on hovering */
-/* TODO: cassowary, platypus */
 @theme {
   --color-background: light-dark(#ffffff, #2d2d32);
   --color-foreground: light-dark(#000000, #ffffff);

@@ -78,20 +78,12 @@ def _requeue(factory: sessionmaker[Session], bug_id: int) -> None:
 
 def _reset_abandoned_claims(factory: sessionmaker[Session]) -> None:
     with factory.begin() as db:
-        db.execute(
-            update(Bugs)
-            .where(Bugs.discord_ticket_status == "creating")
-            .values(discord_ticket_status="pending")
-        )
+        db.execute(update(Bugs).where(Bugs.discord_ticket_status == "creating").values(discord_ticket_status="pending"))
 
 
 def _recover_transcript_claims(factory: sessionmaker[Session]) -> None:
     with factory.begin() as db:
-        db.execute(
-            update(Bugs)
-            .where(Bugs.transcript_status == "generating")
-            .values(transcript_status="failed")
-        )
+        db.execute(update(Bugs).where(Bugs.transcript_status == "generating").values(transcript_status="failed"))
 
 
 def _save_channel(factory: sessionmaker[Session], bug_id: int, channel_id: str) -> None:
@@ -99,9 +91,7 @@ def _save_channel(factory: sessionmaker[Session], bug_id: int, channel_id: str) 
         db.execute(update(Bugs).where(Bugs.id == bug_id).values(discord_thread_id=channel_id))
 
 
-def _set_ticket_created(
-    factory: sessionmaker[Session], bug_id: int, channel_id: str, message_id: str
-) -> None:
+def _set_ticket_created(factory: sessionmaker[Session], bug_id: int, channel_id: str, message_id: str) -> None:
     with factory.begin() as db:
         db.execute(
             update(Bugs)
@@ -114,24 +104,16 @@ def _set_ticket_created(
         )
 
 
-def _get_ticket_refs(
-    factory: sessionmaker[Session], bug_id: int
-) -> tuple[str | None, str | None, str | None]:
+def _get_ticket_refs(factory: sessionmaker[Session], bug_id: int) -> tuple[str | None, str | None, str | None]:
     with factory() as db:
         bug = db.get(Bugs, bug_id)
-        return (
-            (bug.discord_thread_id, bug.discord_message_id, bug.status.value)
-            if bug
-            else (None, None, None)
-        )
+        return (bug.discord_thread_id, bug.discord_message_id, bug.status.value) if bug else (None, None, None)
 
 
 def _set_bug_status(factory: sessionmaker[Session], bug_id: int, status: BugStatus) -> bool:
     with factory.begin() as db:
         result = db.execute(
-            update(Bugs)
-            .where(Bugs.id == bug_id, Bugs.status != BugStatus.CLOSED)
-            .values(status=status)
+            update(Bugs).where(Bugs.id == bug_id, Bugs.status != BugStatus.CLOSED).values(status=status)
         )
         return bool(result.rowcount)
 
@@ -204,9 +186,7 @@ def _build_embed(bug: dict[str, Any]) -> discord.Embed:
     embed.add_field(name="Severity", value=_value(severity), inline=True)
     embed.add_field(name="Category", value=_value(bug.get("category")), inline=True)
     embed.add_field(name="Submitted by", value=_value(bug.get("username")), inline=True)
-    embed.add_field(
-        name="Status", value=str(bug.get("status", "open")).replace("_", " ").title(), inline=True
-    )
+    embed.add_field(name="Status", value=str(bug.get("status", "open")).replace("_", " ").title(), inline=True)
     for label, key in (
         ("Reproduction steps", "reproduction_steps"),
         ("Expected behavior", "expected_behavior"),
@@ -290,8 +270,7 @@ class BugStatusSelect(discord.ui.Select):
 
         if interaction.channel is not None:
             await interaction.channel.send(
-                f"**Bug #{bug_id}** status changed to "
-                f"**{status_label}** by {interaction.user.mention}."
+                f"**Bug #{bug_id}** status changed to **{status_label}** by {interaction.user.mention}."
             )
 
 
@@ -306,16 +285,10 @@ class BugTicketView(discord.ui.View):
         super().__init__(timeout=None)
         self.client = client
 
-    @discord.ui.button(
-        label="Update Status", style=discord.ButtonStyle.primary, custom_id="cfbr:bug:update_status"
-    )
-    async def update_status(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ) -> None:
+    @discord.ui.button(label="Update Status", style=discord.ButtonStyle.primary, custom_id="cfbr:bug:update_status")
+    async def update_status(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         if not _is_game_dev(interaction):
-            await interaction.response.send_message(
-                "Only Game Devs can update tickets.", ephemeral=True
-            )
+            await interaction.response.send_message("Only Game Devs can update tickets.", ephemeral=True)
             return
         bug_id = _bug_id_from_channel(interaction.channel)
         if bug_id is None:
@@ -323,24 +296,16 @@ class BugTicketView(discord.ui.View):
             return
         _, _, status = await asyncio.to_thread(_get_ticket_refs, self.client.factory, bug_id)
         if status == "closed":
-            await interaction.response.send_message(
-                "This ticket is already closed.", ephemeral=True
-            )
+            await interaction.response.send_message("This ticket is already closed.", ephemeral=True)
             return
         await interaction.response.send_message(
             "Select the new status:", view=BugStatusView(self.client), ephemeral=True
         )
 
-    @discord.ui.button(
-        label="Close Ticket", style=discord.ButtonStyle.danger, custom_id="cfbr:bug:close_ticket"
-    )
-    async def close_ticket_button(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ) -> None:
+    @discord.ui.button(label="Close Ticket", style=discord.ButtonStyle.danger, custom_id="cfbr:bug:close_ticket")
+    async def close_ticket_button(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         if not _is_game_dev(interaction):
-            await interaction.response.send_message(
-                "Only Game Devs can close tickets.", ephemeral=True
-            )
+            await interaction.response.send_message("Only Game Devs can close tickets.", ephemeral=True)
             return
         bug_id = _bug_id_from_channel(interaction.channel)
         if bug_id is None or not isinstance(interaction.channel, discord.TextChannel):
@@ -348,9 +313,7 @@ class BugTicketView(discord.ui.View):
             return
         await interaction.response.defer(ephemeral=True)
         try:
-            result = await self.client.close_ticket(
-                interaction.channel, bug_id, str(interaction.user.id)
-            )
+            result = await self.client.close_ticket(interaction.channel, bug_id, str(interaction.user.id))
             await interaction.followup.send(result, ephemeral=True)
         except Exception:
             logger.exception("Failed closing bug ticket %s", bug_id)
@@ -404,10 +367,7 @@ class BugTicketClient(discord.Client):
         category_id = settings.discord_ticket_category_id
         game_dev_role_id = settings.discord_game_dev_role_id
         if not all((guild_id, category_id, game_dev_role_id)):
-            raise RuntimeError(
-                "DISCORD_GUILD_ID, DISCORD_TICKET_CATEGORY_ID,"
-                "and DISCORD_GAME_DEV_ROLE_ID are required"
-            )
+            raise RuntimeError("DISCORD_GUILD_ID, DISCORD_TICKET_CATEGORY_ID,and DISCORD_GAME_DEV_ROLE_ID are required")
         guild = self.get_guild(guild_id)
         if guild is None:
             raise RuntimeError(f"Discord guild {guild_id} unavailable")
@@ -422,15 +382,10 @@ class BugTicketClient(discord.Client):
         channel: discord.TextChannel | None = None
         if bug.get("discord_thread_id"):
             candidate = guild.get_channel(int(bug["discord_thread_id"]))
-            if (
-                isinstance(candidate, discord.TextChannel)
-                and _bug_id_from_channel(candidate) == bug_id
-            ):
+            if isinstance(candidate, discord.TextChannel) and _bug_id_from_channel(candidate) == bug_id:
                 channel = candidate
         if channel is None:
-            channel = next(
-                (c for c in category.text_channels if _bug_id_from_channel(c) == bug_id), None
-            )
+            channel = next((c for c in category.text_channels if _bug_id_from_channel(c) == bug_id), None)
         if channel is None:
             bot_member = guild.me
             if bot_member is None:
@@ -489,14 +444,10 @@ class BugTicketClient(discord.Client):
             )
         else:
             await message.edit(view=BugTicketView(self))
-        await asyncio.to_thread(
-            _set_ticket_created, self.factory, bug_id, str(channel.id), str(message.id)
-        )
+        await asyncio.to_thread(_set_ticket_created, self.factory, bug_id, str(channel.id), str(message.id))
 
     async def refresh_ticket_embed(self, bug_id: int) -> None:
-        channel_id, message_id, status = await asyncio.to_thread(
-            _get_ticket_refs, self.factory, bug_id
-        )
+        channel_id, message_id, status = await asyncio.to_thread(_get_ticket_refs, self.factory, bug_id)
         if not channel_id or not message_id or not status:
             logger.warning("No Discord message reference for bug %s", bug_id)
             return
@@ -510,9 +461,7 @@ class BugTicketClient(discord.Client):
         fields = list(embed.fields)
         for index, field in enumerate(fields):
             if field.name == "Status":
-                embed.set_field_at(
-                    index, name="Status", value=status.replace("_", " ").title(), inline=True
-                )
+                embed.set_field_at(index, name="Status", value=status.replace("_", " ").title(), inline=True)
                 break
         else:
             embed.add_field(name="Status", value=status.replace("_", " ").title(), inline=True)
@@ -548,35 +497,24 @@ class BugTicketClient(discord.Client):
                 filename = html.escape(attachment.filename)
                 lines.append(f'<p>Attachment: <a href="{url}">{filename}</a></p>')
             if message.embeds:
-                lines.append(
-                    f"<p><small>{len(message.embeds)} Discord embed(s) attached</small></p>"
-                )
+                lines.append(f"<p><small>{len(message.embeds)} Discord embed(s) attached</small></p>")
             lines.append("</article>")
         lines.append("</body></html>")
-        return discord.File(
-            BytesIO("\n".join(lines).encode("utf-8")), filename=f"bug-{bug_id}-transcript.html"
-        )
+        return discord.File(BytesIO("\n".join(lines).encode("utf-8")), filename=f"bug-{bug_id}-transcript.html")
 
-    async def _find_existing_transcript(
-        self, channel: discord.TextChannel, bug_id: int
-    ) -> discord.Message | None:
+    async def _find_existing_transcript(self, channel: discord.TextChannel, bug_id: int) -> discord.Message | None:
         # Reconcile uploads if the process crashed after posting but before DB commit.
         marker = f"{TRANSCRIPT_MARKER} {bug_id}"
         async for message in channel.history(limit=500):
             if (
                 message.author.id == self.user.id
                 and marker in message.content
-                and any(
-                    attachment.filename == f"bug-{bug_id}-transcript.html"
-                    for attachment in message.attachments
-                )
+                and any(attachment.filename == f"bug-{bug_id}-transcript.html" for attachment in message.attachments)
             ):
                 return message
         return None
 
-    async def close_ticket(
-        self, channel: discord.TextChannel, bug_id: int, discord_user_id: str
-    ) -> str:
+    async def close_ticket(self, channel: discord.TextChannel, bug_id: int, discord_user_id: str) -> str:
         claimed = await asyncio.to_thread(_claim_close, self.factory, bug_id, discord_user_id)
         if not claimed:
             state = await asyncio.to_thread(_get_transcript_state, self.factory, bug_id)
@@ -590,9 +528,7 @@ class BugTicketClient(discord.Client):
             destination_id = settings.discord_transcripts_channel_id
             if not destination_id:
                 raise RuntimeError("DISCORD_TRANSCRIPTS_CHANNEL_ID is not configured")
-            destination = self.get_channel(destination_id) or await self.fetch_channel(
-                destination_id
-            )
+            destination = self.get_channel(destination_id) or await self.fetch_channel(destination_id)
             if not isinstance(destination, discord.TextChannel):
                 raise RuntimeError("Transcript destination must be a text channel")
             existing = await self._find_existing_transcript(destination, bug_id)
@@ -610,9 +546,7 @@ class BugTicketClient(discord.Client):
                     )
                 finally:
                     transcript.close()
-            await asyncio.to_thread(
-                _set_transcript_status, self.factory, bug_id, "published", str(existing.id)
-            )
+            await asyncio.to_thread(_set_transcript_status, self.factory, bug_id, "published", str(existing.id))
         except Exception:
             logger.exception("Transcript publication failed for bug %s", bug_id)
             await asyncio.to_thread(_set_transcript_status, self.factory, bug_id, "failed")

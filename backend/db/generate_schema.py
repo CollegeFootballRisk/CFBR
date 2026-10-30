@@ -16,9 +16,7 @@ OUTPUT_FILE = DB_DIR / "schema.sql"
 def main() -> None:
     pg_dump = shutil.which("pg_dump")
     if not pg_dump:
-        raise RuntimeError(
-            "pg_dump was not found. Install PostgreSQL client tools and ensure pg_dump is on PATH."
-        )
+        raise RuntimeError("pg_dump was not found. Install PostgreSQL client tools and ensure pg_dump is on PATH.")
 
     # Convert SQLAlchemy's driver-qualified URL into a libpq URL.
     url = make_url(settings.database_url)

@@ -43,8 +43,7 @@ def _required_env(name: str) -> str:
     value = os.getenv(name)
     if not value or not value.strip():
         raise RuntimeError(
-            f"Missing required environment variable {name!r} in {ENV_PATH}. "
-            "Add it to the repository-root .env file."
+            f"Missing required environment variable {name!r} in {ENV_PATH}. Add it to the repository-root .env file."
         )
     return value.strip()
 
@@ -107,9 +106,7 @@ def connection_identity(engine: Engine, *, readonly: bool = False) -> pd.DataFra
             return pd.read_sql(IDENTITY_SQL, conn)
 
 
-def inspect_table_schema(
-    engine: Engine, table_name: str, *, schema_name: str = "public"
-) -> pd.DataFrame:
+def inspect_table_schema(engine: Engine, table_name: str, *, schema_name: str = "public") -> pd.DataFrame:
     """Return ordered column metadata for a table."""
     with engine.connect() as conn:
         return pd.read_sql(
@@ -119,9 +116,7 @@ def inspect_table_schema(
         )
 
 
-def inspect_table_constraints(
-    engine: Engine, table_name: str, *, schema_name: str = "public"
-) -> pd.DataFrame:
+def inspect_table_constraints(engine: Engine, table_name: str, *, schema_name: str = "public") -> pd.DataFrame:
     """Return constraints and their columns for a table."""
     with engine.connect() as conn:
         return pd.read_sql(

@@ -50,17 +50,14 @@ class GeneratedModelTransformer(ast.NodeTransformer):
     def visit_Module(self, node: ast.Module) -> ast.Module:
         """Collect generated string enums before transforming the module."""
         self.enum_classes = {
-            item.name
-            for item in node.body
-            if isinstance(item, ast.ClassDef) and self._is_str_enum(item)
+            item.name for item in node.body if isinstance(item, ast.ClassDef) and self._is_str_enum(item)
         }
 
         self.generic_visit(node)
 
         # Ensure enum.StrEnum has its required module import.
         uses_enum_module = any(
-            isinstance(item, ast.Import) and any(alias.name == "enum" for alias in item.names)
-            for item in node.body
+            isinstance(item, ast.Import) and any(alias.name == "enum" for alias in item.names) for item in node.body
         )
 
         if self.enum_classes and not uses_enum_module:
@@ -174,8 +171,7 @@ def generate_orm() -> None:
 
     if sqlacodegen is None:
         raise RuntimeError(
-            "Could not find sqlacodegen. Install the project dependencies "
-            "and run this script with 'uv run'."
+            "Could not find sqlacodegen. Install the project dependencies and run this script with 'uv run'."
         )
 
     database_url = settings.database_url

@@ -6,9 +6,19 @@ export const BugCategory = [
   "gameplay",
   "UI_design",
   "performance",
-  "other",
+  "other"
 ] as const;
 
-export const BugSeverity = ["low", "medium", "high", "critical"] as const;
+export const BugSeverity = [
+  "low",
+  "medium",
+  "high",
+  "critical"
+] as const;
 
-export const BugStatus = ["open", "in_progress", "resolved", "closed"] as const;
+export const BugStatus = [
+  "open",
+  "in_progress",
+  "resolved",
+  "closed"
+] as const;

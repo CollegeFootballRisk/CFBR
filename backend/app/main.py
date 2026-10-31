@@ -17,6 +17,7 @@ from app.config import settings
 from app.config.db import get_engine
 from app.routers.bug import router as bugs_router
 from app.routers.team import router as teams_router
+from app.routers.user import router as users_router
 from app.schemas.api import (
     ApiError,
     ApiErrorResponse,
@@ -168,6 +169,7 @@ async def unexpected_exception_handler(
 
 app.include_router(bugs_router)
 app.include_router(teams_router)
+app.include_router(users_router)
 
 app.add_middleware(
     CORSMiddleware,

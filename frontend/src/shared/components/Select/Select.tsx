@@ -28,6 +28,8 @@ export interface SelectProps<T = string>
   required?: boolean;
   error?: string;
   disabled?: boolean;
+  onSearchChange?: (search: string) => void;
+  measureLabel?: string;
 }
 
 const MAX_DROPDOWN_HEIGHT = 256;
@@ -53,6 +55,8 @@ export function Select<T = string>({
   variant = "default",
   className,
   centeredOptions = false,
+  onSearchChange,
+  measureLabel,
   ...props
 }: SelectProps<T>) {
   const labelId = useId();
@@ -220,7 +224,7 @@ export function Select<T = string>({
         rounded={rounded}
         variant={variant}
       >
-        {longestOption}
+        {measureLabel ?? longestOption}
       </SelectMeasure>
 
       <button
@@ -261,7 +265,10 @@ export function Select<T = string>({
         label={label}
         searchable={searchable}
         search={search}
-        setSearch={setSearch}
+        setSearch={(value) => {
+          setSearch(value);
+          onSearchChange?.(typeof value === "function" ? value(search) : value);
+        }}
         handleSearchKeyDown={handleSearchKeyDown}
         filteredItems={filteredItems}
         value={value}

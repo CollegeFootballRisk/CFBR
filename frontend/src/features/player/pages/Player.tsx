@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: MPL-2.0
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { teams } from "@/features/team/data/teams";
+import { Alert } from "@/shared/components/Alert";
 import { StarIcon } from "@/shared/components/Icons";
 import { Link } from "@/shared/components/Link";
 import { Select } from "@/shared/components/Select";
 import { Table, type TableColumn } from "@/shared/components/Table";
 import { PageContainer } from "@/shared/layouts/PageContainer";
 import { type PlayerTurn, players, playerTurnHistory } from "../data/players";
+import { usePlayerSearch } from "../hooks/usePlayer";
 
 const turnColumns: TableColumn<PlayerTurn>[] = [
   {
@@ -85,6 +87,8 @@ const turnColumns: TableColumn<PlayerTurn>[] = [
 export function Player() {
   const navigate = useNavigate();
   const { player: playerParam } = useParams();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { data: searchResults = [], isError: isSearchError } = usePlayerSearch(searchQuery);
 
   const selectedPlayer = useMemo(() => {
     if (!playerParam) {
@@ -131,16 +135,24 @@ export function Player() {
           variant="map-control"
           label="Player"
           value={selectedPlayer?.name ?? ""}
-          options={players.map((player) => ({
-            label: player.name,
-            value: player.name,
+          options={searchResults.map((player) => ({
+            label: player.displayName,
+            value: String(player.id),
           }))}
+          onSearchChange={setSearchQuery}
           onChange={(value) => {
             if (value) {
               navigate(`/player/${encodeURIComponent(value)}`);
             }
           }}
+          measureLabel="thenewusernamessuckass$0"
         />
+
+        {isSearchError && (
+          <Alert variant="error" title="Unable to load teams">
+            Unable to search player: {isSearchError}
+          </Alert>
+        )}
       </div>
 
       <PageContainer>

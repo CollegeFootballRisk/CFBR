@@ -59,6 +59,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/players/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search Players
+         * @description Search active players by display-name prefix.
+         */
+        get: operations["search_players_api_players_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -88,6 +108,15 @@ export interface components {
             message: string;
             /** Data */
             data: null;
+        };
+        /** ApiResponse[list[PlayerSearchResult]] */
+        ApiResponse_list_PlayerSearchResult__: {
+            /** Status */
+            status: number;
+            /** Message */
+            message: string;
+            /** Data */
+            data: components["schemas"]["PlayerSearchResult"][];
         };
         /** ApiResponse[list[TeamResponse]] */
         ApiResponse_list_TeamResponse__: {
@@ -169,6 +198,16 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /**
+         * PlayerSearchResult
+         * @description Public player fields returned by GET /api/players/search.
+         */
+        PlayerSearchResult: {
+            /** Id */
+            id: number;
+            /** Displayname */
+            displayName: string;
         };
         /**
          * TeamResponse
@@ -294,6 +333,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiResponse_list_TeamResponse__"];
+                };
+            };
+        };
+    };
+    search_players_api_players_search_get: {
+        parameters: {
+            query: {
+                q: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponse_list_PlayerSearchResult__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

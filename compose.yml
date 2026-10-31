@@ -52,6 +52,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${CFBR_PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${CFBR_PGADMIN_PASSWORD}
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False" 
 
     volumes:
       - /volume1/docker/cfbr-pgadmin:/var/lib/pgadmin
